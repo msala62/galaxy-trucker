@@ -2,7 +2,7 @@ package componenti;
 
 public class MotoreDoppio extends Motore {
 
-	MotoreDoppio(Connettore SX, Connettore DX, Connettore SU, Connettore GIU) {
+	public MotoreDoppio(Connettore SX, Connettore DX, Connettore SU, Connettore GIU) {
 		super(SX, DX, SU, GIU);
 		this.potenza=0;
 	}

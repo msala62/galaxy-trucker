@@ -15,7 +15,7 @@ public abstract class Componente {
 		this.connettoreGIU = GIU;
 	}
 	
-	//Metodo per ruotare il componente. Ha bisogno di uno char che indichi la direzione in cui ruotare
+	//Metodo per ruotare il componente. Ha bisogno di un char che indichi la direzione in cui ruotare
 	public void ruota(char direzioneRotazione) 
 	{
 		Connettore temp;

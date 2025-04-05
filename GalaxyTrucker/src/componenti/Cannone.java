@@ -5,7 +5,7 @@ public class Cannone extends Componente {
 	protected Direzione direzione;
 	protected double potenza;
 
-	Cannone(Connettore SX, Connettore DX, Connettore SU, Connettore GIU, Direzione dir) {
+	public Cannone(Connettore SX, Connettore DX, Connettore SU, Connettore GIU, Direzione dir) {
 		super(SX, DX, SU, GIU);
 		this.direzione = Direzione.SU;
 		this.potenza=1;

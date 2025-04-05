@@ -5,7 +5,7 @@ public class Motore extends Componente {
 	protected Direzione direzione;
 	protected int potenza;
 	
-	Motore(Connettore SX, Connettore DX, Connettore SU, Connettore GIU) {
+	public Motore(Connettore SX, Connettore DX, Connettore SU, Connettore GIU) {
 		super(SX, DX, SU, GIU);
 		this.direzione = Direzione.GIU;
 		this.potenza = 1; //È sempre 1 per i motori normali 

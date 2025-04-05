@@ -5,7 +5,7 @@ public class Stiva extends Componente {
 	private final int spazioCargo;
 	private int cargoCorrente;
 	
-	Stiva(Connettore SX, Connettore DX, Connettore SU, Connettore GIU, Grandezza grandezza) {
+	public Stiva(Connettore SX, Connettore DX, Connettore SU, Connettore GIU, Grandezza grandezza) {
 		super(SX, DX, SU, GIU);
 		if(grandezza == Grandezza.NORMALE)
 			this.spazioCargo=2;

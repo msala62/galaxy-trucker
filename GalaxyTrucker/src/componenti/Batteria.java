@@ -4,7 +4,7 @@ public class Batteria extends Componente {
 
 	private int carica;
 	
-	Batteria(Connettore SX, Connettore DX, Connettore SU, Connettore GIU, Grandezza grandezza) {
+	public Batteria(Connettore SX, Connettore DX, Connettore SU, Connettore GIU, Grandezza grandezza) {
 		super(SX, DX, SU, GIU);
 		if(grandezza == Grandezza.NORMALE)
 			this.carica=2;

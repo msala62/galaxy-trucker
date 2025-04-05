@@ -5,7 +5,7 @@ public class Scudo extends Componente {
 	private Direzione dirScudo1;
 	private Direzione dirScudo2;
 	
-	Scudo(Connettore SX, Connettore DX, Connettore SU, Connettore GIU, Direzione dir1, Direzione dir2) {
+	public Scudo(Connettore SX, Connettore DX, Connettore SU, Connettore GIU, Direzione dir1, Direzione dir2) {
 		super(SX, DX, SU, GIU);
 		this.dirScudo1 = dir1; //Imposta direzione iniziale protezione scudo
 		this.dirScudo2 = dir2;

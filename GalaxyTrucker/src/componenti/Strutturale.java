@@ -2,7 +2,7 @@ package componenti;
 
 public class Strutturale extends Componente {
 
-	Strutturale(Connettore SX, Connettore DX, Connettore SU, Connettore GIU) {
+	public Strutturale(Connettore SX, Connettore DX, Connettore SU, Connettore GIU) {
 		super(SX, DX, SU, GIU);
 	}
 

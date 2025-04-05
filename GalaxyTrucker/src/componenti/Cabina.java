@@ -7,7 +7,7 @@ public class Cabina extends CabinaPartenza {
 	private static final int EQUIPAGGIO_ALIENO_MAX=1;
 	private boolean accettaAlieni;
 	
-	Cabina(Connettore SX, Connettore DX, Connettore SU, Connettore GIU) {
+	public Cabina(Connettore SX, Connettore DX, Connettore SU, Connettore GIU) {
 		super(SX, DX, SU, GIU);
 	}
 
