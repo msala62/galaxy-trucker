@@ -2,12 +2,12 @@ package componenti;
 
 public abstract class Componente {
 	//Ogni direzione ha un proprio tipo di connettore
-	protected  Connettore connettoreSX;
-	protected  Connettore connettoreDX;
-	protected  Connettore connettoreSU;
-	protected  Connettore connettoreGIU;
+	protected Connettore connettoreSX;
+	protected Connettore connettoreDX;
+	protected Connettore connettoreSU;
+	protected Connettore connettoreGIU;
 	
-	Componente (Connettore SX, Connettore DX, Connettore SU, Connettore GIU)
+	public Componente (Connettore SX, Connettore DX, Connettore SU, Connettore GIU)
 	{
 		this.connettoreSX = SX;
 		this.connettoreDX = DX;
