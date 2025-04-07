@@ -1,14 +1,30 @@
-package carteAvventura;
+	package carteAvventura;
 
 public class Contrabbandieri extends Carta {
+	
+	int potenzaRichiesta;
+	int giorniDaPerdere;
+	int merci
+	boolean sconfitti = FALSE;
 
-	public Contrabbandieri(Livello livello) {
+	public Contrabbandieri(Livello livello, int potenaRichiesta, int giorniDaPerdere) {
 		super(livello);
-		// TODO Auto-generated constructor stub
+		this.potenzaRichiesta = potenzaRichiesta;
+		this.giorniDaPerdere = giorniDaPerdere;
 	}
 	
 	@Override
-    public void azione() {
+    public void azione(int potenza, int posizione) {
+		
+		if (!Sconfitti)
+		{
+			if (potenza> potenzaRichiesta)
+			{
+				sconfitti = TRUE;
+				posizione = posizione - giorniDaPerdere;
+				
+			}
+		}
 		
 	};
 

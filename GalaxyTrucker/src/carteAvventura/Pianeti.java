@@ -2,11 +2,16 @@ package carteAvventura;
 
 public class Pianeti extends Carta {
 	
-	public Pianeti(Livello livello) {
+	private int giorniDaPerdere;
+	private List<pianeta> pianetiDisponibili;
+	
+	
+	public Pianeti(Livello livello, int giorniDaPerdere, List<pianeta>, pianeti) {
 		super(livello);
-		// TODO Auto-generated constructor stub
+		this.giorniDaPerdere = giorniDaPerdere;
+		this.pianetiDisponibili = pianetti;
+		
 	}
 
-	
 
 }
