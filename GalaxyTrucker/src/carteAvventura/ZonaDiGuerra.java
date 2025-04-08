@@ -3,11 +3,10 @@ package carteAvventura;
 public class ZonaDiGuerra  extends Carta {
 	
 	public ZonaDiGuerra(Livello livello) {
-		super(livello);
+		super(livello, "Zona Di Guerra");
 		// TODO Auto-generated constructor stub
 	}
 
-	@Override
     public void azione() {
 		
 	};

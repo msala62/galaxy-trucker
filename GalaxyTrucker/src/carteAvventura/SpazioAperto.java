@@ -3,7 +3,7 @@ package carteAvventura;
 public class SpazioAperto extends Carta {
 	
 	public SpazioAperto(Livello livello) {
-		super(livello);
+		super(livello, "SpazioAperto");
 		// TODO Auto-generated constructor stub
 	}
 

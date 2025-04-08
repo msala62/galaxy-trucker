@@ -10,7 +10,7 @@ public class StazioneAbbandonata extends Carta {
 	public StazioneAbbandonata(Livello livello, int equipaggioRichiesto,int giorniDaPerdere,
      int merciVerdi, int merciGialli,
 	 int merciRossi) {
-		super(livello);
+		super(livello, "Stazione Abbandonata");
 		this.equipaggioRichiesto = equipaggioRichiesto;
 		this.giorniDaPerdere = giorniDaPerdere;
 		this.merciGialli = merciGialli;

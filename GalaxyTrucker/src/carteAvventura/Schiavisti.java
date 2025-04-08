@@ -9,7 +9,7 @@ public class Schiavisti extends Carta {
 	private int creditiDaAquistare;
 	
 	public Schiavisti(Livello livello, int potenzaRichiesta,int equipaggioDaPerdere, int giorniDaPerdere, int creditiDaAquistare) {
-		super(livello);
+		super(livello, "Schiavisti");
 		this.potenzaRichiesta = potenzaRichiesta;
 		this.creditiDaAquistare = creditiDaAquistare;
 		this.equipaggioDaPerdere = equipaggioDaPerdere;

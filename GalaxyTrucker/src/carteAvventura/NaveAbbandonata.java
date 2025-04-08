@@ -8,7 +8,7 @@ public class NaveAbbandonata extends Carta {
 	
 
 	public NaveAbbandonata(Livello livello, int equipaggioDaPerdere, int giorniDaPerdere, int creditiDaAquistare) {
-		super(livello);
+		super(livello, "NaveAbbandonata");
 		this.creditiDaAquistare = creditiDaAquistare;
 		this.equipaggioDaPerdere = equipaggioDaPerdere;
 		this.giorniDaPerdere = giorniDaPerdere;

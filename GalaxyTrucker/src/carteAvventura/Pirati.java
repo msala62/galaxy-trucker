@@ -8,7 +8,7 @@ public class Pirati extends Carta {
 	private int creditiDaAquistare;
 
 	public Pirati(Livello livello, int potenzaRichiesta, int giorniDaPerdere, int creditiDaAquistare) {
-		super(livello);
+		super(livello, "Pirati");
 		this.creditiDaAquistare = creditiDaAquistare;
 		this.potenzaRichiesta = potenzaRichiesta;
 		this.giorniDaPerdere = giorniDaPerdere;
