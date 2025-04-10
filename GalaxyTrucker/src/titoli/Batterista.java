@@ -1,10 +1,17 @@
 package titoli;
 
+import game_logic.Giocatore;
+
 public class Batterista extends Titolo {
 
 	public Batterista() {
 		super("Batterista");
-		// TODO Auto-generated constructor stub
+	
 	}
 
+	public int valutazione (Giocatore giocatore )
+	{
+		return 0;
+	}
 }
+

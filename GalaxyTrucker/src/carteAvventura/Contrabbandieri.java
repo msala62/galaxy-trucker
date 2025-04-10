@@ -2,12 +2,11 @@
 
 public class Contrabbandieri extends Carta {
 	
-	int potenzaRichiesta;
-	int giorniDaPerdere;
-	int merciDaAquistare;
-	int penalita; //merci da perdere in sconfittta
-	
-	boolean sconfitti = false;
+	private int potenzaRichiesta;
+	private int giorniDaPerdere;
+	private int merciDaAquistare;
+	private int penalita; //merci da perdere in sconfittta
+	private boolean sconfitti = false;
 
 	public Contrabbandieri(Livello livello, int potenzaRichiesta, int giorniDaPerdere, int merci, int penalita) {
 		super(livello, "Contrabbandieri");
