@@ -17,8 +17,8 @@ public class Alieno {
 			bonus.add(new Motore(null, null, null, null));
 			bonus.add(new Motore(null, null, null, null));
 		} else {
-			bonus.add(new Cannone(null, null, null, null, null));
-			bonus.add(new Cannone(null, null, null, null, null));
+			bonus.add(new Cannone(null, null, null, null));
+			bonus.add(new Cannone(null, null, null, null));
 		}
 	}
 }

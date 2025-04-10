@@ -3,10 +3,12 @@ package componenti;
 public class Batteria extends Componente {
 
 	private int carica;
+	private boolean grande;
 	
-	public Batteria(Connettore SX, Connettore DX, Connettore SU, Connettore GIU, Grandezza grandezza) {
+	public Batteria(Connettore SX, Connettore DX, Connettore SU, Connettore GIU, boolean grande) {
 		super(SX, DX, SU, GIU);
-		if(grandezza == Grandezza.NORMALE)
+		this.grande=grande;
+		if(!grande)
 			this.carica=2;
 		else
 			this.carica=3;
@@ -23,9 +25,11 @@ public class Batteria extends Componente {
 	}
 
 	@Override
-	public String stampa() {
-		return null;
-		// TODO Auto-generated method stub
+	public String nomeComponente() {
+		if(this.grande)
+			return "Bat*";
+		else
+			return "Bat";
 	}
 
 }

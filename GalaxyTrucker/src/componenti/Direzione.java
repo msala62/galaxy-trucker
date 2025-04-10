@@ -1,7 +1,7 @@
 package componenti;
 
 public enum Direzione {
-	SX, DX, SU, GIU; //Servono per i cannoni che cambiano proprietà rispetto alla proprio direzione, e per i motori che possono solo guardare GIU
+	SX, DX, SU, GIU; //Servono per i cannoni che cambiano proprietà rispetto alla proprio direzione
 	
 	//Cambio direzione a seguito di una rotazione. A = antiorario; O = orario
 	public Direzione cambioDirezioneA() 

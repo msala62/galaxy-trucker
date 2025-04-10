@@ -7,9 +7,8 @@ public class Strutturale extends Componente {
 	}
 
 	@Override
-	public String stampa() {
-		return null;
-		// TODO Auto-generated method stub
+	public String nomeComponente() {
+		return "Strut";
 	}
 
 }

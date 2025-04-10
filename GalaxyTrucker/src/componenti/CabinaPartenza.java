@@ -25,9 +25,8 @@ public class CabinaPartenza extends Componente {
 	}
 
 	@Override
-	public String stampa() {
-		// TODO Auto-generated method stub
-		return null;
+	public String nomeComponente() {
+		return "CabPart";
 	}
 
 }

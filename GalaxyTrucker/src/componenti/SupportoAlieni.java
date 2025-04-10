@@ -17,10 +17,11 @@ public class SupportoAlieni extends Componente {
 	}
 
 	@Override
-	public String stampa() {
-		return null;
-		// TODO Auto-generated method stub
-
+	public String nomeComponente() {
+		if(this.colore==Colore.MARRONE)
+			return "SupAlM";
+		else
+			return "SupAlV";
 	}
 
 }

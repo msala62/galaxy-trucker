@@ -5,7 +5,7 @@ public class Cannone extends Componente {
 	protected Direzione direzione;
 	protected double potenza;
 
-	public Cannone(Connettore SX, Connettore DX, Connettore SU, Connettore GIU, Direzione dir) {
+	public Cannone(Connettore SX, Connettore DX, Connettore SU, Connettore GIU) {
 		super(SX, DX, SU, GIU);
 		this.direzione = Direzione.SU;
 		this.potenza=1;
@@ -69,9 +69,8 @@ public class Cannone extends Componente {
 	}
 	
 	@Override
-	public String stampa() {
-		return null;
-		// TODO Auto-generated method stub
+	public String nomeComponente() {
+		return "Can";
 	}
 
 }

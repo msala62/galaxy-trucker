@@ -5,9 +5,9 @@ public class Stiva extends Componente {
 	private final int spazioCargo;
 	private int cargoCorrente;
 	
-	public Stiva(Connettore SX, Connettore DX, Connettore SU, Connettore GIU, Grandezza grandezza) {
+	public Stiva(Connettore SX, Connettore DX, Connettore SU, Connettore GIU, boolean grande) {
 		super(SX, DX, SU, GIU);
-		if(grandezza == Grandezza.NORMALE)
+		if(!grande)
 			this.spazioCargo=2;
 		else
 			this.spazioCargo=3;
@@ -33,9 +33,11 @@ public class Stiva extends Componente {
 	}
 
 	@Override
-	public String stampa() {
-		return null;
-		// TODO Auto-generated method stub
+	public String nomeComponente() {
+		if(this.spazioCargo>2)
+			return "Stiva*";
+		else
+			return "Stiva";
 
 	}
 

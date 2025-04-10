@@ -20,9 +20,9 @@ public class Cabina extends CabinaPartenza {
 	public void setEquipaggioAlieno(int equipaggioAlieno)
 	{
 		if(this.equipaggio != 0)
-			System.out.println("E' gia presente un alieno nella cabina");
+			System.out.println("E' gia presente un umano nella cabina");
 		else if (this.equipaggioAlieno + equipaggioAlieno > EQUIPAGGIO_ALIENO_MAX)
-			System.out.println("Numero massimo umani raggiunto");
+			System.out.println("Numero massimo alieni raggiunto");
 		else
 			this.equipaggioAlieno = equipaggioAlieno;
 	}
@@ -47,11 +47,10 @@ public class Cabina extends CabinaPartenza {
 		else
 			this.equipaggio = equipaggio;
 	}
-
+	
 	@Override
-	public String stampa() {
-		return null;
-		// TODO Auto-generated method stub
+	public String nomeComponente() {
+		return "Cab";
 	}
-
+	
 }

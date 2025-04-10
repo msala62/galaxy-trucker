@@ -9,6 +9,7 @@ public class Scudo extends Componente {
 		super(SX, DX, SU, GIU);
 		this.dirScudo1 = dir1; //Imposta direzione iniziale protezione scudo
 		this.dirScudo2 = dir2;
+		this.richiedeBatterie=true;
 	}
 
 	public Direzione getDirScudo1()
@@ -64,9 +65,8 @@ public class Scudo extends Componente {
 	}	
 	
 	@Override
-	public String stampa() {
-		return null;
-		// TODO Auto-generated method stub
+	public String nomeComponente() {
+		return "Scudo";
 	}
 
 }

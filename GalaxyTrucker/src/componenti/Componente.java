@@ -7,12 +7,15 @@ public abstract class Componente {
 	protected Connettore connettoreSU;
 	protected Connettore connettoreGIU;
 	
+	protected boolean richiedeBatterie;	//Usato dal titolo "Batterista" per determianare quanti pezzi che utilizzano batterie ha ciascun giocatore
+	
 	public Componente (Connettore SX, Connettore DX, Connettore SU, Connettore GIU)
 	{
 		this.connettoreSX = SX;
 		this.connettoreDX = DX;
 		this.connettoreSU = SU;
 		this.connettoreGIU = GIU;
+		this.richiedeBatterie=false;	//Inizializzato a false. I componenti interessati lo cambiano a true nel proprio costruttore
 	}
 	
 	//Metodo per ruotare il componente. Ha bisogno di un char che indichi la direzione in cui ruotare
@@ -62,6 +65,16 @@ public abstract class Componente {
 		return connettoreGIU;
 	}
 	
-	//TODO Metodo per ritornare una rappresentazione string del componente
-	public abstract String stampa();
+	//Ogni connettore ha un metodo toString per rappresentarlo nella nave. Idem i componeneti che usano un'abbreviazione del proprio nome.
+	//Se c'è * dopo all'abbreviazione significa che il componente è la versione grande di se stesso
+	public String toString() 
+	{
+		String componente = "\t" + connettoreSU.toString(connettoreSU) + "\n" 
+				+ connettoreSX.toString(connettoreSX) + "\t" + this.nomeComponente() + "\t" + connettoreDX.toString(connettoreDX) + "\n\t" 
+				+ connettoreGIU.toString(connettoreGIU);
+		
+		return componente;		
+	}
+	
+	public abstract String nomeComponente();
 }
