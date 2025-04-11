@@ -16,10 +16,26 @@ public class PioggiaDiMeteoriti extends Carta {
 
     public void azione() {
     	
-    	int dado1 = random.nextInt(6) + 1;
-        int dado2 = random.nextInt(6) + 1;
-        int coordinata = dado1 + dado2;
-		
+    	for (int i=0; i<meteorite.size(); i++)
+    	{
+    		int dado1 = random.nextInt(6) + 1;
+            int dado2 = random.nextInt(6) + 1;
+            int coordinata = dado1 + dado2;
+    		
+    		
+    	}
+    	if (livello.equals('I'))
+    	{
+    		
+    	}
+    	else if (livello.equals('II'))
+    	{
+    		
+    	}
+    	else {
+    		
+    	}
+    	
 	};
 	
 	

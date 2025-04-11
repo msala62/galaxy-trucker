@@ -1,18 +1,24 @@
 package carteAvventura;
 
+import game_logic.Giocatore;
+
 public abstract class Carta {
 	
 	
 	private String nome;
-	private Livello livello;
+	public Livello livello;
 	public Carta(Livello livello, String nome)
 	{
 		this.setLivello(livello);
 		this.setNome(nome);
 	}
 	
-	public void azione() {
-		
+	public void azione(Giocatore giocatore) {
+				
+	}
+	
+	public String getCartaInfo() {
+	 return nome;
 	}
 
 	public String getNome() {
@@ -29,6 +35,11 @@ public abstract class Carta {
 
 	public void setLivello(Livello livello) {
 		this.livello = livello;
+	}
+	
+	public String stampaCarta() {
+		return nome;
+		
 	}
 
 
