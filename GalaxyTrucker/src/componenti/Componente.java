@@ -65,7 +65,7 @@ public abstract class Componente {
 		return connettoreGIU;
 	}
 	
-	//Ogni connettore ha un metodo toString per rappresentarlo nella nave. Idem i componeneti che usano un'abbreviazione del proprio nome.
+	//Ogni connettore ha un metodo toString per rappresentarlo nella nave. Idem i componeneti (nomeComponente) che usano un'abbreviazione del proprio nome.
 	//Se c'è * dopo all'abbreviazione significa che il componente è la versione grande di se stesso
 	public String toString() 
 	{
