@@ -1,14 +1,14 @@
 package game_logic;
 
 import java.util.Scanner;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import componenti.Componente;
+import componenti.*;
 
 public class Game {
-	
 	private final static Clessidra clessidra = new Clessidra();
 	private List<Componente> componentiBanco;
 	
@@ -47,10 +47,26 @@ public class Game {
 		return giocatori;
 	}
 	
-	private static void Assemblaggio(List<Giocatore> giocatori) {
+	private static List<Componente> GeneraComponenti(List<ComponentBuilder> tipologie) {
+		List<Componente> componenti = new ArrayList<Componente>();
+		
+		for(ComponentBuilder builder : tipologie) {
+			for(int i = 0; i < builder.quantia; i++) {
+				//TODO
+			}
+		}
+		
+		return componenti;
+	}
+	
+	private static void Assemblaggio(List<Giocatore> giocatori) {		
 		for(Giocatore giocatore : giocatori) {
 			System.out.println("E' il tuo turno, " + giocatore.nome + "\ne' tempo di assemblare la tua nave per avviare il viaggio interspaziale!");
-			clessidra.run();
+			clessidra.start(60);
+			
+			while(!clessidra.isTimeEnded()) {
+				
+			}
 		}
 	}
 	
