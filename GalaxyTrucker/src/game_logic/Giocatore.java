@@ -29,5 +29,11 @@ public class Giocatore {
 		}
 		
 		return riepilogo.toString();
+		
 	}
+	
+	public Nave getNave() {
+		return nave;
+	}
+
 }

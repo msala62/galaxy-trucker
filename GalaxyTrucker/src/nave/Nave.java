@@ -46,4 +46,8 @@ public class Nave {
 			System.out.println("");
 		}
 	}
+	public Casella[][] getPlancia() {
+	    return plancia;
+	}
+
 }
