@@ -1,31 +1,44 @@
 package titoli;
 
+import java.util.List;
 import game_logic.Giocatore;
+import nave.*;
 
 public class Titolo {
-	
-	private String titolo; 
+
+	private String titolo;
 	private Giocatore proprietario;
 	private int creditiPremio = 2;
-	private boolean isGold = false;  
-    private boolean isOwned = false; 
-    
-    public Titolo (String titolo) {
-    	this.titolo = titolo;
-    }
-    
-    public void assegnatitolo (Giocatore giocatore) {
-    		//giocatore.setTitolo =  titolo;
-    		this.isOwned = true;
-    }
-    
-    public void passaAGold () {
-    	this.isGold = true;
-    	this.creditiPremio = 12;
-    	
-    }
-    public Giocatore getProprietario() {
-    	return proprietario;
-    }
-    
+	private boolean isGold = false;
+	private boolean isOwned = false;
+
+	public Titolo(String titolo) {
+		this.titolo = titolo;
+	}
+
+	public void passaAGold() {
+		this.isGold = true;
+		this.creditiPremio = 12;
+
+	}
+
+	public Giocatore getProprietario() {
+		return proprietario;
+	}
+
+	public void assegnaTitolo(Giocatore giocatore) {
+		this.proprietario = giocatore;
+		this.isOwned = true;
+
+	}
+
+	public int contatore(Nave nave) {
+		int count = 0;
+		return count;
+	}
+
+	public Giocatore valutazione(List<Giocatore> giocatori) {
+
+		return null;
+	}
 }

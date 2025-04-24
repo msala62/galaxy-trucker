@@ -1,6 +1,7 @@
+
 package titoli;
 
-public class MastroCorridoista extends Titolo  {
+public class MastroCorridoista extends Titolo {
 
 	public MastroCorridoista() {
 		super("MastroCorridoista");
