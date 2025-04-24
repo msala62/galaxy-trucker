@@ -27,9 +27,12 @@ public class Titolo {
 	}
 
 	public void assegnaTitolo(Giocatore giocatore) {
-		this.proprietario = giocatore;
-		this.isOwned = true;
+		if (!this.isOwned) {
+			this.proprietario = giocatore;
+			this.isOwned = true;
 
+		} else
+			System.out.println("titolo già attribuito a un altro giocatore");
 	}
 
 	public int contatore(Nave nave) {

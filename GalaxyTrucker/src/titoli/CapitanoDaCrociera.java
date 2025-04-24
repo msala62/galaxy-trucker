@@ -1,13 +1,10 @@
 package titoli;
-
 import java.util.List;
-
 import componenti.CabinaPartenza;
 import componenti.Connettore;
 import game_logic.Giocatore;
 import nave.Casella;
 import nave.Nave;
-
 public class CapitanoDaCrociera extends Titolo {
 
 	public CapitanoDaCrociera() {
