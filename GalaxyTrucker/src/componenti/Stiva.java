@@ -1,6 +1,6 @@
 package componenti;
 
-public class Stiva extends Componente {
+public class Stiva extends Componente implements cargoInterface {
 	
 	private final int spazioCargo;
 	private int cargoCorrente;
