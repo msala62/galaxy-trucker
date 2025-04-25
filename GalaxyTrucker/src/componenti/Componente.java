@@ -77,4 +77,23 @@ public abstract class Componente {
 	}
 	
 	public abstract String nomeComponente();
+
+	// GEORGE: metodo aggiunto per ottenere il valore dell'attributo
+	// richiedeBatterie
+	public boolean getRichiedeBatterie() {
+		return richiedeBatterie;
+	}
+
+	public void setRichiedeBatterie() {
+		this.richiedeBatterie = true;
+	}
+
+	public Integer tryGetCargoCorrente() {
+		if (this instanceof cargoInterface) {
+			return ((cargoInterface) this).getCargoCorrente();
+		} else {
+			return null;
+		}
+	}
+
 }

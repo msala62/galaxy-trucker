@@ -1,6 +1,6 @@
 package componenti;
 
-public class MotoreDoppio extends Motore {
+public class MotoreDoppio extends Motore implements CalcoloPotenza{
 
 	public MotoreDoppio(Connettore SX, Connettore DX, Connettore SU, Connettore GIU) {
 		super(SX, DX, SU, GIU);
