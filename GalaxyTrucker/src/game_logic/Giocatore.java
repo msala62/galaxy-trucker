@@ -29,17 +29,5 @@ public class Giocatore {
 		}
 		
 		return riepilogo.toString();
-		
 	}
-	
-	public Nave getNave() {
-		return nave;
-	}
-	
-	//GEORGE: Metodo per assegnare crediti ai giocatori
-	public void aggiungiCrediti (int creditoDaAggiungere)
-	{
-		this.crediti = this.crediti + creditoDaAggiungere;
-	}
-
 }

@@ -5,38 +5,25 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class Clessidra {
-	private boolean timeEnded = false;
-	private int secondi;
-	private ScheduledExecutorService executor;
-	
-	public void start(int secondi) {
-		this.secondi = secondi;
-		this.timeEnded = false;
-		
-		this.executor = Executors.newSingleThreadScheduledExecutor();
-		
-		this.executor.scheduleAtFixedRate(() -> {
-			if(this.secondi > 0) {
-				this.secondi--;
-			} else {
-				this.timeEnded = true;
-				executor.shutdown();
+	public void run() {
+		// esecutore --> viene utilizzato per svolgere un compito dopo un tempo specifico
+		ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+		// operazione --> ciè che deve essere eseguito dall'esecutore in sequenza
+		Runnable task = new Runnable() {
+			int secondi = 60;
+			
+			@Override
+			public void run() {
+				if(secondi > 0) {
+					secondi--;
+				} else {
+					System.out.println("Tempo scaduto!");
+					executor.shutdown();
+				}
 			}
-		}, 0, 1, TimeUnit.SECONDS);
+		};
+		
+		// Imposta l'esecuzione della task ogni secondo, senza delay iniziale
+		executor.scheduleAtFixedRate(task, 0, 1, TimeUnit.SECONDS);
 	}
-
-	public boolean isTimeEnded() {
-		return timeEnded;
-	}
-	
-	public int getSecondi() {
-		return secondi;
-	}
-	
-	public void stop() {
-        if (executor != null && !executor.isShutdown()) {
-            executor.shutdown();
-            timeEnded = true;
-        }
-    }
 }

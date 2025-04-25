@@ -27,10 +27,5 @@ public class Casella {
 	public String toString() {
 		return posizione.toString();
 	}
-	
-	public boolean isUtilizzabile() {
-		return utilizzabile;
-	}
-
 
 }

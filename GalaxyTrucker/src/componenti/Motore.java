@@ -1,6 +1,6 @@
 package componenti;
 
-public class Motore extends Componente implements CalcoloPotenza {
+public class Motore extends Componente {
 
 	protected int potenza;
 	

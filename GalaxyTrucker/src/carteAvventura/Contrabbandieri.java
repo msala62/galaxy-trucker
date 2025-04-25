@@ -1,16 +1,18 @@
 /*
- * Metodi richiesti per questa carta:
+ * Funzioni richiesti per questa carta:
  * 1- cambiaPosizione: per cambiare la posizione del giocatore nella plancia volo
  * 2- caricaMerci: per caricare dei merci
  * 3- eleminaMerci: se il giocatore viene sconfiito, deve perdere n numero di merci
+ * 4-getPotenzaDiFuoco
+ * 
+ * attribuiti richiesti:
+ * 1- giocatore.nave.potenzaDiFuoco = la potenza di fuoco della nave
  * */
 
 
 package carteAvventura;
 
-import componenti.*;
 import game_logic.Giocatore;
-import nave.Nave;
 
 public class Contrabbandieri extends Carta {
 	
@@ -49,7 +51,7 @@ public class Contrabbandieri extends Carta {
 		
 		if (!isSconfitto)
 		{
-			if (calcolaPotenzaFuoco(giocatore.getNave()) > potenzaRichiesta)
+			//if (giocatore.nave.getPotenzaDiFuoco() > potenzaRichiesta)
 			{
 				isSconfitto = true;
 				
@@ -64,25 +66,14 @@ public class Contrabbandieri extends Carta {
 				//giocatore.nave.caricaMerci(merci);
 				
 			}
+			// else if ( giocatore.nave.getPotenzaDiFuoco() == potenzaRichiesta) 
+			{} //Nessun effetto per quel giocatore, ma il nemico non è sconfitto
 			
-			 else if (calcolaPotenzaFuoco(giocatore.getNave()) < potenzaRichiesta) {}
+			// else if (giocatore.nave.getPotenzaDiFuoco() < potenzaRichiesta) 
 				//giocatore.nave.eleminaMerci(merci); //il nemico non è sconfitto, penalia= n  merci da perdere
 			
 		}
 		
-	}
-
-	public double calcolaPotenzaFuoco(Nave nave) {
-		double potenzaFuoco = 0;
-		for (int i = 0; i < nave.getPlancia().length; i++)
-			for (int j = 0; j < nave.getPlancia()[0].length; j++) {
-				if (nave.getPlancia()[i][j].isUtilizzabile() && nave.getPlancia()[i][j].getComponente() != null)
-					if (nave.getPlancia()[i][j].getComponente() instanceof Cannone) {
-						Cannone p = (Cannone) nave.getPlancia()[i][j].getComponente();
-						potenzaFuoco = potenzaFuoco + p.getPotenza();
-					}
-			}
-		return potenzaFuoco;
 	}
 
 }
