@@ -7,11 +7,13 @@ public class Compartimento {
     private final int capacita;
     private final boolean isRosso;
     private final List<Cubo> cubi;
+    private boolean isDanneggiato;
 
     public Compartimento(int capacita, boolean isRosso) {
         this.capacita = capacita;
         this.isRosso = isRosso;
         this.cubi = new ArrayList<>(capacita);
+        this.isDanneggiato = false;          // Inizialmente, il compartimento non è danneggiato
     }
 
     public int getSpazioDisponibile() {
@@ -22,7 +24,13 @@ public class Compartimento {
         return cubi;
     }
 
+    public boolean isDanneggiato() { 
+        return isDanneggiato;
+    }
     public String cuboAggiunto(Cubo cubo) {
+    	 if (isDanneggiato) {
+             return "Questo compartimento è danneggiato. Non è possibile aggiungere merce.";
+         }
         if (cubi.size() >= capacita) {
             return "Non possiamo aggiungere " + cubo + " perché non c'è spazio in questo compartimento.";
         }
@@ -40,6 +48,9 @@ public class Compartimento {
     }
 
     public String rimuoviCubo(Cubo cubo) {
+    	if (isDanneggiato) {
+            return "Questo compartimento è danneggiato. Non è possibile rimuovere merce.";
+        }
         if (cubi.contains(cubo)) {
             cubi.remove(cubo);
             return cubo + " rimosso dal compartimento.";
@@ -59,8 +70,45 @@ public class Compartimento {
     @Override
     public String toString() {
         String tipo = isRosso ? "Rosso" : "Bianco";
-        return "Compartimento " + tipo + " (Capacità: " + capacita + ", Cubi: " + cubi + ")";
+        String stato = isDanneggiato ? "Danneggiato" : "Intatto";
+        return "Compartimento " + tipo + " (" +stato+ ", Capacità: " + capacita + ", Cubi: " + cubi + ")";
     }
+
+    public String merciPersi(int numeroCubiDaPerdere) {
+        if (isDanneggiato) {
+            return "Questo compartimento è danneggiato. Non è possibile perdere merce.";
+        }
+        if (cubi.isEmpty()) {
+            return "Il compartimento è vuoto. Nessuna merce da perdere.";
+        }
+
+        int numeroCubiPersi = 0;
+        int cubiSize = cubi.size();
+
+        for (int i = 0; i < numeroCubiDaPerdere && !cubi.isEmpty(); i++) {
+            numeroCubiPersi++;
+            if (cubiSize == 0) {
+                break;
+            }
+        }
+
+        return numeroCubiPersi + " cubi persi dal compartimento.";
+    }
+
+    public String danneggiaCompartimento() {
+        if (isDanneggiato) {
+            return "Questo compartimento è già danneggiato.";
+        }
+        isDanneggiato = true;
+
+      
+        int numeroCubiPersi = cubi.size();
+        cubi.clear();
+
+        return "Compartimento danneggiato e " + numeroCubiPersi + " cubi persi.";
+    }
+
+
 
     public static void main(String[] args) {
         // Esempi di creazione di cubi 
@@ -103,6 +151,27 @@ public class Compartimento {
         // Visualizzazione dello stato dei compartimenti dopo la rimozione
         
         System.out.println("\nStato dei Compartimenti dopo la rimozione:");
+        System.out.println(compartimentoRosso);
+        System.out.println("Valore totale del compartimento rosso: " + compartimentoRosso.getValoreTotale());
+        System.out.println(compartimentoBianco2Spazi);
+        System.out.println("Valore totale del compartimento bianco (2 Spazi) : " + compartimentoBianco2Spazi.getValoreTotale());
+        System.out.println(compartimentoBianco3Spazi);
+        System.out.println("Valore totale del compartimento bianco (3 Spazi) : " + compartimentoBianco3Spazi.getValoreTotale());
+    
+        // Compartimento danneggiato e merci persi
+        
+        System.out.println("\nCompartimento danneggiato e merci persi:");
+        compartimentoRosso.cuboAggiunto(cuboRosso1);                  //aggiungo un cubo rosso al compartimento rosso
+        System.out.println(compartimentoRosso.danneggiaCompartimento());
+        compartimentoBianco2Spazi.cuboAggiunto(cuboBlu1);            //aggiungo un cubo blu e giallo al compartimento bianco
+        compartimentoBianco2Spazi.cuboAggiunto(cuboGiallo1);
+        System.out.println(compartimentoBianco2Spazi.danneggiaCompartimento());
+        compartimentoBianco3Spazi.cuboAggiunto(cuboVerde1); 
+        compartimentoBianco3Spazi.cuboAggiunto(cuboGiallo1);
+        compartimentoBianco3Spazi.cuboAggiunto(cuboBlu1);
+        System.out.println(compartimentoBianco3Spazi.danneggiaCompartimento());
+
+        System.out.println("\nStato dei Compartimenti dopo il danneggiamento:");
         System.out.println(compartimentoRosso);
         System.out.println("Valore totale del compartimento rosso: " + compartimentoRosso.getValoreTotale());
         System.out.println(compartimentoBianco2Spazi);
