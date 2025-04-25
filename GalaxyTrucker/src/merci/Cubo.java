@@ -1,33 +1,85 @@
 package merci;
+import java.util.Objects;
 
 public class Cubo {
-    private int valore;
-    private boolean isRed; 
+    public enum ColoreCubo {
+        ROSSO(4),
+        GIALLO(3),
+        VERDE(2),
+        BLU(1);
 
-    public Cubo(int valore, boolean isRed) {
-        this.valore = valore; 
-        this.isRed = isRed; 
-    }
+        private final int valore;
 
-    public int getValore() {
-        return valore; 
-    }
+        ColoreCubo(int valore) {
+            this.valore = valore;
+        }
 
-    public boolean isRed() {
-        return isRed; 
-    }
+        public int getValore() {
+            return valore;
+        }
 
-    public void danneggia() {
-        if (valore > 0) {
-            valore -= 1; 
-            System.out.println("Cubo danneggiato. Nuovo valore: " + valore);
-        } else {
-            System.out.println("Il cubo è già a valore zero e non può essere danneggiato ulteriormente.");
+        @Override
+        public String toString() {
+            return name().substring(0, 1).toUpperCase() + name().substring(1).toLowerCase();
         }
     }
 
-    public void premia() {
-        valore += 1; 
-        System.out.println("Cubo premiato. Nuovo valore: " + valore);
+    private final ColoreCubo colore;
+
+    public Cubo(ColoreCubo colore) {
+        this.colore = colore;
+    }
+
+    public ColoreCubo getColore() {
+        return colore;
+    }
+
+    public int getValore() {
+        return colore.getValore();
+    }
+
+    @Override
+    public String toString() {
+        return "Cubo " + colore;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Cubo cubo = (Cubo) obj;
+        return colore == cubo.colore;
+    }
+
+    public int hashCode() {
+        return Objects.hash(colore);
+    }
+    
+
+    public static void main(String[] args) {
+    	
+        //Creazione Cubi :
+    	
+        Cubo cuboRosso = new Cubo(ColoreCubo.ROSSO);
+        Cubo cuboBlu = new Cubo(ColoreCubo.BLU);
+        Cubo cuboGiallo = new Cubo(ColoreCubo.GIALLO);
+        Cubo cuboVerde = new Cubo(ColoreCubo.VERDE);
+
+       
+        System.out.println(cuboRosso);
+        System.out.println("Colore del cubo rosso: " + cuboRosso.getColore());
+        System.out.println("Valore del cubo rosso: " + cuboRosso.getValore());
+
+        System.out.println(cuboBlu);
+        System.out.println("Colore del cubo blu: " + cuboBlu.getColore());
+        System.out.println("Valore del cubo blu: " + cuboBlu.getValore());
+
+        System.out.println(cuboGiallo);
+        System.out.println("Colore del cubo giallo: " + cuboGiallo.getColore());
+        System.out.println("Valore del cubo giallo: " + cuboGiallo.getValore());
+
+        System.out.println(cuboVerde);
+        System.out.println("Colore del cubo verde: " + cuboVerde.getColore());
+        System.out.println("Valore del cubo verde: " + cuboVerde.getValore());
     }
 }
