@@ -8,55 +8,13 @@ import game_logic.Giocatore;
 import nave.Casella;
 import nave.Nave;
 
-public class MastroCorridoista extends Titolo  {
+public class MastroCorridoista extends Titolo {
 
 	public MastroCorridoista() {
-		super("MastroCorridoista");
-		// TODO Auto-generated constructor stub
-	}
-	
-	public int contatore(Nave nave) {
-		int lunghezza;
-		int lunghezzaMassima;
-		
-		Casella[][] plancia;
-		plancia = nave.getPlancia();
-		
-		for (int i = 0; i < plancia.length; i++) {
-			for (int j = 0; j < plancia[0].length; j++) {
-				if (plancia[i][j].isUtilizzabile())
-				{
-					if (plancia[i][j].getComponente()!=null)
-					{
-						if (isComponenteCorridoio(plancia[i][j].getComponente()))
-						{
-						
-							
-						}
-					}
-				}
-			}
-		}
-
-		return 0;
-	}
-	
-	public Giocatore valutazione(List<Giocatore> giocatori) {
-		Giocatore giocatore;
-		Giocatore vincetore = giocatori.getFirst();
-
-		for (int i = 0; i < giocatori.size(); i++) {
-			giocatore = giocatori.get(i);
-			if (contatore(giocatore.getNave()) > contatore(vincetore.getNave())) {
-				vincetore = giocatori.get(i);
-			}
-
-		}
-
-		return vincetore;
+		super("MastroCorridoista", "Catena più lunga di corridoi");
 	}
 
-	public boolean isComponenteCorridoio(Componente componente) {
+	private boolean isComponenteCorridoio(Componente componente) {
 		int count = 0;
 		if (componente.getConnettoreDX() != Connettore.LISCIO)
 			count++;
@@ -71,6 +29,44 @@ public class MastroCorridoista extends Titolo  {
 			return true;
 
 		return false;
+	}
+
+
+	private int ricercaProfondita(Casella[][] plancia, boolean[][] visitato, int i, int j) {
+
+		if (i < 0 || i >= plancia.length || j < 0 || j >= plancia[0].length)
+			return 0;
+		if (visitato[i][j])
+			return 0;
+		if (!plancia[i][j].isUtilizzabile() || plancia[i][j].getComponente() == null
+				|| !isComponenteCorridoio(plancia[i][j].getComponente()))
+			return 0;
+		visitato[i][j] = true;
+		int lunghezza = 1;
+		lunghezza += ricercaProfondita(plancia, visitato, i + 1, j);
+		lunghezza += ricercaProfondita(plancia, visitato, i - 1, j);
+		lunghezza += ricercaProfondita(plancia, visitato, i, j + 1);
+		lunghezza += ricercaProfondita(plancia, visitato, i, j - 1);
+
+		return lunghezza;
+	}
+
+	@Override
+	protected  int contatore(Nave nave) {
+		int lunghezzaMassima = 0;
+		Casella[][] plancia = nave.getPlancia();
+		boolean[][] visitato = new boolean[plancia.length][plancia[0].length];
+		for (int i = 0; i < plancia.length; i++) {
+			for (int j = 0; j < plancia[0].length; j++) {
+				if (plancia[i][j].isUtilizzabile() && plancia[i][j].getComponente() != null
+						&& isComponenteCorridoio(plancia[i][j].getComponente())) {
+					int lunghezza = ricercaProfondita(plancia, visitato, i, j);
+					if (lunghezza > lunghezzaMassima)
+						lunghezzaMassima = lunghezza;
+				}
+			}
+		}
+		return lunghezzaMassima;
 	}
 
 }
