@@ -23,6 +23,10 @@ public class Casella {
 		return posizione;
 	}
 	
+	public boolean isUtilizzabile() {
+		return this.utilizzabile;
+	}
+	
 	@Override
 	public String toString() {
 		return posizione.toString();

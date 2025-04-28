@@ -8,7 +8,7 @@ public class Cannone extends Componente {
 	public Cannone(Connettore SX, Connettore DX, Connettore SU, Connettore GIU) {
 		super(SX, DX, SU, GIU);
 		this.direzione = Direzione.SU;
-		this.potenza=1;
+		this.potenza= 1;
 	}
 
 	protected void calcolaPotenza() 

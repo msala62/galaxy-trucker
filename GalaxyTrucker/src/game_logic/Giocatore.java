@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Giocatore {
-	private Nave nave;
+	public final Nave nave;
 	public final String nome;
 	private int crediti;
 	private List<String> titoli;
@@ -16,6 +16,10 @@ public class Giocatore {
 		this.nome = nome;
 		this.crediti = 0;
 		this.titoli = new ArrayList<String>();
+	}
+	
+	public Nave getNave() {
+		return this.nave;
 	}
 	
 	@Override

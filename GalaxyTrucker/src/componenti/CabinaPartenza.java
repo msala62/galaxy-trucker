@@ -3,7 +3,6 @@ package componenti;
 public class CabinaPartenza extends Componente {
 
 	protected int equipaggio;
-	
 	protected static final int EQUIPAGGIO_MAX=2;
 	
 	public CabinaPartenza(Connettore SX, Connettore DX, Connettore SU, Connettore GIU) {

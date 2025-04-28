@@ -1,5 +1,7 @@
 package nave;
 
+import componenti.CabinaPartenza;
+
 public class Nave {
 	private Casella[][] plancia;
 	
@@ -45,5 +47,51 @@ public class Nave {
 			}
 			System.out.println("");
 		}
+	}
+
+	public Casella[][] getPlancia() {
+		return plancia;
+	}
+
+	public int getEquipaggioTotale() {
+		int equipaggioTotale = 0;
+		for (int i = 0; i < plancia.length; i++) {
+			for (int j = 0; j < plancia[0].length; j++) {
+				if (this.plancia[i][j].utilizzabile && this.plancia[i][j].getComponente() != null) {
+					if (this.plancia[i][j].getComponente() instanceof CabinaPartenza) {
+						CabinaPartenza c = (CabinaPartenza) this.plancia[i][j].getComponente();
+						equipaggioTotale += c.getEquipaggio();
+					}
+
+				}
+			}
+		}
+		return equipaggioTotale;
+	}
+
+
+	//GEORGE: metodo per eliminare l'equipaggio dalla nave
+	public int eliminaEquipaggio (int equipaggioDaEliminare)
+	{
+		for(int i =0; i<plancia.length; i++)
+		{
+			for(int j = 0; j<plancia[0].length; j++)
+			{
+				if (this.plancia[i][j].utilizzabile && this.plancia[i][j].getComponente() instanceof CabinaPartenza)
+				{
+					CabinaPartenza c = (CabinaPartenza) this.plancia[i][j].getComponente();
+					while (c.getEquipaggio()!=0)
+					{
+						if (equipaggioDaEliminare>0)
+						{
+						 c.setEquipaggio(c.getEquipaggio()-1);
+						 equipaggioDaEliminare--;
+						} else if (equipaggioDaEliminare==0)
+							return 0;
+					}
+				}
+			}
+		}
+		return -1;
 	}
 }
