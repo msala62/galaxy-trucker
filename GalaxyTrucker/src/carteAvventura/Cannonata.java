@@ -33,7 +33,7 @@ public class Cannonata {
 		this.dimensione = dimensione;
 	}
 
-	public Direzione getDirezione() {
+	public Direzione sgetDirezione() {
 		return direzione;
 	}
 
@@ -42,8 +42,13 @@ public class Cannonata {
 	}
 
 	public void applicaSu(Giocatore giocatore) {
-		Casella c = verificaImpatto(giocatore.getNave(), direzione, dado);
+		
+		System.out.println("\nCannonata in arrivo su " + giocatore.getNome());
+        System.out.println("Tipo: " + dimensione + ", Direzione: " + direzione + ", Coordinata: " + dado);
+
+		Casella c = getCasellaDacolpire(giocatore.getNave(), direzione, dado);
 		if (c!=null) {
+			System.out.println("Colpisce la nave in posizione [" + c.getPosizione() + "]");
 			if (dimensione == Dimensione.LEGGERA && proteggeComp(giocatore.getNave(), direzione)) {
 				System.out.println("Scudo attivato: componente salvo.");
 			} else {
@@ -55,7 +60,7 @@ public class Cannonata {
 		}
 	}
 
-	public Casella verificaImpatto(Nave nave, Cannonata.Direzione direzione, int coordinata) {
+	public Casella getCasellaDacolpire(Nave nave, Cannonata.Direzione direzione, int coordinata) {
 		switch (direzione) {
 			case SU:
 				if (coordinata > 0 && coordinata <= nave.getPlancia()[0].length) {
@@ -65,7 +70,7 @@ public class Cannonata {
 					}
 				}
 				return null;
-
+   
 			case GIU:
 				if (coordinata > 0 && coordinata <= nave.getPlancia()[0].length) {
 					for (int i = nave.getPlancia().length; i > 0; i--) {

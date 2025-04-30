@@ -7,6 +7,7 @@
 
 package carteAvventura;
 
+import java.util.*;
 import game_logic.Giocatore;
 
 public class NaveAbbandonata extends Carta {
@@ -24,33 +25,57 @@ public class NaveAbbandonata extends Carta {
 	}
 
 	@Override
-	public String getCartaInfo() {
-		return getNome() + "\n equipaggio Da Perdere:" + equipaggioDaPerdere + "\n Giorni Da Perdere: "
-				+ giorniDaPerdere + "\n Crediti Da Aquistare" + creditiDaAquistare;
+	public String toString() {
+		return "Carta: " + getNome() + "\n" + "Livello: " + getLivello() + "\n" + "Equipaggio da perdere: "
+				+ equipaggioDaPerdere + "\n" + "Giorni da perdere: " + giorniDaPerdere + "\n"
+				+ "Crediti da acquistare: " + creditiDaAquistare + "\n" + "Usata: " + isUsed;
 	}
 
 	@Override
-	public void azione(Giocatore giocatore) {
+	public void azione(List<Giocatore> giocatori) {
+		Scanner scanner = new Scanner(System.in);
+		System.out.println("Evento: Nave Abbandonata!");
+		System.out.println("Il primo giocatore che accetta può perdere " + equipaggioDaPerdere
+				+ " membri dell’equipaggio per ottenere " + creditiDaAquistare + " crediti, ma perderà "
+				+ giorniDaPerdere + " giorni di volo.");
 
-		if (giocatore.nave.getEquipaggioTotale()>= equipaggioDaPerdere &&  isUsed == false) {
-			/* Volo.cambiaPosizione(giocatore, giorniDaPerdere,-1) 
-			/*
-			 * Nella classe VOLO dovrebbe essere presente un metodo per aggiornare la
-			 * posizione di un giocatore. Il parametro GIOCATORE rappresenta il giocatore da
-			 * spostare, mentre i GIORNI DA PERDERE indicano i passi. Un valore di -1
-			 * corrisponde a uno spostamento all'indietro, mentre 1 indica uno spostamento
-			 * in avanti (l'implementazione qui va modificata in caso il metodo venga
-			 * programmato in modo diverso).
-			 */
-			//eliminaEquipaggio dalla nave
-			if (giocatore.nave.eliminaEquipaggio(equipaggioDaPerdere))
-			 {
-				isUsed = true;
-				giocatore.aggiungiCrediti(creditiDaAquistare);
-			 }
-			
-		} else {
-			System.out.println("Equipaggio Insufficiente");
+		for (Giocatore giocatore : giocatori) {
+			if (isUsed)
+				break;
+
+			System.out.println("Giocatore: " + giocatore.getNome());
+			System.out.print("Vuoi accettare l'offerta? (s/n): ");
+			String risposta = scanner.nextLine().trim().toLowerCase();
+
+			// verifica input
+			while (!risposta.equals("s") && !risposta.equals("n")) {
+				System.out.print("Risposta non valida. Digita 's' per sì o 'n' per no: ");
+				risposta = scanner.nextLine().trim().toLowerCase();
+			}
+
+			// se si
+			if (risposta.equals("s")) {
+
+				if (giocatore.nave.getEquipaggioTotale() >= equipaggioDaPerdere && isUsed == false) {
+					//TODO: Volo.cambiaPosizione(giocatore, giorniDaPerdere,-1)
+					if (giocatore.nave.eliminaEquipaggio(equipaggioDaPerdere)) {
+						isUsed = true;
+						giocatore.aggiungiCrediti(creditiDaAquistare);
+						System.out.println(giocatore.getNome() + " ha accettato e ottenuto " + creditiDaAquistare + " crediti.");
+					} else {
+						System.out.println("Errore: non è stato possibile eliminare l'equipaggio.");
+					}
+				} else {
+					System.out.println("Equipaggio Insufficiente");
+				}
+
+			}
+
+			// se no
+			else {
+				System.out.println("(giocatore.getNome() + \" ha rifiutato l'offerta.\"");
+			}
+
 		}
 
 	};

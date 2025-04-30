@@ -48,4 +48,7 @@ public class Giocatore {
 	public void setLeader(boolean isLeader) {
 		this.isLeader = isLeader;
 	}
+	public String getNome() {
+		return nome;
+	}
 }

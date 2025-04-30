@@ -4,6 +4,8 @@
 
 package carteAvventura;
 
+import java.util.List;
+
 import componenti.Componente;
 import componenti.Connettore;
 import game_logic.Giocatore;
@@ -18,17 +20,34 @@ public class PolvereStellare extends Carta {
 	}
 
 	@Override
-	public void azione(Giocatore giocatore) {
-		giorniDaPerdere = 0;
-		for (int i = 0; i < giocatore.getNave().getPlancia().length; i++)	
-		{
-			for (int j = 0; j < giocatore.getNave().getPlancia()[0].length; j++) {
-				giorniDaPerdere = giorniDaPerdere + latiEsposti(giocatore.getNave(), i, j);
+	public String toString() {
+		return "Carta: " + getNome() + "\n" + "Livello: " + getLivello() + "\n" + "Giorni da perdere: "
+				+ giorniDaPerdere;
+	}
 
+	@Override
+	public void azione(List<Giocatore> giocatori) {
+
+		System.out.println("Evento: Polvere Stellare");
+		System.out.println("Ogni giocatore perderà 1 giorno di volo per ogni connettore esposto sulla propria nave.");
+		for (Giocatore giocatore : giocatori) {
+			giorniDaPerdere = 0;
+			for (int i = 0; i < giocatore.getNave().getPlancia().length; i++) {
+				for (int j = 0; j < giocatore.getNave().getPlancia()[0].length; j++) {
+					giorniDaPerdere = giorniDaPerdere + latiEsposti(giocatore.getNave(), i, j);
+
+				}
 			}
+
+			System.out.println("\n>> Giocatore: " + giocatore.getNome());
+			System.out.println("Connettori esposti trovati: " + giorniDaPerdere);
+			System.out.println("Perde " + giorniDaPerdere + " giorni di volo.");
+			// TODO: Volo.cambiaPosizione(giocatore, giorniDaPerdere , -1)
 		}
-		// TODO: Volo.cambiaPosizione(giocatore, giorniDaPerdere , -1)
-	};
+
+        System.out.println("Fine effetto Polvere Stellare");
+
+	}
 
 	public int latiEsposti(Nave nave, int i, int j) {
 		int lati = 0;
@@ -41,18 +60,18 @@ public class PolvereStellare extends Carta {
 				lati++;
 		}
 
-		if (i - 1 < 0 || nave.getPlancia()[i - 1][j].getComponente() == null ) {
+		if (i - 1 < 0 || nave.getPlancia()[i - 1][j].getComponente() == null) {
 			// su
 			if (comp.getConnettoreSU() != Connettore.LISCIO)
 				lati++;
 		}
 
-		if (j + 1 >= nave.getPlancia()[0].length || nave.getPlancia()[i][j + 1].getComponente() == null ) {
+		if (j + 1 >= nave.getPlancia()[0].length || nave.getPlancia()[i][j + 1].getComponente() == null) {
 			// des
 			if (comp.getConnettoreDX() != Connettore.LISCIO)
 				lati++;
 		}
-		if (j - 1 < 0 || nave.getPlancia()[i][j - 1].getComponente() == null ) {
+		if (j - 1 < 0 || nave.getPlancia()[i][j - 1].getComponente() == null) {
 			// sin
 			if (comp.getConnettoreSX() != Connettore.LISCIO)
 				lati++;

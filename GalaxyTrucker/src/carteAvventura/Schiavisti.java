@@ -21,37 +21,56 @@ public class Schiavisti extends Carta {
 		this.isSconfitto = false;
 	}
 
-	public String getCartaInfo() {
-		return "Equipaggio Da Perdere: " + equipaggioDaPerdere +
-			   ", Giorni Da Perdere: " + giorniDaPerdere +
-			   ", Crediti Da Acquistare: " + creditiDaAquistare +
-			   ", Potenza Richiesta: " + potenzaRichiesta;
+	@Override
+	public String toString() {
+		return "Carta: " + getNome() + "\n" +
+		       "Livello: " + getLivello() + "\n" +
+		       "Potenza richiesta: " + potenzaRichiesta + "\n" +
+		       "Equipaggio da perdere: " + equipaggioDaPerdere + "\n" +
+		       "Giorni da perdere: " + giorniDaPerdere + "\n" +
+		       "Crediti da acquistare: " + creditiDaAquistare + "\n" +
+		       "Sconfitto: " + isSconfitto;
 	}
 
+
 	public void azione(List<Giocatore> giocatori) {
-		for (int i = 0; i <= giocatori.size(); i++) {
-			Giocatore giocatore = giocatori.get(i);
-
+		
+		System.out.println("Evento: Attacco Schiavisti");
+		System.out.println("Potenza richiesta per sconfiggerli: " + potenzaRichiesta);
+		System.out.println("Se non sconfitti, i giocatori perdono " + equipaggioDaPerdere + " membri dell'equipaggio.");
+		
+		for (Giocatore giocatore: giocatori) {
+			System.out.println(">> Giocatore: " + giocatore.getNome());
+			double potenza = giocatore.getNave().getPotenzaFuoco();
+			System.out.println("Potenza di fuoco: " + potenza);
 			if (!isSconfitto) {
-				if (giocatore.getNave().getPotenzaFuoco() > potenzaRichiesta) {
+				if (potenza > potenzaRichiesta) {
 					// TODO:Volo.cambiaPosizione(giocatore, giorniDaPerdere,-1);
+					System.out.println("Gli Schiavisti sono stati sconfitti da " + giocatore.getNome());
+					System.out.println("Perde " + giorniDaPerdere + " giorni di volo.");
 					isSconfitto = true;
-					System.out.println("Gli Schiavisti sono stati sconfitti");
-
 					if (giocatore.isLeader()) {
+						System.out.println("Leader guadagna " + creditiDaAquistare + " crediti.");
 						giocatore.aggiungiCrediti(creditiDaAquistare);
+					} else {
+						System.out.println("Ma non essendo leader, non ottiene la ricompensa.");
 					}
 
-				} else if (giocatore.getNave().getPotenzaFuoco() < potenzaRichiesta) {
+				} else if (potenza< potenzaRichiesta) {
 
+					System.out.println("Potenza insufficiente: subisce la perdita di equipaggio!");
 					if (giocatore.getNave().getEquipaggioTotale() < equipaggioDaPerdere) {
+						System.out.println("Equipaggio insufficiente )");
 						System.out.println("Giocatore costretto ad abbandonare la corsa");
 						//TODO: giocatore.abbandonaCorsa();
 					} else {
 						giocatore.getNave().eliminaEquipaggio(equipaggioDaPerdere);
+						System.out.println("- Equipaggio perso: " + equipaggioDaPerdere);
 					}
 				}
 			}
 		}
+		System.out.println("Fine effetto Schiavisti");
+
 	}
 }

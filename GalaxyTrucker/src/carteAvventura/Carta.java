@@ -1,6 +1,7 @@
 package carteAvventura;
 
-import game_logic.Giocatore;
+import java.util.*;
+import game_logic.*;
 
 public abstract class Carta {
 	
@@ -13,12 +14,8 @@ public abstract class Carta {
 		this.setNome(nome);
 	}
 	
-	public void azione(Giocatore giocatore) {
+	public void azione(List<Giocatore> giocatori) {
 				
-	}
-	
-	public String getCartaInfo() {
-	 return nome;
 	}
 
 	public String getNome() {
@@ -37,12 +34,11 @@ public abstract class Carta {
 		this.livello = livello;
 	}
 	
-	public String stampaCarta() {
-		return nome + livello;
-		
+	@Override
+	public String toString() {
+		return "Carta:" + nome + "\n" +
+		       "livello=" + livello;
 	}
-
-
 
 
 }

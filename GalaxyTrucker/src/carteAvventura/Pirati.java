@@ -24,31 +24,53 @@ public class Pirati extends Carta {
 		this.giorniDaPerdere = giorniDaPerdere;
 		this.cannonate = cannonate;
 	}
-
-	public String getCartaInfo() {
-		return "Potenza Richiesta: " + potenzaRichiesta + ", Giorni Da Perdere: " + giorniDaPerdere
-				+ ", Crediti Da Aquistare" + creditiDaAquistare;
+	
+	@Override
+	public String toString() {
+		return "Carta: " + getNome() + "\n" +
+		       "Livello: " + getLivello() + "\n" +
+		       "Potenza richiesta: " + potenzaRichiesta + "\n" +
+		       "Giorni da perdere: " + giorniDaPerdere + "\n" +
+		       "Crediti da acquistare: " + creditiDaAquistare + "\n" +
+		       "Sconfitto: " + isSconfitto + "\n" +
+		       "Cannonate: " + cannonate;
 	}
 
+
+	
+
+	@Override
 	public void azione(List<Giocatore> giocatori) {
-		for (int i = 0; i <= giocatori.size(); i++) {
-			Giocatore giocatore = giocatori.get(i);
-			if (!isSconfitto) {
+		System.out.println("Evento: Attacco dei Pirati");
+        System.out.println("Potenza richiesta per sconfiggere i pirati: " + potenzaRichiesta);
+        System.out.println("Chi riesce li sconfigge e guadagna " + creditiDaAquistare + " crediti.");
+		for (Giocatore giocatore: giocatori) {
+				if (!isSconfitto) {
 				if (giocatore.getNave().getPotenzaFuoco() > potenzaRichiesta) {
 					// TODO:Volo.cambiaPosizione(giocatore, giorniDaPerdere,-1);
 					isSconfitto = true;
-					System.out.println("i pirati sono stati sconfitti");
+                    System.out.println(" I pirati sono stati sconfitti da " + giocatore.getNome() + "!");
 					if (giocatore.isLeader()) {
+                        System.out.println("Leader riceve " + creditiDaAquistare + " crediti.");
 						giocatore.aggiungiCrediti(creditiDaAquistare);
+                        System.out.println("Perde " + giorniDaPerdere + " giorni di volo.");
 					}
+					else {
+                        System.out.println("Ma non essendo leader, non ottiene la ricompensa.");
+                    }
+					
 				} else if (giocatore.getNave().getPotenzaFuoco() < potenzaRichiesta) {
-					for (int x = 0; i < cannonate.size(); i++) {
-						cannonate.get(x).applicaSu(giocatore);
+					System.out.println("Potenza insufficiente: subisce cannonate!");
+					for (Cannonata cannonata: cannonate) {
+						cannonata.applicaSu(giocatore);
 					}
 
-				}
+				} else {
+                    System.out.println("Potenza pari: nessun effetto, ma i pirati non sono sconfitti.");
+                }
 			}
 		}
+		System.out.println("Fine attacco dei Pirati");
 	}
 
 }

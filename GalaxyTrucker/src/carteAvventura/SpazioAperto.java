@@ -7,6 +7,8 @@
 */
 package carteAvventura;
 
+import java.util.List;
+
 import componenti.*;
 import game_logic.Giocatore;
 import nave.Nave;
@@ -18,23 +20,24 @@ public class SpazioAperto extends Carta {
 	}
 
 	@Override
-	public void azione(Giocatore giocatore) {
+	public void azione(List<Giocatore> giocatori) {
+		 System.out.println(" Carta Avventura: Spazio Aperto");
+		    System.out.println("Ogni giocatore dichiara la potenza motrice e avanza sulla rotta.");
 
-		if (giocatore.getNave().getPotenzaMotrice()< 1) {
-			System.out.println("giocatore costretto ad abbandonare la corsa​");
+		for (Giocatore giocatore : giocatori) {
+			System.out.println("Giocatore: " + giocatore.getNome());
+	        int potenza = giocatore.getNave().getPotenzaMotrice();
+	        
+			if (potenza < 1) {
+				System.out.println("  Potenza motrice: " + potenza);
+	            System.out.println("  Risultato: potenza insufficiente. Il giocatore è costretto ad abbandonare la corsa.");
+	            //TODO: metodo per abbandonare cara
+			} else {
+				System.out.println("  Potenza motrice dichiarata: " + potenza);
+	            System.out.println("  Il giocatore avanza di " + (int) potenza + " spazi vuoti sulla rotta.");
+//TODO:			 Volo.cambiaPosizione(giocatore, giocatore.nave.getPotenzaMotrice , 1) 
+			}
 		}
-		// else {
-		/* Volo.cambiaPosizione(giocatore, giocatore.nave.getPotenzaMotrice , 1) */
-		/*
-		 * Nella classe VOLO dovrebbe essere presente un metodo per aggiornare la
-		 * posizione di un giocatore. Il parametro GIOCATORE rappresenta il giocatore da
-		 * spostare, mentre i GIORNI DA PERDERE indicano i passi. Un valore di -1
-		 * corrisponde a uno spostamento all'indietro, mentre 1 indica uno spostamento
-		 * in avanti (l'implementazione qui va modificata in caso il metodo venga
-		 * programmato in modo diverso).
-		 */
-
 	}
 
-	
 }

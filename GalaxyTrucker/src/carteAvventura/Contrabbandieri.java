@@ -7,7 +7,6 @@
  * 3- eleminaMerci: se il giocatore viene sconfiito, deve perdere n numero di merci
  * */
 
-
 package carteAvventura;
 
 import java.util.List;
@@ -17,19 +16,19 @@ import nave.*;
 import merci.*;
 
 public class Contrabbandieri extends Carta {
-	
+
 	private double potenzaRichiesta;
 	private int giorniDaPerdere;
 	private List<Cargo> cargo;
 	private List<Cargo> cargoDaPerdere;
 	private boolean isSconfitto = false;
-	
+
 	private boolean getIsSconfitto() {
 		return isSconfitto;
 	}
-	
-	public Contrabbandieri(Livello livello, double potenzaRichiesta, int giorniDaPerdere, List<Cargo> cargoDaPerdere
-			, List<Cargo> cargo)
+
+	public Contrabbandieri(Livello livello, double potenzaRichiesta, int giorniDaPerdere, List<Cargo> cargoDaPerdere,
+			List<Cargo> cargo)
 
 	{
 		super(livello, "Contrabbandieri");
@@ -38,40 +37,47 @@ public class Contrabbandieri extends Carta {
 		this.giorniDaPerdere = giorniDaPerdere;
 		this.cargoDaPerdere = cargoDaPerdere;
 	}
-	
+
 	@Override
-	public String getCartaInfo() {
-	    return  getNome() +
-	    		"\n Potenza Richiesta:" + potenzaRichiesta +
-	    		"\n Giorni Da Perdere: " + giorniDaPerdere 
-	  //		+"\n Penalita(MERCI DA PERDERE):" 
-	 //			+"\n Merci:" + merci.getMerci()
-	;
+	public String toString() {
+		return "Carta: " + getNome() + "\n" + "Livello: " + getLivello() + "\n" + "Potenza richiesta: "
+				+ potenzaRichiesta + "\n" + "Giorni da perdere: " + giorniDaPerdere + "\n" + "Cargo da caricare: "
+				+ cargo + "\n" + "Cargo da perdere: " + cargoDaPerdere + "\n" + "Sconfitto: " + isSconfitto;
 	}
-	
+
 	@Override
-	public void azione(Giocatore giocatore) {
-		
-		if (!isSconfitto)
-		{
-			if (giocatore.getNave().getPotenzaFuoco()> potenzaRichiesta)
-			{
+	public void azione(List<Giocatore> giocatori) {
+		System.out.println(">> Carta Avventura: Contrabbandieri");
+		System.out.println("Potenza richiesta per sconfiggerli: " + potenzaRichiesta);
+		for (Giocatore giocatore : giocatori) {
+			double potenza = giocatore.getNave().getPotenzaFuoco();
+			System.out.println("Giocatore: " + giocatore.getNome());
+			System.out.println("  Potenza di fuoco: " + potenza);
+			if (isSconfitto)
+				break;
+
+			if (potenza > potenzaRichiesta) {
 				isSconfitto = true;
-				
-				//TODO:Volo.cambiaPosizione(giocatore, giorniDaPerdere,-1);
-				giocatore.nave.caricaCargo(cargo);
-				
+				// TODO:Volo.cambiaPosizione(giocatore, giorniDaPerdere,-1);
+				giocatore.getNave().caricaCargo(cargo);
+				System.out.println("  Risultato: VITTORIA");
+				System.out.println("  Il giocatore sconfigge i contrabbandieri e carica le seguenti merci: " + cargo);
+				System.out.println("  Perde " + giorniDaPerdere + " giorni di volo.");
+
+			} else if (potenza < potenzaRichiesta)
+
+			{
+				System.out.println("  Risultato: SCONFITTA");
+				System.out.println("  Il giocatore perde le seguenti merci: " + cargoDaPerdere);
+				giocatore.getNave().eliminaCargo(cargoDaPerdere); //il nemico non è sconfitto, penalia= n
+				// merci da perdere
+			} else {
+				System.out.println("  Risultato: PAREGGIO");
+				System.out.println("  Nessuna conseguenza per il giocatore, ma i contrabbandieri non sono sconfitti.");
 			}
-			
-			 else if (giocatore.getNave().getPotenzaFuoco() < potenzaRichiesta) 
-			 {
-				//giocatore.nave.eleminaMerci(merci); //il nemico non è sconfitto, penalia= n  merci da perdere
-			 }	
-			
+
 		}
-		
+
 	}
 
-		
-		 }
-
+}
