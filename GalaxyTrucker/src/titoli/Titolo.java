@@ -32,13 +32,15 @@ public class Titolo {
 		return titolo + ": " + descrizione;
 	}
 
-	public void assegnaTitolo(Giocatore giocatore) {
-		this.proprietario = giocatore;
-		this.isOwned = true;
-
+	public boolean assegnaTitolo(Giocatore giocatore) {
+		if (!this.isOwned) {
+				this.proprietario = giocatore;
+				this.isOwned = true;
+				return true;
 	}
-
-	protected  int contatore(Nave nave) {
+		return false;
+	}
+	protected int contatore(Nave nave) {
 		
 		return -1;
 	}

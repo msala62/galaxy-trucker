@@ -38,7 +38,7 @@ public abstract class Carta {
 	}
 	
 	public String stampaCarta() {
-		return nome;
+		return nome + livello;
 		
 	}
 

@@ -1,27 +1,18 @@
 package carteAvventura;
 
+import java.util.*;
+import merci.*;
 
 /* ogni carta di pianeti puo avere piu di una pianeta, ogni pianeta puo avere diversi tipi di merci*/
 
 public class Pianeta {
-	private int merciVerdi;
-	private int merciRossi;
-	private int merciBlu;
-	private int merciGialli;	
-	
-	public Pianeta (int merciVerdi, int merciRossi, int merciBlu ,int merciGialli) {
-		this.merciVerdi = merciVerdi;
-		this.merciRossi = merciVerdi;
-		this.merciBlu = merciBlu;
-		this.merciGialli = merciGialli;
-
+	private List<Cargo> cargo;
+	public Pianeta (List<Cargo> cargo) {
+		this.cargo = cargo;
 	}
 
-	public String getMerci() {
-		return "Merci Gialli" + merciGialli +
-				"Merci Rossi" + merciRossi +
-				"Merci Verdi " + merciVerdi +
-				"Merci Blu " + merciBlu ;
+	public List<Cargo> getPianeta() {
+		return cargo;
 	}
 	
 	
