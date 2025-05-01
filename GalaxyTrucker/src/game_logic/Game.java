@@ -50,47 +50,108 @@ public class Game {
 	}
 	
 	private static List<Componente> GeneraComponenti(List<ComponentBuilder> builders) {
-		List<Componente> componenti = new ArrayList<Componente>();
-		Connettore[] direzioni = {Connettore.SINGOLO, Connettore.DOPPIO, Connettore.UNIVERSALE, Connettore.LISCIO};
-		
-		for(ComponentBuilder builder : builders) {
-			for(int i = 0; i < builder.quantia; i++) {
-				componenti.add(builder.tipologia.get());
-				
-				for(int j = 0; j < 4; j++) {
-					//TODO
-				}
-			}
-		}
-		
-		return componenti;
+	    List<Componente> componenti = new ArrayList<>();
+	    Connettore[] direzioni = {Connettore.SINGOLO, Connettore.DOPPIO, Connettore.UNIVERSALE, Connettore.LISCIO};
+	    Colore[] coloriAlieni = {Colore.MARRONE, Colore.VIOLA};
+	    
+	    for(ComponentBuilder builder : builders) {
+	        for(int i = 0; i < builder.quantia; i++) {
+	            try {
+	                int su = (int)(Math.random() * 4);
+	                int giu = (int)(Math.random() * 4);
+	                int dx = (int)(Math.random() * 4);
+	                int sx = (int)(Math.random() * 4);
+	                int colore = (int)(Math.random() * 2);
+	                
+	                Componente componente;
+	                
+	                if(builder.tipologia.equals(SupportoAlieni.class)) {
+	                    componente = builder.tipologia.getConstructor(
+	                        Connettore.class, Connettore.class, Connettore.class, Connettore.class, Colore.class)
+	                        .newInstance(direzioni[sx], direzioni[dx], direzioni[su], direzioni[giu], coloriAlieni[colore]);
+	                }
+	                else if(builder.tipologia.equals(Scudo.class)) {
+	                    componente = builder.tipologia.getConstructor(
+	                        Connettore.class, Connettore.class, Connettore.class, Connettore.class, Connettore.class, Connettore.class)
+	                        .newInstance(direzioni[sx], direzioni[dx], direzioni[su], direzioni[giu], direzioni[su], direzioni[giu]);
+	                }
+	                else if(builder.tipologia.equals(Batteria.class) || 
+	                        builder.tipologia.equals(Stiva.class) || 
+	                        builder.tipologia.equals(StivaSpeciale.class)) {
+	                    componente = builder.tipologia.getConstructor(
+	                        Connettore.class, Connettore.class, Connettore.class, Connettore.class, boolean.class)
+	                        .newInstance(direzioni[sx], direzioni[dx], direzioni[su], direzioni[giu], builder.speciale);
+	                }
+	                else {
+	                    componente = builder.tipologia.getConstructor(
+	                        Connettore.class, Connettore.class, Connettore.class, Connettore.class)
+	                        .newInstance(direzioni[sx], direzioni[dx], direzioni[su], direzioni[giu]);
+	                }
+	                
+	                componenti.add(componente);
+	                
+	            } catch (Exception e) {
+	                throw new RuntimeException("Errore nella creazione di un componente", e);
+	            }
+	        }
+	    }
+	    return componenti;
 	}
 	
 	private static void Assemblaggio(List<Giocatore> giocatori) {
 		List<ComponentBuilder> builders = Arrays.asList(
-				new ComponentBuilder(() -> new Cannone(null, null, null, null), 25),
-				new ComponentBuilder(() -> new CannoneDoppio(null, null, null, null), 11),
-				new ComponentBuilder(()-> new SupportoAlieni(null, null, null, null, Colore.MARRONE), 6),
-				new ComponentBuilder(()-> new SupportoAlieni(null, null, null, null, Colore.VIOLA), 6),
-				new ComponentBuilder(() -> new Scudo(null, null, null, null, null, null), 8),
-				new ComponentBuilder(() -> new Batteria(null, null, null, null, false), 11),
-				new ComponentBuilder(() -> new Batteria(null, null, null, null, true), 6),
-				new ComponentBuilder(() -> new Stiva(null, null, null, null, false), 9),
-				new ComponentBuilder(() -> new Stiva(null, null, null, null, true), 6),
-				new ComponentBuilder(() -> new StivaSpeciale(null, null, null, null, true), 3),
-				new ComponentBuilder(() -> new StivaSpeciale(null, null, null, null, false), 6),
-				new ComponentBuilder(() -> new Motore(null, null, null, null), 21),
-				new ComponentBuilder(() -> new MotoreDoppio(null, null, null, null), 9),
-				new ComponentBuilder(() -> new StivaSpeciale(null, null, null, null, true), 3),
-				new ComponentBuilder(() -> new Strutturale(null, null, null, null), 8),
-				new ComponentBuilder(() -> new CabinaPartenza(null, null, null, null), 4),
-				new ComponentBuilder(() -> new Cabina(null, null, null, null), 17)
+				new ComponentBuilder(Cannone.class, 25),					
+				new ComponentBuilder(CannoneDoppio.class, 11),				
+				new ComponentBuilder(Scudo.class, 8),						
+				new ComponentBuilder(Batteria.class, 11, false),			
+				new ComponentBuilder(Batteria.class, 6, true),				
+				new ComponentBuilder(Stiva.class, 9, false),				
+				new ComponentBuilder(Stiva.class, 6, true),					
+				new ComponentBuilder(StivaSpeciale.class, 3, true),			
+				new ComponentBuilder(StivaSpeciale.class, 6, false),		
+				new ComponentBuilder(Motore.class, 21),						
+				new ComponentBuilder(MotoreDoppio.class, 9),				
+				new ComponentBuilder(StivaSpeciale.class, 3, true),		
+				new ComponentBuilder(Strutturale.class, 8),					
+				new ComponentBuilder(CabinaPartenza.class, 4),				
+				new ComponentBuilder(Cabina.class, 17),						
+				new ComponentBuilder(SupportoAlieni.class, 6, Colore.MARRONE),
+				new ComponentBuilder(SupportoAlieni.class, 6, Colore.VIOLA)
 				);
 		List<Componente> componenti = GeneraComponenti(builders);
 		
 		for(Giocatore giocatore : giocatori) {
 			System.out.println("E' il tuo turno, " + giocatore.nome + "\ne' tempo di assemblare la tua nave per avviare il viaggio interspaziale!");
+			System.out.println("Da questo momento in poi hai tempo 2 minuti esatti per scegliere le tue tessere.");
 			clessidra.start(60);
+			
+			while(!clessidra.isTimeEnded()) {
+				System.out.println("SCEGLI UNA TESSERA COMPONENTE TRA QUELLE PROPOSTE: ");
+				System.out.println("Attualmente rimangono sul banco: " + componenti.size() + " tessere");
+				
+				Scanner sc = new Scanner(System.in);
+				String scelta = sc.nextLine();
+				
+				if(scelta.isEmpty()) {
+					int random = (int)(Math.random() * componenti.size());
+					Componente pescata = componenti.get(random);
+					System.out.println("Questa è la tessera che hai scelto:\n" + pescata.toString() + "\n\n Puoi scegliere se tenerla (T) o scartartla (S): ");
+					String sceltaTessera = sc.nextLine();
+					
+					if(sceltaTessera.toLowerCase() == "t") {
+						componenti.remove(random);
+						giocatore.nave.tesserePescate.add(pescata);	
+					}
+				}
+				
+				sc.close();
+				
+				//Clears screen: https://www.quora.com/How-do-I-clear-the-console-screen-in-Java
+				System.out.print("\033[H\033[2J");   
+			    System.out.flush();
+			}
+			
+			System.out.println("TEMPO SCADUTO! " + giocatore.nome + ", nella prossima fase avrai modo di organizzare la tua nave!");
 		}
 	}
 	

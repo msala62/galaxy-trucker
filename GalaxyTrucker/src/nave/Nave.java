@@ -1,9 +1,14 @@
 package nave;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import componenti.CabinaPartenza;
+import componenti.Componente;
 
 public class Nave {
 	private Casella[][] plancia;
+	public List<Componente> tesserePescate = new ArrayList<Componente>();
 	
 	public Nave() {
 		this.plancia = new Casella[5][7];
