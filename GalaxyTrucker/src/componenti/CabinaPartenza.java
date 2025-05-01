@@ -1,12 +1,16 @@
 package componenti;
 
+import game_logic.ColoreGiocatore;
+
 public class CabinaPartenza extends Componente {
 
 	protected int equipaggio;
 	protected static final int EQUIPAGGIO_MAX=2;
+	protected ColoreGiocatore colore;
 	
-	public CabinaPartenza(Connettore SX, Connettore DX, Connettore SU, Connettore GIU) {
+	public CabinaPartenza(Connettore SX, Connettore DX, Connettore SU, Connettore GIU, ColoreGiocatore colore) {
 		super(SX, DX, SU, GIU);
+		this.colore = colore;
 		setEquipaggio(2);
 	}
 	
@@ -26,6 +30,10 @@ public class CabinaPartenza extends Componente {
 	@Override
 	public String nomeComponente() {
 		return "CabPart";
+	}
+	
+	public ColoreGiocatore getColore() {
+		return this.colore;
 	}
 
 }

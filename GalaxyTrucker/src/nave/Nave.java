@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import componenti.CabinaPartenza;
+import componenti.Cannone;
 import componenti.Componente;
+import componenti.Connettore;
+import componenti.Stiva;
 
 public class Nave {
 	private Casella[][] plancia;
-	public List<Componente> tesserePescate = new ArrayList<Componente>();
 	
 	public Nave() {
 		this.plancia = new Casella[5][7];
@@ -49,8 +51,55 @@ public class Nave {
 		}
 	}
 
-	public Casella[][] getPlancia() {
-		return plancia;
+	public boolean aggiungiComponente(int x, int y, Componente tessera) {
+		for(int i = 0; i < 5; i++) {
+			for(int j = 0; j < 7; j++) {
+				if(x == i && y == j) {
+					if(plancia[x][y].utilizzabile) {
+						int sopra = y - 1;
+						int sotto = y + 1;
+						int destra = x + 1;
+						int sinistra = x - 1;
+						
+						// Punti di uscita dall'area della nave e punti proibiti
+						if(x == 0 && (y == 5 || y == 6)) return false;
+						if((x < 0 || x > 7) && (y < 0 || y > 5)) return false;
+						
+						Componente su = plancia[x][sopra].getComponente();
+						Componente giu = plancia[x][sotto].getComponente();
+						Componente dx = plancia[destra][y].getComponente();
+						Componente sx = plancia[sinistra][y].getComponente();
+						
+						if(y == 0) {
+							if(tessera.getConnettoreGIU() == giu.getConnettoreSU() || giu.getConnettoreSU() == Connettore.UNIVERSALE) {
+								this.plancia[x][y].setComponente(tessera);
+								return true;
+							}
+						}
+						
+						if(x == 4) {
+							if(tessera.getConnettoreSU() == su.getConnettoreGIU() || su.getConnettoreGIU() == Connettore.UNIVERSALE) {
+								this.plancia[x][y].setComponente(tessera);
+								return true;
+							}
+						}
+						
+						if(((tessera.getConnettoreSU() == su.getConnettoreGIU()) || su.getConnettoreGIU() == Connettore.UNIVERSALE)
+						&& ((tessera.getConnettoreGIU() == giu.getConnettoreSU()) || giu.getConnettoreSU() == Connettore.UNIVERSALE)
+						&& ((tessera.getConnettoreDX() == dx.getConnettoreSX()) || dx.getConnettoreSX() == Connettore.UNIVERSALE)
+						&& ((tessera.getConnettoreSX() == sx.getConnettoreDX()) || sx.getConnettoreDX() == Connettore.UNIVERSALE)
+								) {
+							this.plancia[x][y].setComponente(tessera);
+							return true;
+						}
+					} else {
+						return false;
+					}
+				}
+			}
+		}
+		
+		return false;
 	}
 
 	public int getEquipaggioTotale() {

@@ -8,6 +8,7 @@ public abstract class Carta {
 	
 	private String nome;
 	public Livello livello;
+	
 	public Carta(Livello livello, String nome)
 	{
 		this.setLivello(livello);

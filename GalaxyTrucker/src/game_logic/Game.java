@@ -112,18 +112,28 @@ public class Game {
 				new ComponentBuilder(Motore.class, 21),						
 				new ComponentBuilder(MotoreDoppio.class, 9),				
 				new ComponentBuilder(StivaSpeciale.class, 3, true),		
-				new ComponentBuilder(Strutturale.class, 8),					
-				new ComponentBuilder(CabinaPartenza.class, 4),				
+				new ComponentBuilder(Strutturale.class, 8),			
 				new ComponentBuilder(Cabina.class, 17),						
 				new ComponentBuilder(SupportoAlieni.class, 6, Colore.MARRONE),
 				new ComponentBuilder(SupportoAlieni.class, 6, Colore.VIOLA)
 				);
 		List<Componente> componenti = GeneraComponenti(builders);
+		CabinaPartenza[] coloreGiocatori = new CabinaPartenza[] {
+				new CabinaPartenza(Connettore.UNIVERSALE, Connettore.UNIVERSALE, Connettore.UNIVERSALE, Connettore.UNIVERSALE, ColoreGiocatore.BLU),
+				new CabinaPartenza(Connettore.UNIVERSALE, Connettore.UNIVERSALE, Connettore.UNIVERSALE, Connettore.UNIVERSALE, ColoreGiocatore.ROSSO),
+				new CabinaPartenza(Connettore.UNIVERSALE, Connettore.UNIVERSALE, Connettore.UNIVERSALE, Connettore.UNIVERSALE, ColoreGiocatore.GIALLO),
+				new CabinaPartenza(Connettore.UNIVERSALE, Connettore.UNIVERSALE, Connettore.UNIVERSALE, Connettore.UNIVERSALE, ColoreGiocatore.VERDE)
+				};
 		
 		for(Giocatore giocatore : giocatori) {
+			int random = (int)(Math.random() * 4);
+			CabinaPartenza cabinaGiocatore = coloreGiocatori[random];
+			giocatore.nave.aggiungiComponente(7, 7, cabinaGiocatore);
+			
+			System.out.println("Ti è stato assegnato il colore " + cabinaGiocatore.getColore());
 			System.out.println("E' il tuo turno, " + giocatore.nome + "\ne' tempo di assemblare la tua nave per avviare il viaggio interspaziale!");
 			System.out.println("Da questo momento in poi hai tempo 2 minuti esatti per scegliere le tue tessere.");
-			clessidra.start(60);
+			clessidra.start(120);
 			
 			while(!clessidra.isTimeEnded()) {
 				System.out.println("SCEGLI UNA TESSERA COMPONENTE TRA QUELLE PROPOSTE: ");
@@ -132,15 +142,29 @@ public class Game {
 				Scanner sc = new Scanner(System.in);
 				String scelta = sc.nextLine();
 				
-				if(scelta.isEmpty()) {
-					int random = (int)(Math.random() * componenti.size());
+				if(!scelta.isEmpty()) {
+					System.out.print("\033[H\033[2J");
+				    System.out.flush();
+					
+					random = (int)(Math.random() * componenti.size());
 					Componente pescata = componenti.get(random);
 					System.out.println("Questa è la tessera che hai scelto:\n" + pescata.toString() + "\n\n Puoi scegliere se tenerla (T) o scartartla (S): ");
+					giocatore.nave.stampa();
+					
 					String sceltaTessera = sc.nextLine();
 					
 					if(sceltaTessera.toLowerCase() == "t") {
 						componenti.remove(random);
-						giocatore.nave.tesserePescate.add(pescata);	
+						System.out.println("Ottimo! dimmi ora in che cella vuoi posizionarlo (Esempio: 11, 21, 54...)");
+						String posizione = sc.nextLine();
+						
+						char xChar = posizione.charAt(0);
+						char yChar = posizione.charAt(1);
+						
+						int x = Character.getNumericValue(xChar);
+						int y = Character.getNumericValue(yChar);
+						
+						giocatore.nave.aggiungiComponente(x, y, pescata);
 					}
 				}
 				
@@ -151,7 +175,7 @@ public class Game {
 			    System.out.flush();
 			}
 			
-			System.out.println("TEMPO SCADUTO! " + giocatore.nome + ", nella prossima fase avrai modo di organizzare la tua nave!");
+			System.out.println("TEMPO SCADUTO, " + giocatore.nome + "! Attendi ora che gli altri giocatori terminimo la fase di assemblaggio delle loro navi!");
 		}
 	}
 	
