@@ -1,43 +1,45 @@
-	package carteAvventura;
+
+/*
+ * Evento di danno. Vengono lanciati dadi per determinare impatti su righe/colonne. Piccoli meteoriti
+ * si bloccano con scudi; grandi devono essere abbattuti con cannoni, altrimenti distruggono pezzi.
+ * 
+ * */
+package carteAvventura;
 
 import java.util.List;
 import java.util.Random;
 
-public class PioggiaDiMeteoriti extends Carta {
-	
-	private List<Meteorite> meteorite;
-	private Random random = new Random();
-	
+import componenti.Componente;
+import componenti.Connettore;
+import game_logic.Giocatore;
+import nave.*;
 
-	public PioggiaDiMeteoriti(Livello livello, List<Meteorite> Meteorite) {
+public class PioggiaDiMeteoriti extends Carta {
+
+	private List<Meteorite> meteoriti;
+	private Random random = new Random();
+
+	public PioggiaDiMeteoriti(Livello livello, List<Meteorite> Meteoriti) {
 		super(livello, "Pioggia Di Meteoriti");
-		this.meteorite  = Meteorite;
+		this.meteoriti = Meteoriti;
 	}
 
-    public void azione() {
-    	
-    	for (int i=0; i<meteorite.size(); i++)
-    	{
-    		int dado1 = random.nextInt(6) + 1;
-            int dado2 = random.nextInt(6) + 1;
-            int coordinata = dado1 + dado2;
-    		
-    		
-    	}
-    	if (livello.equals('I'))
-    	{
-    		
-    	}
-    	else if (livello.equals('II'))
-    	{
-    		
-    	}
-    	else {
-    		
-    	}
-    	
-	};
-	
-	
+	@Override
+	public String toString() {
+		return "Carta: " + getNome() + "\n" + "Livello: " + getLivello() + "\n" + "Meteoriti: " + meteoriti;
+	}
+
+	@Override
+	public void azione(List<Giocatore> giocatori) {
+		System.out.println("evento: Pioggia di Meteoriti");
+	    System.out.println(" Ogni giocatore sarà colpito");
+		for (Giocatore giocatore : giocatori) {
+			 System.out.println("\n>> Giocatore: " + giocatore.getNome());
+			for (Meteorite meteorite : meteoriti) {
+				meteorite.applicaSu(giocatore);
+			}
+		}
+
+	}
 
 }

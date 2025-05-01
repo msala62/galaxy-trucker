@@ -1,61 +1,76 @@
 /*
- * Funzioni richiesti per questa carta:
+ * Evento singolo. Richiede un numero minimo di membri dell'equipaggio per essere sfruttato.
+ * Chi aggancia carica merci e perde giorni di volo. Solo un giocatore può sfruttarlo. 
+ * 
+ * Metodi richiesti per questa carta:
  * 1-cambiaPosizione: per cambiare la posizione del giocatore nella plancia volo
  * 2- caricaMerci: per caricare dei merci
  * */
 
-
 package carteAvventura;
 
+import java.util.*;
 import game_logic.Giocatore;
+import merci.*;
 
 public class StazioneAbbandonata extends Carta {
-	
+
 	private int equipaggioRichiesto;
 	private int giorniDaPerdere;
-	private Pianeta merci;
-	
-	
-	public StazioneAbbandonata(Livello livello, int equipaggioRichiesto,int giorniDaPerdere,
-     int merciVerdi, int merciGialli, int merciRossi, int merciBlu) {
+	private List<Cargo> cargo;
+	private boolean isUsed = false;
+
+	public StazioneAbbandonata(Livello livello, List<Cargo> cargo, int giorniDaPerdere, int equipaggioRichiesto) {
 		super(livello, "Stazione Abbandonata");
 		this.equipaggioRichiesto = equipaggioRichiesto;
 		this.giorniDaPerdere = giorniDaPerdere;
-		merci = new Pianeta(merciVerdi, merciRossi, merciBlu, merciGialli);
-		
-				}
-	
-	
-	public String getCartaInfo() {
-	    return getNome() +
-	    		"Equipaggio Richiesto: " + equipaggioRichiesto +
-	    		"\n Giorni Da Perdere: " + giorniDaPerdere
-	    		+ "\n Merci: " + merci.getMerci() ;
+		this.cargo = cargo;
+
 	}
-	
+
 	@Override
-    public void azione(Giocatore giocatore) {
-		
-		//if(giocatore.nave.getEquipaggio()<equipaggioRichiesto)
-		{
-			System.out.println("gioicatore non può attraccare alla stazione");
-		}
-		//else {
-			
-			/*Volo.cambiaPosizione(giocatore, giorniDaPerdere,-1)*/	
-    		/*Nella classe VOLO dovrebbe essere presente un metodo per
-			aggiornare la posizione di un giocatore. Il parametro GIOCATORE
-			rappresenta il giocatore da spostare, mentre i GIORNI DA PERDERE
-			indicano i passi. Un valore di -1 corrisponde a uno spostamento
-			all'indietro, mentre 1 indica uno spostamento in avanti
-			(l'implementazione qui va modificata in caso il metodo venga
- 			programmato in modo diverso).*/ 
-			
-			// giocatore.nave.caricaMerci(merci);
-			
-			
-			
+	public String toString() {
+		return "Carta: " + getNome() + "\n" + "Livello: " + getLivello() + "\n" + "Equipaggio richiesto: "
+				+ equipaggioRichiesto + "\n" + "Giorni da perdere: " + giorniDaPerdere + "\n" + "Cargo: " + cargo;
+	}
+
+	@Override
+	public void azione(List<Giocatore> giocatori) {
+		Scanner scanner = new Scanner(System.in);
+		for (Giocatore giocatore : giocatori) {
+			if (isUsed)
+				break;
+
+			System.out.println("Giocatore: " + giocatore.getNome());
+			System.out.print("Vuoi accettare l'offerta? (s/n): ");
+			String risposta = scanner.nextLine().trim().toLowerCase();
+
+			// verifica input
+			while (!risposta.equals("s") && !risposta.equals("n")) {
+				System.out.print("Risposta non valida. Digita 's' per sì o 'n' per no: ");
+				risposta = scanner.nextLine().trim().toLowerCase();
+			}
+
+			// se si
+			if (risposta.equals("s")) {
+				if (giocatore.nave.getEquipaggioTotale() < equipaggioRichiesto) {
+					System.out.println("gioicatore non può attraccare alla stazione"); //equipaggio minore di quello richiesto
+				} else {
+//TODO:				Volo.cambiaPosizione(giocatore, giorniDaPerdere,-1)/
+					giocatore.nave.caricaCargo(cargo);
+					isUsed=true;
+					System.out.println(giocatore.getNome() + " ha accettato e ottenuto " + cargo + " cargo.");
+
+				}
+
+			}
+
+			// se no
+			else {
+				System.out.println("(giocatore.getNome() + \" ha rifiutato l'offerta.\"");
+			}
+
 		}
 
 	}
-
+}

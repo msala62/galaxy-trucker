@@ -1,6 +1,6 @@
 package componenti;
 
-public class StivaSpeciale extends Componente {
+public class StivaSpeciale extends Componente implements cargoInterfaccia {
 
 	protected final int spazioCargo;
 	private int cargoCorrente;
@@ -24,13 +24,22 @@ public class StivaSpeciale extends Componente {
 		return cargoCorrente;
 	}
 
-	public void aumentaCargoCorrente()
+	//GEORGE:Modificato il tipo di ritorno del metodo in boolean per indicare se l'operazione è stata eseguita correttamente
+	public boolean aumentaCargoCorrente()
 	{
 		if(this.spazioCargo >= this.cargoCorrente + 1)
+		{
 			this.cargoCorrente ++;
+			return true;
+		}
 		else
+		{
 			System.out.println("Spazio insufficiente");
+			return false;
+		}
+			
 	}
+
 	
 	@Override
 	public String nomeComponente() {
