@@ -37,12 +37,12 @@ public class Nave {
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 7; j++) {
 				if (this.plancia[i][j].utilizzabile) {
-					System.out.print(GREEN + this.plancia[i][j] + "\t" + RESET);
+					System.out.print(GREEN + this.plancia[i][j].getComponente() + "\t" + RESET);
 				} else {
 					if ((i == 0 && j == 5) || (i == 0 && j == 6)) {
-						System.out.print(YELLOW + this.plancia[i][j] + "\t" + RESET);
+						System.out.print(YELLOW + this.plancia[i][j].getComponente() == null ? this.plancia[i][j] : this.plancia[i][j].getComponente() + "\t" + RESET);
 					} else {
-						System.out.print(this.plancia[i][j] + "\t");
+						System.out.print("  \t");
 					}
 				}
 
@@ -51,46 +51,85 @@ public class Nave {
 		}
 	}
 
-	public boolean aggiungiComponente(int x, int y, Componente tessera) {
+	public boolean aggiungiComponente(int y, int x, Componente tessera) {
 		for(int i = 0; i < 5; i++) {
 			for(int j = 0; j < 7; j++) {
-				if(x == i && y == j) {
-					if(plancia[x][y].utilizzabile) {
+				if(y == i && x == j) {
+					if(plancia[y][x].utilizzabile) {
 						int sopra = y - 1;
 						int sotto = y + 1;
 						int destra = x + 1;
 						int sinistra = x - 1;
 						
+						Componente su; 
+						Componente giu; 
+						Componente dx; 
+						Componente sx;
+						
 						// Punti di uscita dall'area della nave e punti proibiti
-						if(x == 0 && (y == 5 || y == 6)) return false;
+						if(y == 0 && (x == 5 || x == 6)) return false;
 						if((x < 0 || x > 7) && (y < 0 || y > 5)) return false;
 						
-						Componente su = plancia[x][sopra].getComponente();
-						Componente giu = plancia[x][sotto].getComponente();
-						Componente dx = plancia[destra][y].getComponente();
-						Componente sx = plancia[sinistra][y].getComponente();
-						
 						if(y == 0) {
-							if(tessera.getConnettoreGIU() == giu.getConnettoreSU() || giu.getConnettoreSU() == Connettore.UNIVERSALE) {
-								this.plancia[x][y].setComponente(tessera);
-								return true;
+							giu = plancia[y][sotto].getComponente();
+							
+							if(giu == null) {
+								this.plancia[y][x].setComponente(tessera);
+								return true;								
+							} else {
+								if(tessera.getConnettoreGIU() == giu.getConnettoreSU() || giu.getConnettoreSU() == Connettore.UNIVERSALE) {
+									this.plancia[y][x].setComponente(tessera);
+									return true;
+								}								
 							}
 						}
 						
-						if(x == 4) {
-							if(tessera.getConnettoreSU() == su.getConnettoreGIU() || su.getConnettoreGIU() == Connettore.UNIVERSALE) {
-								this.plancia[x][y].setComponente(tessera);
+						else if(y == 4) {
+							su = plancia[x][sopra].getComponente();
+							
+							if(su == null) {
+								this.plancia[y][x].setComponente(tessera);
 								return true;
+							} else {
+								if(tessera.getConnettoreSU() == su.getConnettoreGIU() || su.getConnettoreGIU() == Connettore.UNIVERSALE) {
+									this.plancia[y][x].setComponente(tessera);
+									return true;
+								}								
 							}
 						}
 						
-						if(((tessera.getConnettoreSU() == su.getConnettoreGIU()) || su.getConnettoreGIU() == Connettore.UNIVERSALE)
-						&& ((tessera.getConnettoreGIU() == giu.getConnettoreSU()) || giu.getConnettoreSU() == Connettore.UNIVERSALE)
-						&& ((tessera.getConnettoreDX() == dx.getConnettoreSX()) || dx.getConnettoreSX() == Connettore.UNIVERSALE)
-						&& ((tessera.getConnettoreSX() == sx.getConnettoreDX()) || sx.getConnettoreDX() == Connettore.UNIVERSALE)
-								) {
-							this.plancia[x][y].setComponente(tessera);
-							return true;
+						else {
+							su = plancia[sopra][x].getComponente();
+							dx = plancia[y][destra].getComponente();
+							sx = plancia[y][sinistra].getComponente();
+							
+							if(sotto > 5 && dx == null) {
+								if(((tessera.getConnettoreSU() == su.getConnettoreGIU()) || su.getConnettoreGIU() == Connettore.UNIVERSALE)
+									&& ((tessera.getConnettoreSX() == sx.getConnettoreDX()) || sx.getConnettoreDX() == Connettore.UNIVERSALE)
+									) {
+									this.plancia[y][x].setComponente(tessera);
+									return true;
+								}
+							} else if(sotto > 5 && sx == null) {
+								if(((tessera.getConnettoreSU() == su.getConnettoreGIU()) || su.getConnettoreGIU() == Connettore.UNIVERSALE)
+									&& ((tessera.getConnettoreDX() == dx.getConnettoreSX()) || dx.getConnettoreSX() == Connettore.UNIVERSALE)
+									) {
+									this.plancia[y][x].setComponente(tessera);
+									return true;
+								}
+							} else {
+								giu = plancia[sotto][x].getComponente();
+								
+								if(((tessera.getConnettoreSU() == su.getConnettoreGIU()) || su.getConnettoreGIU() == Connettore.UNIVERSALE)
+										&& ((tessera.getConnettoreGIU() == giu.getConnettoreSU()) || giu.getConnettoreSU() == Connettore.UNIVERSALE)
+										&& ((tessera.getConnettoreDX() == dx.getConnettoreSX()) || dx.getConnettoreSX() == Connettore.UNIVERSALE)
+										&& ((tessera.getConnettoreSX() == sx.getConnettoreDX()) || sx.getConnettoreDX() == Connettore.UNIVERSALE)
+										) {
+									this.plancia[y][x].setComponente(tessera);
+									return true;
+								}
+							}
+							
 						}
 					} else {
 						return false;
