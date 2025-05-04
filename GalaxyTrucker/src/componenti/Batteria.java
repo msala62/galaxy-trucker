@@ -19,9 +19,11 @@ public class Batteria extends Componente {
 		return carica;
 	}
 	
-	public void scalaCarica() 
+	public boolean scalaCarica() 
 	{
+		if(carica == 0) return false;
 		this.carica--;
+		return true;
 	}
 
 	@Override

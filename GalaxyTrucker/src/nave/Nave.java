@@ -3,19 +3,25 @@ package nave;
 import java.util.ArrayList;
 import java.util.List;
 
+import componenti.Batteria;
 import componenti.Cabina;
 import componenti.CabinaPartenza;
+import componenti.CalcoloPotenza;
 import componenti.Cannone;
 import componenti.Componente;
 import componenti.Connettore;
+import componenti.Scudo;
 import componenti.Stiva;
 import componenti.SupportoAlieni;
+import merci.Cargo;
 
 public class Nave {
 	private Casella[][] plancia;
-	
+	private int equipaggio;
+
 	public Nave() {
 		this.plancia = new Casella[5][7];
+		this.equipaggio = getEquipaggioTotale();
 
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 7; j++) {
@@ -29,6 +35,10 @@ public class Nave {
 		for (int[] coord : caselleUtilizzabili) {
 			this.plancia[coord[0]][coord[1]].utilizzabile = true;
 		}
+	}
+	
+	public Casella[][] getPlancia(){
+		return this.plancia;
 	}
 
 	public void stampa() {
@@ -55,16 +65,31 @@ public class Nave {
 
 	//IMPORTANTE: Y sono le righe e X le colonne
 	public boolean aggiungiComponente(int y, int x, Componente tessera) {
-		if(tessera.equals(Cabina.class)) {
-			
-		} else if(tessera.equals(SupportoAlieni.class)) {
-			
-		}
+		Componente inserimento = tessera;
 		
 		for(int i = 0; i < 5; i++) {
 			for(int j = 0; j < 7; j++) {
 				if(y == i && x == j) {
 					if(plancia[y][x].utilizzabile) {
+						if(tessera.equals(Cabina.class)) {
+							this.equipaggio += 2;
+							inserimento = new Cabina(tessera.getConnettoreSX(), tessera.getConnettoreDX(), tessera.getConnettoreSU(), tessera.getConnettoreGIU());
+							((Cabina) inserimento).setEquipaggio(2);
+						} else if(tessera.equals(Scudo.class) && getEnergia() > 0) {
+							for(int k = 0; k < 5; k++) {
+								for(int z = 0; z < 7; z++) {
+									if(isUtilizzabile(plancia[k][z]) && plancia[k][z].getComponente().equals(Batteria.class)) {
+										if(((Batteria) plancia[k][z].getComponente()).getCarica() > 0) {
+											((Batteria) plancia[k][z].getComponente()).scalaCarica();
+											break;											
+										} else {
+											continue;
+										}
+									}
+								}
+							}
+						}
+						
 						int sopra = y - 1;
 						int sotto = y + 1;
 						int destra = x + 1;
@@ -84,13 +109,16 @@ public class Nave {
 							giu = plancia[y][sotto].getComponente();
 							
 							if(giu == null) {
-								this.plancia[y][x].setComponente(tessera);
+								if(tessera.equals(SupportoAlieni.class)) return false;
+								this.plancia[y][x].setComponente(inserimento);
 								return true;								
 							} else {
+								if(tessera.equals(SupportoAlieni.class) && giu.equals(Cabina.class)) return true;
+								
 								if(tessera.getConnettoreGIU() == giu.getConnettoreSU() || giu.getConnettoreSU() == Connettore.UNIVERSALE) {
-									this.plancia[y][x].setComponente(tessera);
+									this.plancia[y][x].setComponente(inserimento);
 									return true;
-								}								
+								}
 							}
 						}
 						
@@ -99,13 +127,16 @@ public class Nave {
 							su = plancia[x][sopra].getComponente();
 							
 							if(su == null) {
-								this.plancia[y][x].setComponente(tessera);
+								if(tessera.equals(SupportoAlieni.class)) return false;
+								this.plancia[y][x].setComponente(inserimento);
 								return true;
 							} else {
+								if(tessera.equals(SupportoAlieni.class) && su.equals(Cabina.class)) return true; 
+								
 								if(tessera.getConnettoreSU() == su.getConnettoreGIU() || su.getConnettoreGIU() == Connettore.UNIVERSALE) {
-									this.plancia[y][x].setComponente(tessera);
+									this.plancia[y][x].setComponente(inserimento);
 									return true;
-								}								
+								}							
 							}
 						}
 						
@@ -116,17 +147,21 @@ public class Nave {
 							sx = plancia[y][sinistra].getComponente();
 							
 							if(sotto > 5 && dx == null) {
+								if(tessera.equals(SupportoAlieni.class) && sx.equals(Cabina.class)) return true;
+								
 								if(((tessera.getConnettoreSU() == su.getConnettoreGIU()) || su.getConnettoreGIU() == Connettore.UNIVERSALE)
 									&& ((tessera.getConnettoreSX() == sx.getConnettoreDX()) || sx.getConnettoreDX() == Connettore.UNIVERSALE)
 									) {
-									this.plancia[y][x].setComponente(tessera);
+									this.plancia[y][x].setComponente(inserimento);
 									return true;
 								}
 							} else if(sotto > 5 && sx == null) {
+								if(tessera.equals(SupportoAlieni.class) && dx.equals(Cabina.class)) return true;
+								
 								if(((tessera.getConnettoreSU() == su.getConnettoreGIU()) || su.getConnettoreGIU() == Connettore.UNIVERSALE)
 									&& ((tessera.getConnettoreDX() == dx.getConnettoreSX()) || dx.getConnettoreSX() == Connettore.UNIVERSALE)
 									) {
-									this.plancia[y][x].setComponente(tessera);
+									this.plancia[y][x].setComponente(inserimento);
 									return true;
 								}
 							} else {
@@ -137,7 +172,7 @@ public class Nave {
 										&& ((tessera.getConnettoreDX() == dx.getConnettoreSX()) || dx.getConnettoreSX() == Connettore.UNIVERSALE)
 										&& ((tessera.getConnettoreSX() == sx.getConnettoreDX()) || sx.getConnettoreDX() == Connettore.UNIVERSALE)
 										) {
-									this.plancia[y][x].setComponente(tessera);
+									this.plancia[y][x].setComponente(inserimento);
 									return true;
 								}
 							}
@@ -152,13 +187,32 @@ public class Nave {
 		
 		return false;
 	}
+	
+	public boolean isUtilizzabile(Casella casella) {
+		return (casella.utilizzabile && casella.getComponente() != null) ? true : false;
+	}
+	
+	public int getEnergia() {
+		int energia = 0;
+		
+		for(int i = 0; i < 5; i++) {
+			for(int j = 0; i < 7; j++) {
+				if(isUtilizzabile(this.plancia[i][j]) && this.plancia[i][j].getComponente().equals(Batteria.class)) {
+					Batteria batteria = (Batteria)this.plancia[i][j].getComponente();
+					energia += batteria.getCarica();
+				}
+			}
+		}
+		
+		return energia;
+	}
 
 	public int getEquipaggioTotale() {
 		int equipaggioTotale = 0;
+		
 		for (int i = 0; i < plancia.length; i++) {
 			for (int j = 0; j < plancia[0].length; j++) {
-				if (this.plancia[i][j].utilizzabile && this.plancia[i][j].getComponente() != null
-						&& this.plancia[i][j].getComponente() instanceof CabinaPartenza) {
+				if (isUtilizzabile(this.plancia[i][j]) && this.plancia[i][j].getComponente() instanceof CabinaPartenza) {
 					CabinaPartenza c = (CabinaPartenza) this.plancia[i][j].getComponente();
 					equipaggioTotale += c.getEquipaggio();
 
@@ -170,16 +224,17 @@ public class Nave {
 
 	// GEORGE: metodo per eliminare l'equipaggio dalla nave
 	public boolean eliminaEquipaggio(int equipaggioDaEliminare) {
+		if (equipaggioDaEliminare == 0)
+			return true;
+		
 		for (int i = 0; i < plancia.length; i++) {
 			for (int j = 0; j < plancia[0].length; j++) {
-				if (this.plancia[i][j].utilizzabile && this.plancia[i][j].getComponente() instanceof CabinaPartenza) {
+				if (isUtilizzabile(this.plancia[i][j]) && this.plancia[i][j].getComponente() instanceof CabinaPartenza) {
 					CabinaPartenza c = (CabinaPartenza) this.plancia[i][j].getComponente();
 					while (c.getEquipaggio() != 0 && equipaggioDaEliminare > 0) {
 						c.setEquipaggio(c.getEquipaggio() - 1);
 						equipaggioDaEliminare--;
 					}
-					if (equipaggioDaEliminare == 0)
-						return true;
 				}
 			}
 		}
@@ -195,9 +250,9 @@ public class Nave {
 				if (cargo.isEmpty())
 					return true;
 
-				if (this.plancia[i][j].utilizzabile && this.plancia[i][j].getComponente() instanceof Stiva) {
+				if (isUtilizzabile(this.plancia[i][j]) && this.plancia[i][j].getComponente() instanceof Stiva) {
 					Stiva stiva = (Stiva) this.plancia[i][j].getComponente();
-					while ( !cargo.isEmpty() && stiva.aumentaCargoCorrente()) {
+					while (!cargo.isEmpty() && stiva.aumentaCargoCorrente()) {
 						cargo.removeFirst();
 					}
 				}
@@ -208,7 +263,6 @@ public class Nave {
 	}
 	
 	public boolean eliminaCargo(List<Cargo> cargo) {
-
 		if (cargo.isEmpty())
 			return false;
 
@@ -217,9 +271,9 @@ public class Nave {
 				if (cargo.isEmpty())
 					return true;
 
-				if (this.plancia[i][j].utilizzabile && this.plancia[i][j].getComponente() instanceof Stiva) {
+				if (isUtilizzabile(this.plancia[i][j]) && this.plancia[i][j].getComponente() instanceof Stiva) {
 					Stiva stiva = (Stiva) this.plancia[i][j].getComponente();
-					while ( !cargo.isEmpty() && stiva.aumentaCargoCorrente()) {
+					while (!cargo.isEmpty() && stiva.aumentaCargoCorrente()) {
 						cargo.removeFirst();
 					}
 				}
@@ -231,28 +285,33 @@ public class Nave {
 
 	public int getPotenzaMotrice() {
 		int potenzaMotrice = 0;
-		for (int i = 0; i < this.plancia.length; i++)
+		
+		for (int i = 0; i < this.plancia.length; i++) {
 			for (int j = 0; j < this.plancia[0].length; j++) {
-				if (this.plancia[i][j].isUtilizzabile() && this.plancia[i][j].getComponente() != null)
-					if (getPlancia()[i][j].getComponente() instanceof CalcoloPotenza) {
-						CalcoloPotenza p = (CalcoloPotenza) this.plancia[i][j].getComponente();
-						potenzaMotrice = potenzaMotrice + p.getPotenza();
-					}
-			}
+				if (isUtilizzabile(this.plancia[i][j]) && this.plancia[i][j].getComponente() instanceof CalcoloPotenza) {
+					CalcoloPotenza p = (CalcoloPotenza) this.plancia[i][j].getComponente();
+					potenzaMotrice = potenzaMotrice + p.getPotenza();
+				}
+			}			
+		}
 		return potenzaMotrice;
 	}
 
 	public double getPotenzaFuoco() {
 		double potenzaFuoco = 0;
-		for (int i = 0; i < this.plancia.length; i++)
-		for (int j = 0; j < this.plancia[0].length; j++) {
-		if (this.plancia[i][j].isUtilizzabile() && this.plancia[i][j].getComponente() != null)
-		if (this.plancia[i][j].getComponente() instanceof Cannone) {
-		Cannone p = (Cannone) this.plancia[i][j].getComponente();
-		potenzaFuoco = potenzaFuoco + p.getPotenza();
-		}
-		}
-				return potenzaFuoco;
+		for (int i = 0; i < this.plancia.length; i++) {
+			for (int j = 0; j < this.plancia[0].length; j++) {
+				if (isUtilizzabile(this.plancia[i][j]) && this.plancia[i][j].getComponente() instanceof Cannone) {
+					Cannone p = (Cannone) this.plancia[i][j].getComponente();
+					potenzaFuoco = potenzaFuoco + p.getPotenza();
+				}
 			}
-	
+			
+		}
+		return potenzaFuoco;
+	}
+
+	public int getEquipaggio() {
+		return equipaggio;
+	}
 }
