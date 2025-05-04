@@ -8,8 +8,10 @@ import componenti.Cabina;
 import componenti.CabinaPartenza;
 import componenti.CalcoloPotenza;
 import componenti.Cannone;
+import componenti.CannoneDoppio;
 import componenti.Componente;
 import componenti.Connettore;
+import componenti.Motore;
 import componenti.Scudo;
 import componenti.Stiva;
 import componenti.SupportoAlieni;
@@ -113,12 +115,18 @@ public class Nave {
 								this.plancia[y][x].setComponente(inserimento);
 								return true;								
 							} else {
-								if(tessera.equals(SupportoAlieni.class) && giu.equals(Cabina.class)) return true;
-								
-								if(tessera.getConnettoreGIU() == giu.getConnettoreSU() || giu.getConnettoreSU() == Connettore.UNIVERSALE) {
-									this.plancia[y][x].setComponente(inserimento);
-									return true;
-								}
+								if(tessera.equals(SupportoAlieni.class) && giu.equals(Cabina.class)) {
+									if(tessera.getConnettoreGIU() == giu.getConnettoreSU() || giu.getConnettoreSU() == Connettore.UNIVERSALE) {
+										this.plancia[y][x].setComponente(inserimento);
+										return true;
+									}
+								} else if((tessera.equals(Cannone.class) || tessera.equals(CannoneDoppio.class))) return false; 
+								else {
+									if(tessera.getConnettoreGIU() == giu.getConnettoreSU() || giu.getConnettoreSU() == Connettore.UNIVERSALE) {
+										this.plancia[y][x].setComponente(inserimento);
+										return true;
+									}									
+								}								
 							}
 						}
 						
@@ -131,12 +139,19 @@ public class Nave {
 								this.plancia[y][x].setComponente(inserimento);
 								return true;
 							} else {
-								if(tessera.equals(SupportoAlieni.class) && su.equals(Cabina.class)) return true; 
-								
-								if(tessera.getConnettoreSU() == su.getConnettoreGIU() || su.getConnettoreGIU() == Connettore.UNIVERSALE) {
-									this.plancia[y][x].setComponente(inserimento);
-									return true;
-								}							
+								if(tessera.equals(SupportoAlieni.class) && su.equals(Cabina.class)) {
+									if(tessera.getConnettoreSU() == su.getConnettoreGIU() || su.getConnettoreGIU() == Connettore.UNIVERSALE) {
+										this.plancia[y][x].setComponente(inserimento);
+										return true;
+									}
+								} else if((tessera.equals(Cannone.class) || tessera.equals(CannoneDoppio.class))) return false;
+								else {
+									if(tessera.getConnettoreSU() == su.getConnettoreGIU() || su.getConnettoreGIU() == Connettore.UNIVERSALE) {
+										this.plancia[y][x].setComponente(inserimento);
+										return true;
+									}							
+									
+								}								
 							}
 						}
 						
@@ -147,34 +162,57 @@ public class Nave {
 							sx = plancia[y][sinistra].getComponente();
 							
 							if(sotto > 5 && dx == null) {
-								if(tessera.equals(SupportoAlieni.class) && sx.equals(Cabina.class)) return true;
-								
 								if(((tessera.getConnettoreSU() == su.getConnettoreGIU()) || su.getConnettoreGIU() == Connettore.UNIVERSALE)
-									&& ((tessera.getConnettoreSX() == sx.getConnettoreDX()) || sx.getConnettoreDX() == Connettore.UNIVERSALE)
-									) {
-									this.plancia[y][x].setComponente(inserimento);
-									return true;
-								}
+										&& ((tessera.getConnettoreSX() == sx.getConnettoreDX()) || sx.getConnettoreDX() == Connettore.UNIVERSALE)
+										) {
+									if(tessera.equals(SupportoAlieni.class) && sx.equals(Cabina.class)) {
+										this.plancia[y][x].setComponente(inserimento);
+										return true;										
+									} else if((tessera.equals(Cannone.class) || tessera.equals(CannoneDoppio.class))) {
+										this.plancia[y][x].setComponente(inserimento);
+										return true;
+									}
+									else {
+										this.plancia[y][x].setComponente(inserimento);
+										return true;
+									}
+								}									
+								
 							} else if(sotto > 5 && sx == null) {
-								if(tessera.equals(SupportoAlieni.class) && dx.equals(Cabina.class)) return true;
-								
 								if(((tessera.getConnettoreSU() == su.getConnettoreGIU()) || su.getConnettoreGIU() == Connettore.UNIVERSALE)
-									&& ((tessera.getConnettoreDX() == dx.getConnettoreSX()) || dx.getConnettoreSX() == Connettore.UNIVERSALE)
-									) {
-									this.plancia[y][x].setComponente(inserimento);
-									return true;
+										&& ((tessera.getConnettoreDX() == dx.getConnettoreSX()) || dx.getConnettoreSX() == Connettore.UNIVERSALE)
+										) {
+									if(tessera.equals(SupportoAlieni.class) && dx.equals(Cabina.class)) {
+										this.plancia[y][x].setComponente(inserimento);
+										return true;										
+									} else if((tessera.equals(Cannone.class) || tessera.equals(CannoneDoppio.class))) {
+										this.plancia[y][x].setComponente(inserimento);
+										return true;
+									}
+									else {
+										this.plancia[y][x].setComponente(inserimento);
+										return true;
+									}
 								}
+								
 							} else {
 								giu = plancia[sotto][x].getComponente();
-								
-								if(((tessera.getConnettoreSU() == su.getConnettoreGIU()) || su.getConnettoreGIU() == Connettore.UNIVERSALE)
+									if(((tessera.getConnettoreSU() == su.getConnettoreGIU()) || su.getConnettoreGIU() == Connettore.UNIVERSALE)
 										&& ((tessera.getConnettoreGIU() == giu.getConnettoreSU()) || giu.getConnettoreSU() == Connettore.UNIVERSALE)
 										&& ((tessera.getConnettoreDX() == dx.getConnettoreSX()) || dx.getConnettoreSX() == Connettore.UNIVERSALE)
 										&& ((tessera.getConnettoreSX() == sx.getConnettoreDX()) || sx.getConnettoreDX() == Connettore.UNIVERSALE)
 										) {
-									this.plancia[y][x].setComponente(inserimento);
-									return true;
-								}
+										if(tessera.equals(SupportoAlieni.class) && 
+												(dx.equals(Cabina.class) || sx.equals(Cabina.class) ||
+												 giu.equals(Cabina.class) || su.equals(Cabina.class))) {
+											this.plancia[y][x].setComponente(inserimento);
+											return true;											
+										} else if((tessera.equals(Cannone.class) || tessera.equals(CannoneDoppio.class))) return false;
+										else {
+											this.plancia[y][x].setComponente(inserimento);
+											return true;
+									}
+								}	
 							}
 							
 						}
@@ -184,7 +222,6 @@ public class Nave {
 				}
 			}
 		}
-		
 		return false;
 	}
 	
