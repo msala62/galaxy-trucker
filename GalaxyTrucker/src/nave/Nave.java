@@ -3,11 +3,13 @@ package nave;
 import java.util.ArrayList;
 import java.util.List;
 
+import componenti.Cabina;
 import componenti.CabinaPartenza;
 import componenti.Cannone;
 import componenti.Componente;
 import componenti.Connettore;
 import componenti.Stiva;
+import componenti.SupportoAlieni;
 
 public class Nave {
 	private Casella[][] plancia;
@@ -51,7 +53,14 @@ public class Nave {
 		}
 	}
 
+	//IMPORTANTE: Y sono le righe e X le colonne
 	public boolean aggiungiComponente(int y, int x, Componente tessera) {
+		if(tessera.equals(Cabina.class)) {
+			
+		} else if(tessera.equals(SupportoAlieni.class)) {
+			
+		}
+		
 		for(int i = 0; i < 5; i++) {
 			for(int j = 0; j < 7; j++) {
 				if(y == i && x == j) {
@@ -70,6 +79,7 @@ public class Nave {
 						if(y == 0 && (x == 5 || x == 6)) return false;
 						if((x < 0 || x > 7) && (y < 0 || y > 5)) return false;
 						
+						//Posizionamento in cima alla nave
 						if(y == 0) {
 							giu = plancia[y][sotto].getComponente();
 							
@@ -84,6 +94,7 @@ public class Nave {
 							}
 						}
 						
+						//Posizionamento in fondo alla nave
 						else if(y == 4) {
 							su = plancia[x][sopra].getComponente();
 							
@@ -98,6 +109,7 @@ public class Nave {
 							}
 						}
 						
+						//Qualsiasi altra posizione centrale
 						else {
 							su = plancia[sopra][x].getComponente();
 							dx = plancia[y][destra].getComponente();

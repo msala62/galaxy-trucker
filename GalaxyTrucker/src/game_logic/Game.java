@@ -100,16 +100,16 @@ public class Game {
 	
 	private static void Assemblaggio(List<Giocatore> giocatori) {
 		List<ComponentBuilder> builders = Arrays.asList(
-				new ComponentBuilder(Cannone.class, 25),					
-				new ComponentBuilder(CannoneDoppio.class, 11),				
-				new ComponentBuilder(Scudo.class, 8),						
-				new ComponentBuilder(Batteria.class, 11, false),			
-				new ComponentBuilder(Batteria.class, 6, true),				
-				new ComponentBuilder(Stiva.class, 9, false),				
-				new ComponentBuilder(Stiva.class, 6, true),					
-				new ComponentBuilder(StivaSpeciale.class, 3, true),			
-				new ComponentBuilder(StivaSpeciale.class, 6, false),		
-				new ComponentBuilder(Motore.class, 21),						
+				new ComponentBuilder(Cannone.class, 25),
+				new ComponentBuilder(CannoneDoppio.class, 11),
+				new ComponentBuilder(Scudo.class, 8),
+				new ComponentBuilder(Batteria.class, 11, false),
+				new ComponentBuilder(Batteria.class, 6, true),
+				new ComponentBuilder(Stiva.class, 9, false),
+				new ComponentBuilder(Stiva.class, 6, true),
+				new ComponentBuilder(StivaSpeciale.class, 3, true),
+				new ComponentBuilder(StivaSpeciale.class, 6, false),
+				new ComponentBuilder(Motore.class, 21),
 				new ComponentBuilder(MotoreDoppio.class, 9),				
 				new ComponentBuilder(StivaSpeciale.class, 3, true),		
 				new ComponentBuilder(Strutturale.class, 8),			
@@ -127,6 +127,9 @@ public class Game {
 		
 		for(Giocatore giocatore : giocatori) {
 			int random = (int)(Math.random() * 4);
+			int prenotazioni = 0;
+			int posizionePrenotazione = 5;
+			
 			CabinaPartenza cabinaGiocatore = coloreGiocatori[random];
 			giocatore.nave.aggiungiComponente(7, 7, cabinaGiocatore);
 			
@@ -148,14 +151,14 @@ public class Game {
 					
 					random = (int)(Math.random() * componenti.size());
 					Componente pescata = componenti.get(random);
-					System.out.println("Questa è la tessera che hai scelto:\n" + pescata.toString() + "\n\n Puoi scegliere se tenerla (T) o scartartla (S): ");
+					System.out.println("Questa è la tessera che hai scelto:\n" + pescata.toString() + "\n\n Puoi scegliere se tenerla (T), scartartla (S) o prenotarla (P): ");
 					giocatore.nave.stampa();
 					
 					String sceltaTessera = sc.nextLine();
 					
 					if(sceltaTessera.toLowerCase() == "t") {
 						componenti.remove(random);
-						System.out.println("Ottimo! dimmi ora in che cella vuoi posizionarlo (Esempio: 11, 21, 54...)");
+						System.out.println("Ottimo! dimmi ora in che cella vuoi posizionarlo (Ricordati che le caselle partono da 00 e non da 11!)");
 						String posizione = sc.nextLine();
 						
 						char xChar = posizione.charAt(0);
@@ -165,6 +168,11 @@ public class Game {
 						int y = Character.getNumericValue(yChar);
 						
 						giocatore.nave.aggiungiComponente(x, y, pescata);
+					} else if(sceltaTessera.toLowerCase() == "p") {
+						if(prenotazioni > 2) continue;
+						giocatore.nave.aggiungiComponente(0, posizionePrenotazione, pescata);
+						posizionePrenotazione++;
+						prenotazioni++;
 					}
 				}
 				
