@@ -8,7 +8,7 @@ public class Cabina extends CabinaPartenza {
 	private boolean accettaAlieni;
 	
 	public Cabina(Connettore SX, Connettore DX, Connettore SU, Connettore GIU) {
-		super(SX, DX, SU, GIU);
+		super(SX, DX, SU, GIU, null);
 	}
 
 	public int getEquipaggioAlieno()
