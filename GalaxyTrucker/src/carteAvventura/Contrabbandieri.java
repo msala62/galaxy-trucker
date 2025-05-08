@@ -20,14 +20,14 @@ public class Contrabbandieri extends Carta {
 	private double potenzaRichiesta;
 	private int giorniDaPerdere;
 	private List<Cargo> cargo;
-	private List<Cargo> cargoDaPerdere;
+	private int cargoDaPerdere;
 	private boolean isSconfitto = false;
 
 	private boolean getIsSconfitto() {
 		return isSconfitto;
 	}
 
-	public Contrabbandieri(Livello livello, double potenzaRichiesta, int giorniDaPerdere, List<Cargo> cargoDaPerdere,
+	public Contrabbandieri(Livello livello, double potenzaRichiesta, int giorniDaPerdere, int cargoDaPerdere,
 			List<Cargo> cargo)
 
 	{
@@ -69,8 +69,7 @@ public class Contrabbandieri extends Carta {
 			{
 				System.out.println("  Risultato: SCONFITTA");
 				System.out.println("  Il giocatore perde le seguenti merci: " + cargoDaPerdere);
-				giocatore.getNave().eliminaCargo(cargoDaPerdere); //il nemico non è sconfitto, penalia= n
-				// merci da perdere
+				giocatore.getNave().eliminaCargo(cargoDaPerdere); //il nemico non è sconfitto, penalita= n merci da perdere
 			} else {
 				System.out.println("  Risultato: PAREGGIO");
 				System.out.println("  Nessuna conseguenza per il giocatore, ma i contrabbandieri non sono sconfitti.");

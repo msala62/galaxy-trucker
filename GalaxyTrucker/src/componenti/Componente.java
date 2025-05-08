@@ -86,8 +86,8 @@ public abstract class Componente {
 	}
 
 	public Integer tryGetCargoCorrente() {
-		if (this instanceof cargoInterfaccia) {
-			return ((cargoInterfaccia) this).getCargoCorrente();
+		if (this instanceof Stiva) {
+			return ((Stiva) this).getCargoCorrente().size();
 		} else {
 			return null;
 		}

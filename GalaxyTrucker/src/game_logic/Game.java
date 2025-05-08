@@ -55,7 +55,7 @@ public class Game {
 	    Colore[] coloriAlieni = {Colore.MARRONE, Colore.VIOLA};
 	    
 	    for(ComponentBuilder builder : builders) {
-	        for(int i = 0; i < builder.quantia; i++) {
+	        for(int i = 0; i < builder.quantita; i++) {
 	            try {
 	                int su = (int)(Math.random() * 4);
 	                int giu = (int)(Math.random() * 4);
@@ -75,12 +75,15 @@ public class Game {
 	                        Connettore.class, Connettore.class, Connettore.class, Connettore.class, Connettore.class, Connettore.class)
 	                        .newInstance(direzioni[sx], direzioni[dx], direzioni[su], direzioni[giu], direzioni[su], direzioni[giu]);
 	                }
-	                else if(builder.tipologia.equals(Batteria.class) || 
-	                        builder.tipologia.equals(Stiva.class) || 
-	                        builder.tipologia.equals(StivaSpeciale.class)) {
+	                else if(builder.tipologia.equals(Batteria.class)) {
 	                    componente = builder.tipologia.getConstructor(
 	                        Connettore.class, Connettore.class, Connettore.class, Connettore.class, boolean.class)
-	                        .newInstance(direzioni[sx], direzioni[dx], direzioni[su], direzioni[giu], builder.speciale);
+	                        .newInstance(direzioni[sx], direzioni[dx], direzioni[su], direzioni[giu], builder.grande);
+	                }
+	                else if(builder.tipologia.equals(Stiva.class)) {
+	                	componente = builder.tipologia.getConstructor(
+		                        Connettore.class, Connettore.class, Connettore.class, Connettore.class, boolean.class)
+		                        .newInstance(direzioni[sx], direzioni[dx], direzioni[su], direzioni[giu], builder.grande, builder.speciale);
 	                }
 	                else {
 	                    componente = builder.tipologia.getConstructor(
@@ -105,13 +108,13 @@ public class Game {
 				new ComponentBuilder(Scudo.class, 8),
 				new ComponentBuilder(Batteria.class, 11, false),
 				new ComponentBuilder(Batteria.class, 6, true),
-				new ComponentBuilder(Stiva.class, 9, false),
-				new ComponentBuilder(Stiva.class, 6, true),
-				new ComponentBuilder(StivaSpeciale.class, 3, true),
-				new ComponentBuilder(StivaSpeciale.class, 6, false),
+				new ComponentBuilder(Stiva.class, 9, false, false),
+				new ComponentBuilder(Stiva.class, 6, true, false),
+				new ComponentBuilder(Stiva.class, 3, true, true),//Stiva speciale grande
+				new ComponentBuilder(Stiva.class, 6, false, true),//stiva speciale piccola
 				new ComponentBuilder(Motore.class, 21),
 				new ComponentBuilder(MotoreDoppio.class, 9),				
-				new ComponentBuilder(StivaSpeciale.class, 3, true),		
+				new ComponentBuilder(Stiva.class, 3, true, true),//Stiva speciale grande	
 				new ComponentBuilder(Strutturale.class, 8),			
 				new ComponentBuilder(Cabina.class, 17),						
 				new ComponentBuilder(SupportoAlieni.class, 6, Colore.MARRONE),
