@@ -89,6 +89,11 @@ public class Nave {
 			}
 			System.out.println(sbSopra + "/n" + sbMezzo + "/n" + sbSotto + "/n");//Si printa una riga di componenti alla volta
 		}
+		System.out.println(sbSopra + "/n" + sbMezzo + "/n" + sbSotto + "/n");//Si printa una riga di componenti alla volta
+		//Reset degli stringbuilder (spero)
+		sbSopra.setLength(0);
+		sbMezzo.setLength(0);
+		sbSotto.setLength(0);
 	}
 
 	//IMPORTANTE: Y sono le righe e X le colonne
