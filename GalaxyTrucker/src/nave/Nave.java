@@ -3,18 +3,7 @@ package nave;
 import java.util.ArrayList;
 import java.util.List;
 
-import componenti.Batteria;
-import componenti.Cabina;
-import componenti.CabinaPartenza;
-import componenti.CalcoloPotenza;
-import componenti.Cannone;
-import componenti.CannoneDoppio;
-import componenti.Componente;
-import componenti.Connettore;
-import componenti.Motore;
-import componenti.Scudo;
-import componenti.Stiva;
-import componenti.SupportoAlieni;
+import componenti.*;
 import merci.Cargo;
 
 public class Nave {
@@ -289,7 +278,7 @@ public class Nave {
 
 				if (isUtilizzabile(this.plancia[i][j]) && this.plancia[i][j].getComponente() instanceof Stiva) {
 					Stiva stiva = (Stiva) this.plancia[i][j].getComponente();
-					while (!cargo.isEmpty() && stiva.aumentaCargoCorrente()) {
+					while (!cargo.isEmpty() && stiva.aumentaCargoCorrente(cargo.getFirst())) {
 						cargo.removeFirst();
 					}
 				}
@@ -300,23 +289,7 @@ public class Nave {
 	}
 	
 	public boolean eliminaCargo(List<Cargo> cargo) {
-		if (cargo.isEmpty())
-			return false;
-
-		for (int i = 0; i < plancia.length; i++) {
-			for (int j = 0; j < plancia[0].length; j++) {
-				if (cargo.isEmpty())
-					return true;
-
-				if (isUtilizzabile(this.plancia[i][j]) && this.plancia[i][j].getComponente() instanceof Stiva) {
-					Stiva stiva = (Stiva) this.plancia[i][j].getComponente();
-					while (!cargo.isEmpty() && stiva.aumentaCargoCorrente()) {
-						cargo.removeFirst();
-					}
-				}
-			}
-		}
-
+		//TODO
 		return cargo.isEmpty();
 	}
 
