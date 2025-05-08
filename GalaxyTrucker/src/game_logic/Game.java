@@ -1,16 +1,20 @@
 package game_logic;
 
 import java.util.Scanner;
+import java.util.concurrent.ThreadLocalRandom;
 
 import alieni.Colore;
-import carteAvventura.Carta;
-import carteAvventura.Livello;
+
+import carteAvventura.*;
+import carteAvventura.Meteorite.Dimensione;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import componenti.*;
+import merci.Cargo;
 import planciavolo.Livello1;
 import planciavolo.PlanciaVolo;
 
@@ -104,8 +108,134 @@ public class Game {
 	    return componenti;
 	}
 	
-	public List<Carta> GeneraMazzo(Livello livello){
+	public static List<Carta> InizializzaMazzo(Livello livello){
 		List<Carta> mazzo = new ArrayList<Carta>();
+		List<CardBuilder> builders = Arrays.asList(
+			new CardBuilder(PioggiaDiMeteoriti.class, 3),
+			new CardBuilder(SpazioAperto.class, 4),
+			new CardBuilder(Pianeti.class, 4),
+			new CardBuilder(NaveAbbandonata.class, 2),
+			new CardBuilder(Contrabbandieri.class, 1),
+			new CardBuilder(Schiavisti.class, 1),
+			new CardBuilder(Pirati.class, 1),
+			new CardBuilder(ZonaDiGuerra.class, 1),
+			new CardBuilder(PolvereStellare.class, 1),
+			new CardBuilder(StazioneAbbandonata.class, 2)
+		);
+		
+		float multiplier = 1;
+		
+		if(livello == Livello.II) multiplier = 2; 
+		else if(livello == Livello.III) multiplier = 2.5f;
+		
+		for(CardBuilder builder : builders) {
+			for(int i = 0; i < builder.getQuantita(); i++) {
+				try {
+					Class<? extends Carta> tipologia = builder.getTipologia();
+					
+					if(tipologia == PioggiaDiMeteoriti.class) {
+						int maxGrandi = new Random().nextInt(1, 3);
+						int maxNormali = new Random().nextInt(1, 5);
+						
+						Meteorite.Direzione[] direzioni = new Meteorite.Direzione[] {
+								Meteorite.Direzione.SU,
+								Meteorite.Direzione.GIU,
+								Meteorite.Direzione.DX,
+								Meteorite.Direzione.SX
+						};
+						List<Meteorite> meteoriti = new ArrayList<Meteorite>();
+						
+						for(int j = 0; j < maxGrandi; j++) {
+							meteoriti.add(new Meteorite(Dimensione.GROSSO, direzioni[new Random().nextInt(0, 4)]));
+						}
+						
+						for(int j = 0; j < maxNormali; j++) {
+							meteoriti.add(new Meteorite(Dimensione.PICCOLO, direzioni[new Random().nextInt(0, 4)]));
+						}
+						
+						mazzo.add(new PioggiaDiMeteoriti(livello, meteoriti));
+						
+					} else if(tipologia == Pianeti.class) {
+						int numeroPianeti = new Random().nextInt(1, 5);
+						List<Pianeta> pianeti = new ArrayList<Pianeta>();
+						
+						for(int j = 0; j < numeroPianeti; j++) {
+							Cargo.ColoreCargo[] colori = new Cargo.ColoreCargo[] {
+								Cargo.ColoreCargo.BLU,
+								Cargo.ColoreCargo.GIALLO,
+								Cargo.ColoreCargo.ROSSO,
+								Cargo.ColoreCargo.VERDE
+							};
+							
+							int quantitaCargo = new Random().nextInt(1, 6);
+							List<Cargo> cargo = new ArrayList<Cargo>();
+							
+							for(int z = 0; z < quantitaCargo; z++) {
+								cargo.add(new Cargo(colori[new Random().nextInt(0, 4)]));
+							}
+							
+							pianeti.add(new Pianeta(cargo));
+						}
+						
+						mazzo.add(new Pianeti(livello, pianeti, new Random().nextInt(1, 4)));
+						
+					} else if(tipologia == SpazioAperto.class) {
+						mazzo.add(new SpazioAperto(livello));
+					} else if(tipologia == NaveAbbandonata.class) {
+						int equipaggioDaPerdere = new Random().nextInt(1, 4);
+						int crediti = new Random().nextInt(2, 5);
+						int giorni = 1;
+						
+						mazzo.add(new NaveAbbandonata(livello, equipaggioDaPerdere, giorni, crediti));
+					} else if(tipologia == Contrabbandieri.class) {
+						Cargo.ColoreCargo[] colori = new Cargo.ColoreCargo[] {
+							Cargo.ColoreCargo.BLU,
+							Cargo.ColoreCargo.GIALLO,
+							Cargo.ColoreCargo.ROSSO,
+							Cargo.ColoreCargo.VERDE
+						};
+						
+						List<Cargo> cargoList = new ArrayList<Cargo>();
+						
+						for(int z = 0; z < 3; z++) {
+							cargoList.add(new Cargo(colori[new Random().nextInt(0, 4)]));
+						}
+						
+						mazzo.add(new Contrabbandieri(livello, 4, 1, 2, cargoList));
+					} else if(tipologia == Schiavisti.class) {						
+						mazzo.add(new Schiavisti(livello, 6, 2, 1, 5));
+					} else if(tipologia == Pirati.class) {
+						Cannonata.Dimensione[] dimensioni = new Cannonata.Dimensione[] {
+								Cannonata.Dimensione.LEGGERA, 
+								Cannonata.Dimensione.PESANTE
+						};
+						
+						Cannonata.Direzione[] direzioni = new Cannonata.Direzione[] {
+								Cannonata.Direzione.SU, 
+								Cannonata.Direzione.GIU,
+						};
+						
+						List<Cannonata> cannonate = new ArrayList<Cannonata>();
+						
+						for(int j = 0; j < 3; j++) {
+							cannonate.add(new Cannonata(dimensioni[new Random().nextInt(0, 2)], direzioni[new Random().nextInt(0, 2)]));
+						}
+						
+						if(livello == Livello.III) {
+							cannonate.add(new Cannonata(dimensioni[0], Cannonata.Direzione.SX));
+							cannonate.add(new Cannonata(dimensioni[0], Cannonata.Direzione.DX));
+						}
+						
+						mazzo.add(new Pirati(livello, 5, 1, 4, cannonate));
+					} else if(tipologia == ZonaDiGuerra.class) {
+						
+					}
+					
+				} catch(Exception e) {
+					throw new RuntimeException("Errore nella creazione di una carta", e);
+				}
+			}
+		}
 		
 		return mazzo;
 	}
@@ -201,15 +331,16 @@ public class Game {
 	
 	public static void StartGame(Livello livello) {
 		List<Giocatore> giocatori = InizializzaGiocatori(livello);
+		List<Carta> mazzo = InizializzaMazzo(livello);
 		Assemblaggio(giocatori);
 		PlanciaVolo plancia;
 		
-		switch(livello) {
+		/*switch(livello) {
 		case Livello.I:
 			plancia = new Livello1();
 			break;
 		default:
-		}
+		}*/
 	}
 	
 	public static void main(String[] args) {

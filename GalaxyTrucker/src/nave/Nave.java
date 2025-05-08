@@ -55,41 +55,41 @@ public class Nave {
 	}
 }*///Lasciata in forma di commento nel caso la versione sottostante non funzionasse
 
-public void stampa() 
-{
-	String RESET = "\u001B[0m";
-	String GREEN = "\u001B[32m";
-	String YELLOW = "\u001B[33m";
-	
-	StringBuilder sbSopra = new StringBuilder();//Per connettore SU
-	StringBuilder sbMezzo = new StringBuilder();//Per connettori SX DX e nome componente
-	StringBuilder sbSotto = new StringBuilder();//Per connettore GIU
-	
-	for (int i = 0; i < 7; i++)//Per mostrare le colonne
-		System.out.print(YELLOW + "/t" + i + "/t" + RESET);
-	
-	for (int i = 0; i < 5; i++) 
+	public void stampa() 
 	{
-		sbMezzo.append(YELLOW + i + RESET);//Per mostrare le righe
-		sbMezzo.append("/t");
-		for (int j = 0; j < 7; j++) 
+		String RESET = "\u001B[0m";
+		String GREEN = "\u001B[32m";
+		String YELLOW = "\u001B[33m";
+		
+		StringBuilder sbSopra = new StringBuilder();//Per connettore SU
+		StringBuilder sbMezzo = new StringBuilder();//Per connettori SX DX e nome componente
+		StringBuilder sbSotto = new StringBuilder();//Per connettore GIU
+		
+		for (int i = 0; i < 7; i++)//Per mostrare le colonne
+			System.out.print(YELLOW + "/t" + i + "/t" + RESET);
+		
+		for (int i = 0; i < 5; i++) 
 		{
-			if (this.plancia[i][j].utilizzabile)//Se la casella è utilizzabile si cerca il componente associato e ogni sua parte viene appended allo stringbuilder associato. TODO cosa fare se casella è utilizzabile, ma vuota
+			sbMezzo.append(YELLOW + i + RESET);//Per mostrare le righe
+			sbMezzo.append("/t");
+			for (int j = 0; j < 7; j++) 
 			{
-				sbSopra.append(GREEN + "/t" + this.plancia[i][j].getComponente().getConnettoreSU() + "/t" + RESET);
-				sbMezzo.append(GREEN + this.plancia[i][j].getComponente().getConnettoreSX() + "/t" + this.plancia[i][j].getComponente().nomeComponente() + "/t" + this.plancia[i][j].getComponente().getConnettoreDX() + RESET);
-				sbSotto.append(GREEN + "/t" + this.plancia[i][j].getComponente().getConnettoreGIU() + "/t" + RESET);
+				if (this.plancia[i][j].utilizzabile)//Se la casella è utilizzabile si cerca il componente associato e ogni sua parte viene appended allo stringbuilder associato. TODO cosa fare se casella è utilizzabile, ma vuota
+				{
+					sbSopra.append(GREEN + "/t" + this.plancia[i][j].getComponente().getConnettoreSU() + "/t" + RESET);
+					sbMezzo.append(GREEN + this.plancia[i][j].getComponente().getConnettoreSX() + "/t" + this.plancia[i][j].getComponente().nomeComponente() + "/t" + this.plancia[i][j].getComponente().getConnettoreDX() + RESET);
+					sbSotto.append(GREEN + "/t" + this.plancia[i][j].getComponente().getConnettoreGIU() + "/t" + RESET);
+				}
+				else//Se la casella non è utilizzabile si appenda due tabulazioni
+				{
+					sbSopra.append("/t/t");
+					sbMezzo.append("/t/t");
+					sbSotto.append("/t/t");
+				}
 			}
-			else//Se la casella non è utilizzabile si appenda due tabulazioni
-			{
-				sbSopra.append("/t/t");
-				sbMezzo.append("/t/t");
-				sbSotto.append("/t/t");
-			}
+			System.out.println(sbSopra + "/n" + sbMezzo + "/n" + sbSotto + "/n");//Si printa una riga di componenti alla volta
 		}
-		System.out.println(sbSopra + "/n" + sbMezzo + "/n" + sbSotto + "/n");//Si printa una riga di componenti alla volta
 	}
-}
 
 	//IMPORTANTE: Y sono le righe e X le colonne
 	public boolean aggiungiComponente(int y, int x, Componente tessera) {
