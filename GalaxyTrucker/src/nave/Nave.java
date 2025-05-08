@@ -5,6 +5,7 @@ import java.util.List;
 
 import componenti.*;
 import merci.Cargo;
+import merci.Cargo.ColoreCargo;
 
 public class Nave {
 	private Casella[][] plancia;
