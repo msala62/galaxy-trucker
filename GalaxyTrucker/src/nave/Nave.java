@@ -34,26 +34,26 @@ public class Nave {
 	}
 
 	/*	public void stampa() {
-	String RESET = "\u001B[0m";
-	String GREEN = "\u001B[32m";
-	String YELLOW = "\u001B[33m";
-
-	for (int i = 0; i < 5; i++) {
-		for (int j = 0; j < 7; j++) {
-			if (this.plancia[i][j].utilizzabile) {
-				System.out.print(GREEN + this.plancia[i][j].getComponente() + "\t" + RESET);
-			} else {
-				if ((i == 0 && j == 5) || (i == 0 && j == 6)) {
-					System.out.print(YELLOW + this.plancia[i][j].getComponente() == null ? this.plancia[i][j] : this.plancia[i][j].getComponente() + "\t" + RESET);
+		String RESET = "\u001B[0m";
+		String GREEN = "\u001B[32m";
+		String YELLOW = "\u001B[33m";
+	
+		for (int i = 0; i < 5; i++) {
+			for (int j = 0; j < 7; j++) {
+				if (this.plancia[i][j].utilizzabile) {
+					System.out.print(GREEN + this.plancia[i][j].getComponente() + "\t" + RESET);
 				} else {
-					System.out.print("  \t");
+					if ((i == 0 && j == 5) || (i == 0 && j == 6)) {
+						System.out.print(YELLOW + this.plancia[i][j].getComponente() == null ? this.plancia[i][j] : this.plancia[i][j].getComponente() + "\t" + RESET);
+					} else {
+						System.out.print("  \t");
+					}
 				}
+	
 			}
-
+			System.out.println("");
 		}
-		System.out.println("");
-	}
-}*///Lasciata in forma di commento nel caso la versione sottostante non funzionasse
+	}*///Lasciata in forma di commento nel caso la versione sottostante non funzionasse
 
 	public void stampa() 
 	{
