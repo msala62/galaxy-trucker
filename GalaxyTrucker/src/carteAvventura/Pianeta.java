@@ -7,6 +7,7 @@ import merci.*;
 
 public class Pianeta {
 	private List<Cargo> cargo;
+	
 	public Pianeta (List<Cargo> cargo) {
 		this.cargo = cargo;
 	}
@@ -14,7 +15,4 @@ public class Pianeta {
 	public List<Cargo> getPianeta() {
 		return cargo;
 	}
-	
-	
-	
 }

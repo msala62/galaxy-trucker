@@ -19,10 +19,9 @@ public abstract class PlanciaVolo implements GestisciAttacchi {
         this.danno = 0;
         this.posizioneCorrente = posizioneIniziale;
         this.posizioniArrivo = new int[numPosizioniArrivo]; // Initialize with size
-
     }
  
-    public abstract  int calcolaCreditiCosmici(int posizione, int naveBello, int[] menoEsposti);
+    public abstract int calcolaCreditiCosmici(int posizione, int naveBello, int[] menoEsposti);
     
     public void aggiungiCargo(int colore) {
         switch (colore) {
@@ -82,6 +81,7 @@ public abstract class PlanciaVolo implements GestisciAttacchi {
             ordineArrivo.add(numeroGiocatore);
         }
     }
+    
     @Override
     public String gestisciAttacco(String tipoAttacco, boolean hasBordiLisci, boolean scudoAttivo, int potenzaCannoni, String parteColpita) {
              switch (tipoAttacco.toLowerCase()) {
@@ -110,6 +110,7 @@ public abstract class PlanciaVolo implements GestisciAttacchi {
             }
 
     }
+    
 	public int getPosizioneCorrente() {
 		return posizioneCorrente;
 	}

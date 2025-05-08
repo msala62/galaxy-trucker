@@ -27,7 +27,6 @@ public class Meteorite {
 	public Meteorite(Dimensione dimensione, Direzione direzione) {
 		this.dimensione = dimensione;
 		this.direzione = direzione;
-
 	}
 
 	public Dimensione getDimensione() {

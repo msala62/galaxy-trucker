@@ -3,16 +3,19 @@ package game_logic;
 import java.util.Scanner;
 
 import alieni.Colore;
+import carteAvventura.Carta;
+import carteAvventura.Livello;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import componenti.*;
+import planciavolo.Livello1;
+import planciavolo.PlanciaVolo;
 
 public class Game {
 	private final static Clessidra clessidra = new Clessidra();
-	private List<Componente> componentiBanco;
 	
 	private static void StampaMenu(String titolo, List<String> voci) 
 	{
@@ -25,7 +28,7 @@ public class Game {
 		System.out.println("================================================");
 	}
 	
-	private static List<Giocatore> InizializzaGiocatori() {
+	private static List<Giocatore> InizializzaGiocatori(Livello livello) {
 		Scanner sc = new Scanner(System.in);
 		List<Giocatore> giocatori = new ArrayList<Giocatore>();
 		int numeroGiocatori = sc.nextInt();
@@ -96,6 +99,12 @@ public class Game {
 	        }
 	    }
 	    return componenti;
+	}
+	
+	public List<Carta> GeneraMazzo(Livello livello){
+		List<Carta> mazzo = new ArrayList<Carta>();
+		
+		return mazzo;
 	}
 	
 	private static void Assemblaggio(List<Giocatore> giocatori) {
@@ -184,6 +193,19 @@ public class Game {
 			}
 			
 			System.out.println("TEMPO SCADUTO, " + giocatore.nome + "! Attendi ora che gli altri giocatori terminimo la fase di assemblaggio delle loro navi!");
+		}
+	}
+	
+	public static void StartGame(Livello livello) {
+		List<Giocatore> giocatori = InizializzaGiocatori(livello);
+		Assemblaggio(giocatori);
+		PlanciaVolo plancia;
+		
+		switch(livello) {
+		case Livello.I:
+			plancia = new Livello1();
+			break;
+		default:
 		}
 	}
 	
