@@ -1,5 +1,5 @@
 package carteAvventura;
 
 public enum Livello {
-	I, II, III;
+	I, II, III, INTERGALATTICA;
 }

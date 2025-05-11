@@ -17,6 +17,7 @@ public class Giocatore {
 		this.nome = nome;
 		this.crediti = 0;
 		this.titoli = new ArrayList<String>();
+		this.isLeader = false;
 	}
 
 	public Nave getNave() {
@@ -48,6 +49,11 @@ public class Giocatore {
 	public void setLeader(boolean isLeader) {
 		this.isLeader = isLeader;
 	}
+	
+	public int getCrediti() {
+		return this.crediti;
+	}
+	
 	public String getNome() {
 		return nome;
 	}

@@ -55,7 +55,7 @@ public class Nave {
 		}
 	}*///Lasciata in forma di commento nel caso la versione sottostante non funzionasse
 
-	public void stampa() 
+	public void stampa()
 	{
 		String RESET = "\u001B[0m";
 		String GREEN = "\u001B[32m";
@@ -74,13 +74,13 @@ public class Nave {
 			sbMezzo.append("/t");
 			for (int j = 0; j < 7; j++) 
 			{
-				if (this.plancia[i][j].utilizzabile)//Se la casella è utilizzabile si cerca il componente associato e ogni sua parte viene appended allo stringbuilder associato. TODO cosa fare se casella è utilizzabile, ma vuota
+				if (this.plancia[i][j].utilizzabile) //Se la casella è utilizzabile si cerca il componente associato e ogni sua parte viene appended allo stringbuilder associato. TODO cosa fare se casella è utilizzabile, ma vuota
 				{
 					sbSopra.append(GREEN + "/t" + this.plancia[i][j].getComponente().getConnettoreSU() + "/t" + RESET);
 					sbMezzo.append(GREEN + this.plancia[i][j].getComponente().getConnettoreSX() + "/t" + this.plancia[i][j].getComponente().nomeComponente() + "/t" + this.plancia[i][j].getComponente().getConnettoreDX() + RESET);
 					sbSotto.append(GREEN + "/t" + this.plancia[i][j].getComponente().getConnettoreGIU() + "/t" + RESET);
 				}
-				else//Se la casella non è utilizzabile si appenda due tabulazioni
+				else //Se la casella non è utilizzabile si appenda due tabulazioni
 				{
 					sbSopra.append("/t/t");
 					sbMezzo.append("/t/t");

@@ -18,7 +18,6 @@ public class Clessidra {
         executor.scheduleAtFixedRate(() -> {
             if (remainingSeconds > 0) {
                 remainingSeconds--;
-                System.out.println("Tempo rimanente: " + remainingSeconds + "s");
             } else {
                 System.out.println("Tempo scaduto!");
                 timeEnded = true;

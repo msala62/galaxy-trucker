@@ -15,8 +15,7 @@ import java.util.Random;
 
 import componenti.*;
 import merci.Cargo;
-import planciavolo.Livello1;
-import planciavolo.PlanciaVolo;
+import planciavolo.*;
 
 public class Game {
 	private final static Clessidra clessidra = new Clessidra();
@@ -35,9 +34,10 @@ public class Game {
 	private static List<Giocatore> InizializzaGiocatori(Livello livello) {
 		Scanner sc = new Scanner(System.in);
 		List<Giocatore> giocatori = new ArrayList<Giocatore>();
+		System.out.print("Quanti giocatori parteciperanno alla parita? (min 2, max 4): ");
 		int numeroGiocatori = sc.nextInt();
 		
-		while(numeroGiocatori < 1 && numeroGiocatori > 4) {
+		while(numeroGiocatori < 2 && numeroGiocatori > 4) {
 			numeroGiocatori = sc.nextInt();
 		}
 		
@@ -123,6 +123,7 @@ public class Game {
 			new CardBuilder(StazioneAbbandonata.class, 2)
 		);
 		
+		// utilizzato per rapportare bonus/malus al livello di gioco
 		float multiplier = 1;
 		
 		if(livello == Livello.II) multiplier = 2; 
@@ -134,8 +135,8 @@ public class Game {
 					Class<? extends Carta> tipologia = builder.getTipologia();
 					
 					if(tipologia == PioggiaDiMeteoriti.class) {
-						int maxGrandi = new Random().nextInt(1, 3);
-						int maxNormali = new Random().nextInt(1, 5);
+						int maxGrandi = (int) (new Random().nextInt(1, 3) * multiplier);
+						int maxNormali = (int) (new Random().nextInt(1, 5) * multiplier);
 						
 						Meteorite.Direzione[] direzioni = new Meteorite.Direzione[] {
 								Meteorite.Direzione.SU,
@@ -182,9 +183,9 @@ public class Game {
 					} else if(tipologia == SpazioAperto.class) {
 						mazzo.add(new SpazioAperto(livello));
 					} else if(tipologia == NaveAbbandonata.class) {
-						int equipaggioDaPerdere = new Random().nextInt(1, 4);
-						int crediti = new Random().nextInt(2, 5);
-						int giorni = 1;
+						int equipaggioDaPerdere = (int) (new Random().nextInt(1, 4) * multiplier);
+						int crediti = (int) (new Random().nextInt(2, 5) * multiplier);
+						int giorni = (int) (1 * multiplier);
 						
 						mazzo.add(new NaveAbbandonata(livello, equipaggioDaPerdere, giorni, crediti));
 					} else if(tipologia == Contrabbandieri.class) {
@@ -228,8 +229,45 @@ public class Game {
 						
 						mazzo.add(new Pirati(livello, 5, 1, 4, cannonate));
 					} else if(tipologia == ZonaDiGuerra.class) {
+						Cannonata.Dimensione[] dimensioni = new Cannonata.Dimensione[] {
+								Cannonata.Dimensione.LEGGERA, 
+								Cannonata.Dimensione.PESANTE
+						};
 						
-					}
+						Cannonata.Direzione[] direzioni = new Cannonata.Direzione[] {
+								Cannonata.Direzione.SU, 
+								Cannonata.Direzione.GIU,
+						};
+						
+						List<Cannonata> cannonate = new ArrayList<Cannonata>();
+						
+						for(int j = 0; j < 3; j++) {
+							cannonate.add(new Cannonata(dimensioni[new Random().nextInt(0, 2)], direzioni[new Random().nextInt(0, 2)]));
+						}
+						
+						if(livello == Livello.II || livello == Livello.III) {
+							cannonate.add(new Cannonata(dimensioni[0], Cannonata.Direzione.SX));
+							cannonate.add(new Cannonata(dimensioni[0], Cannonata.Direzione.DX));
+						}
+						
+						mazzo.add(new ZonaDiGuerra(livello, cannonate));
+					} else if(tipologia == PolvereStellare.class) {
+						mazzo.add(new PolvereStellare(livello));
+					} else if(tipologia == StazioneAbbandonata.class) {
+						Cargo.ColoreCargo[] colori = new Cargo.ColoreCargo[] {
+								Cargo.ColoreCargo.BLU,
+								Cargo.ColoreCargo.GIALLO,
+								Cargo.ColoreCargo.ROSSO,
+								Cargo.ColoreCargo.VERDE
+							};
+							
+						List<Cargo> cargoList = new ArrayList<Cargo>();
+						
+						for(int z = 0; z < 3; z++) {
+							cargoList.add(new Cargo(colori[new Random().nextInt(0, 4)]));
+						}
+						
+						mazzo.add(new StazioneAbbandonata(livello, cargoList, (int)(1 * multiplier), (int)(new Random().nextInt(4, 7) * multiplier)));					}
 					
 				} catch(Exception e) {
 					throw new RuntimeException("Errore nella creazione di una carta", e);
@@ -329,18 +367,50 @@ public class Game {
 		}
 	}
 	
-	public static void StartGame(Livello livello) {
-		List<Giocatore> giocatori = InizializzaGiocatori(livello);
+	public static void StartGame(Livello livello, List<Giocatore> playerList) {
+		List<Giocatore> giocatori;
+		if(livello == Livello.INTERGALATTICA) giocatori = playerList;
+		giocatori = InizializzaGiocatori(livello);
+		
 		List<Carta> mazzo = InizializzaMazzo(livello);
 		Assemblaggio(giocatori);
 		PlanciaVolo plancia;
 		
-		/*switch(livello) {
+		switch(livello) {
 		case Livello.I:
-			plancia = new Livello1();
+			plancia = new Livello1(3);
+			break;
+		case Livello.II:
+			plancia = new Livello2(3);
+			break;
+		case Livello.III:
+			plancia = new Livello3(3);
 			break;
 		default:
-		}*/
+			break;
+		}
+		
+		System.out.println("==================== GIOCATORI, PRONTI ALLA PARTENZA DEL VIAGGIO SPAZIALE! ====================");
+		giocatori.getFirst().setLeader(true);
+		
+		while(!mazzo.isEmpty()) {
+			int scelta = new Random().nextInt(0, mazzo.size());
+			Carta pescata = mazzo.get(scelta);
+			pescata.azione(giocatori);
+		}
+		
+		System.out.println("==================== GIOCATORI, SIAMO GIUNTI ALLA FINE DEL VIAGGIO! ====================");
+		
+		int crediti = 0;
+		int index = 0;
+		
+		for(int i = 0; i < giocatori.size(); i++) {
+			int tmp = giocatori.get(i).getCrediti();
+			if(tmp > crediti) crediti = tmp; index = i;
+		}
+		
+		System.out.println("Si annuncia con orgoglio che il vincitore della partitia, nonché miglior Trasportare Galattico è");
+		System.out.println(giocatori.get(index).getNome() + " !!!!!!!!!!!!!!!!!!");
 	}
 	
 	public static void main(String[] args) {
@@ -360,7 +430,29 @@ public class Game {
 		
 		switch(decisione) {
 		case 1:
-			break;
+			System.out.println("Ottimo, siete allora pronti per affrontare la vostra prima avventura.");
+			System.out.println("Prima di cominciare però, sappiate che avete a disposizione 3 scelte: ");
+			
+			voci = Arrays.asList("Livello 1", "Livello 2", "Livello 3", "Trasporta Intergalattica");
+			StampaMenu("Seleziona il livello desiderato", voci);
+			
+			while(decisione != 1 && decisione != 2 && decisione != 3 && decisione != 4) {
+				System.out.println("Prova a ricontrollare la tua scelta!");
+				decisione = sc.nextInt();
+			}
+			
+			sc.close();
+			
+			if(decisione == 1) StartGame(Livello.I);
+			else if(decisione == 2) StartGame(Livello.II);
+			else if(decisione == 3) StartGame(Livello.III);
+			else {
+				StartGame(Livello.I);
+				System.out.println("Giocatori, avete completato il primo livello, complimenti! Pronti per il secondo.");
+				StartGame(Livello.II);
+				System.out.println("Sembra finita, ma in realtà no! Ultimo livello.");
+				StartGame(Livello.III);
+			}
 		case 2:
 			System.out.println("Ecco a te la pagina dedicata al regolamento del gioco: ");
 			System.out.println("https://www.craniocreations.it/storage/media/product_downloads/179/2052/Galaxy-Trucker_ITA_Rules_compressed.pdf");
