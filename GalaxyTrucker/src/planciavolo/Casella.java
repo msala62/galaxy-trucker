@@ -1,9 +1,13 @@
 package planciavolo; 
-import game_logic.Giocatore;
+
+/**
+ * La classe Casella rappresenta una singola posizione sulla Plancia Volo.
+ * Ogni casella ha un numero di posizione univoco e può contenere un giocatore.
+ */
 
 public class Casella {
     private int numeroPosizione;
-    private Giocatore giocatorePresente; 
+    private Giocatore giocatorePresente; // Il giocatore attualmente presente su questa casella (può essere null).
 
     /**
     * Costruttore per la classe Casella.
