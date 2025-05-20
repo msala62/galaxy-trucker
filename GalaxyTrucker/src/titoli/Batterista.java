@@ -10,7 +10,6 @@ public class Batterista extends Titolo {
 
 	public Batterista() {
 		super("Batterista", "Più componenti che usano batterie");
-
 	}
 
 	/*

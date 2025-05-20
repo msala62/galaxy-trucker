@@ -2,6 +2,8 @@ package planciavolo;
 import java.util.ArrayList;
 import java.util.List;
 
+import game_logic.Giocatore;
+
 /**
  * La classe astratta PlanciaVolo definisce il comportamento generale di una plancia volo per un gioco di volo spaziale.
  * Implementa l'interfaccia GestisciAttacchi per gestire gli attacchi alle navicelle spaziali.
@@ -48,13 +50,20 @@ public abstract class PlanciaVolo implements GestisciAttacchi {
      // Trova e imposta la casella iniziale del giocatore.
         for (Casella casella : this.caselle) {
             if (casella.getNumeroPosizione() == posizioneIniziale) {
-         this.posizioneCorrenteCasella = casella;
+            	this.posizioneCorrenteCasella = casella;
                 break;
             }
         }
      // Inizializza l'array delle posizioni di arrivo.
         this.posizioniArrivo = new int[numPosizioniArrivo]; 
 
+    }
+    
+    public void PiazzaGiocatori(List<Giocatore> giocatori) {
+    	for(int i = 0; i < giocatori.size(); i++) {
+    		int[] posizioni = {1, 3, 4, 5};
+    		this.getCaselle().get(posizioni[i]).setGiocatorePresente(giocatori.get(i));
+    	}
     }
  
     /**

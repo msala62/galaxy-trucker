@@ -7,12 +7,16 @@ import componenti.*;
 import merci.Cargo;
 import merci.Cargo.ColoreCargo;
 
-public class Nave {
-	private Casella[][] plancia;
-	private int equipaggio;
+public abstract class Nave {
+	protected final int ROWS;
+	protected final int COLUMNS;
+	protected Casella[][] plancia;
+	protected int equipaggio;
 
-	public Nave() {
-		this.plancia = new Casella[5][7];
+	public Nave(int rows, int columns, int[][] caselleUtilizzabili) {
+		this.ROWS = rows;
+		this.COLUMNS = columns;
+		this.plancia = new Casella[ROWS][COLUMNS];
 		this.equipaggio = getEquipaggioTotale();
 
 		for (int i = 0; i < 5; i++) {
@@ -20,9 +24,6 @@ public class Nave {
 				plancia[i][j] = new Casella(new Coordinata(i, j));
 			}
 		}
-
-		int[][] caselleUtilizzabili = { { 0, 3 }, { 1, 2 }, { 1, 3 }, { 1, 4 }, { 2, 1 }, { 2, 2 }, { 2, 3 }, { 2, 4 },
-				{ 2, 5 }, { 3, 1 }, { 3, 2 }, { 3, 3 }, { 3, 4 }, { 3, 5 }, { 4, 1 }, { 4, 2 }, { 4, 4 }, { 4, 5 } };
 
 		for (int[] coord : caselleUtilizzabili) {
 			this.plancia[coord[0]][coord[1]].utilizzabile = true;
@@ -65,14 +66,14 @@ public class Nave {
 		StringBuilder sbMezzo = new StringBuilder();//Per connettori SX DX e nome componente
 		StringBuilder sbSotto = new StringBuilder();//Per connettore GIU
 		
-		for (int i = 0; i < 7; i++)//Per mostrare le colonne
+		for (int i = 0; i < COLUMNS; i++)//Per mostrare le colonne
 			System.out.print(YELLOW + "/t" + i + "/t" + RESET);
 		
-		for (int i = 0; i < 5; i++) 
+		for (int i = 0; i < ROWS; i++) 
 		{
 			sbMezzo.append(YELLOW + i + RESET);//Per mostrare le righe
 			sbMezzo.append("/t");
-			for (int j = 0; j < 7; j++) 
+			for (int j = 0; j < COLUMNS; j++) 
 			{
 				if (this.plancia[i][j].utilizzabile) //Se la casella è utilizzabile si cerca il componente associato e ogni sua parte viene appended allo stringbuilder associato. TODO cosa fare se casella è utilizzabile, ma vuota
 				{
@@ -100,8 +101,8 @@ public class Nave {
 	public boolean aggiungiComponente(int y, int x, Componente tessera) {
 		Componente inserimento = tessera;
 		
-		for(int i = 0; i < 5; i++) {
-			for(int j = 0; j < 7; j++) {
+		for(int i = 0; i < ROWS; i++) {
+			for(int j = 0; j < COLUMNS; j++) {
 				if(y == i && x == j) {
 					if(plancia[y][x].utilizzabile) {
 						if(tessera.equals(Cabina.class)) {
@@ -109,8 +110,8 @@ public class Nave {
 							inserimento = new Cabina(tessera.getConnettoreSX(), tessera.getConnettoreDX(), tessera.getConnettoreSU(), tessera.getConnettoreGIU());
 							((Cabina) inserimento).setEquipaggio(2);
 						} else if(tessera.equals(Scudo.class) && getEnergia() > 0) {
-							for(int k = 0; k < 5; k++) {
-								for(int z = 0; z < 7; z++) {
+							for(int k = 0; k < ROWS; k++) {
+								for(int z = 0; z < COLUMNS; z++) {
 									if(isUtilizzabile(plancia[k][z]) && plancia[k][z].getComponente().equals(Batteria.class)) {
 										if(((Batteria) plancia[k][z].getComponente()).getCarica() > 0) {
 											((Batteria) plancia[k][z].getComponente()).scalaCarica();
@@ -135,7 +136,7 @@ public class Nave {
 						
 						// Punti di uscita dall'area della nave e punti proibiti
 						if(y == 0 && (x == 5 || x == 6)) return false;
-						if((x < 0 || x > 7) && (y < 0 || y > 5)) return false;
+						if((x < 0 || x > COLUMNS) && (y < 0 || y > ROWS)) return false;
 						
 						//Posizionamento in cima alla nave
 						if(y == 0) {
@@ -256,15 +257,15 @@ public class Nave {
 		return false;
 	}
 	
-	public boolean isUtilizzabile(Casella casella) {
+	protected boolean isUtilizzabile(Casella casella) {
 		return (casella.utilizzabile && casella.getComponente() != null) ? true : false;
 	}
 	
-	public int getEnergia() {
+	protected int getEnergia() {
 		int energia = 0;
 		
-		for(int i = 0; i < 5; i++) {
-			for(int j = 0; i < 7; j++) {
+		for(int i = 0; i < ROWS; i++) {
+			for(int j = 0; i < COLUMNS; j++) {
 				if(isUtilizzabile(this.plancia[i][j]) && this.plancia[i][j].getComponente().equals(Batteria.class)) {
 					Batteria batteria = (Batteria)this.plancia[i][j].getComponente();
 					energia += batteria.getCarica();

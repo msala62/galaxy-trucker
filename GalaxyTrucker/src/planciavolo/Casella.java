@@ -1,4 +1,6 @@
-package planciavolo; 
+package planciavolo;
+
+import game_logic.Giocatore;
 
 /**
  * La classe Casella rappresenta una singola posizione sulla Plancia Volo.

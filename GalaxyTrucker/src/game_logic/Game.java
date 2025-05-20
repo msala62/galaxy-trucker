@@ -31,7 +31,7 @@ public class Game {
 		System.out.println("================================================");
 	}
 	
-	private static List<Giocatore> InizializzaGiocatori(Livello livello) {
+	private static List<Giocatore> InizializzaGiocatori() {
 		Scanner sc = new Scanner(System.in);
 		List<Giocatore> giocatori = new ArrayList<Giocatore>();
 		System.out.print("Quanti giocatori parteciperanno alla parita? (min 2, max 4): ");
@@ -367,29 +367,83 @@ public class Game {
 		}
 	}
 	
-	public static void StartGame(Livello livello, List<Giocatore> playerList) {
-		List<Giocatore> giocatori;
-		if(livello == Livello.INTERGALATTICA) giocatori = playerList;
-		giocatori = InizializzaGiocatori(livello);
+	public static void StartGame(List<Giocatore> giocatori) {
+		List<Livello> livelli = Arrays.asList(Livello.I, Livello.II, Livello.III);
+		int counter = 0;
 		
+		while(!livelli.isEmpty()) {
+			List<Carta> mazzo = InizializzaMazzo(livelli.get(counter));
+			PlanciaVolo plancia = null;
+			
+			switch(livelli.get(counter)) {
+			case Livello.I:
+				plancia = new Livello1(1);
+				break;
+			case Livello.II:
+				plancia = new Livello2(1);
+				break;
+			case Livello.III:
+				plancia = new Livello3(1);
+				break;
+			default:
+				break;
+			}
+			
+			plancia.PiazzaGiocatori(giocatori);
+			Assemblaggio(giocatori);
+			
+			System.out.println("==================== GIOCATORI, PRONTI ALLA PARTENZA DEL VIAGGIO SPAZIALE! ====================");
+			giocatori.getFirst().setLeader(true);
+			
+			while(!mazzo.isEmpty()) {
+				int scelta = new Random().nextInt(0, mazzo.size());
+				Carta pescata = mazzo.get(scelta);
+				pescata.azione(giocatori);
+				//TODO: ricordarsi di stampare sempre al situazione attuale ----> NAVE, PLANCIA
+				System.out.print("\033[H\033[2J");   
+			    System.out.flush();
+			}
+			
+			System.out.println("==================== GIOCATORI, SIAMO GIUNTI ALLA FINE DEL VIAGGIO! ====================");
+			counter++;
+		}
+		
+		int crediti = 0;
+		int index = 0;
+		
+		for(int i = 0; i < giocatori.size(); i++) {
+			int tmp = giocatori.get(i).getCrediti();
+			if(tmp > crediti) crediti = tmp; index = i;
+		}
+		
+		System.out.println("Si annuncia con orgoglio che il vincitore della partitia, nonché miglior Trasportare Galattico è");
+		System.out.println(giocatori.get(index).getNome() + " !!!!!!!!!!!!!!!!!!");
+	}
+	
+	public static void StartGame(Livello livello) {
+		List<Giocatore> giocatori = InizializzaGiocatori();
 		List<Carta> mazzo = InizializzaMazzo(livello);
 		Assemblaggio(giocatori);
-		PlanciaVolo plancia;
+		
+		for(Giocatore giocatore : giocatori) giocatore.InizializzaNave(livello);
+		
+		PlanciaVolo plancia = null;
 		
 		switch(livello) {
 		case Livello.I:
-			plancia = new Livello1(3);
+			plancia = new Livello1(1);
 			break;
 		case Livello.II:
-			plancia = new Livello2(3);
+			plancia = new Livello2(1);
 			break;
 		case Livello.III:
-			plancia = new Livello3(3);
+			plancia = new Livello3(1);
 			break;
 		default:
 			break;
 		}
 		
+		plancia.PiazzaGiocatori(giocatori);
 		System.out.println("==================== GIOCATORI, PRONTI ALLA PARTENZA DEL VIAGGIO SPAZIALE! ====================");
 		giocatori.getFirst().setLeader(true);
 		
@@ -447,11 +501,8 @@ public class Game {
 			else if(decisione == 2) StartGame(Livello.II);
 			else if(decisione == 3) StartGame(Livello.III);
 			else {
-				StartGame(Livello.I);
-				System.out.println("Giocatori, avete completato il primo livello, complimenti! Pronti per il secondo.");
-				StartGame(Livello.II);
-				System.out.println("Sembra finita, ma in realtà no! Ultimo livello.");
-				StartGame(Livello.III);
+				List<Giocatore> giocatori = InizializzaGiocatori();
+				StartGame(giocatori);
 			}
 		case 2:
 			System.out.println("Ecco a te la pagina dedicata al regolamento del gioco: ");
