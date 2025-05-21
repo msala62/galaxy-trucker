@@ -2,7 +2,7 @@ package componenti;
 
 import java.util.Scanner;
 
-public class MotoreDoppio extends Motore implements CalcoloPotenza {
+public class MotoreDoppio extends Motore  {
 
 	public MotoreDoppio(Connettore SX, Connettore DX, Connettore SU, Connettore GIU) {
 		super(SX, DX, SU, GIU);

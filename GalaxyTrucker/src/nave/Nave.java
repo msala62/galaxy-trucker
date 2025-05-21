@@ -509,12 +509,22 @@ public abstract class Nave {
 		
 		for (int i = 0; i < this.plancia.length; i++) {
 			for (int j = 0; j < this.plancia[0].length; j++) {
-				if (isUtilizzabile(this.plancia[i][j]) && this.plancia[i][j].getComponente() instanceof CalcoloPotenza) {
-					CalcoloPotenza p = (CalcoloPotenza) this.plancia[i][j].getComponente();
-					potenzaMotrice = potenzaMotrice + p.getPotenza();
+				if (isUtilizzabile(this.plancia[i][j]) && this.plancia[i][j].getComponente() instanceof Motore) {
+					Motore motore =  (Motore) this.plancia[i][j].getComponente();
+					potenzaMotrice = potenzaMotrice + motore.getPotenza();
 				}
 			}			
 		}
+		
+		for (int i = 0; i < this.plancia.length; i++) {
+			for (int j = 0; j < this.plancia[0].length; j++) {
+				if (isUtilizzabile(this.plancia[i][j]) && this.plancia[i][j].getComponente() instanceof MotoreDoppio) {
+					MotoreDoppio motore =  (MotoreDoppio) this.plancia[i][j].getComponente();
+					potenzaMotrice = potenzaMotrice + motore.getPotenza();
+				}
+			}			
+		}
+		
 		return potenzaMotrice;
 	}
 
