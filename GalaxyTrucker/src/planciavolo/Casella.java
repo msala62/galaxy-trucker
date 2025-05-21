@@ -39,5 +39,11 @@ public class Casella {
     public boolean isOccupata() {
         return giocatorePresente != null;
     }
+    
+    public String ToString() {
+    	StringBuilder string = new StringBuilder();
+    	string.append(this.numeroPosizione);
+    	return string.toString();
+    }
 	
 }

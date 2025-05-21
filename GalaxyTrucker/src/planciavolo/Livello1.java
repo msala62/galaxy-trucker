@@ -30,6 +30,45 @@ public class Livello1 extends PlanciaVolo {
       //Posizioni (Caselle ) di arrivo per Livello 1
         setPosizioniArrivo(new int[]{1, 3, 4, 5});
 	}
+	
+	@Override
+	public void Stampa() {
+	    int indexRepeat = 0;
+	    String sep = "   ";
+	    int mult = 4;
+	    int max = 5;
+	    
+	    // Prima parte (5 righe)
+	    for(int i = 0; i < 4; i++) {
+	        System.out.print(sep.repeat(mult));
+	        System.out.print(this.caselle.get(caselle.size() - i - 1).ToString());
+	        System.out.print(sep.repeat(max));
+	        System.out.println(this.caselle.get(i).ToString());
+	        mult--;
+	        max += 2;
+	        indexRepeat = i;
+	    }
+	    
+	    // Riga centrale
+	    indexRepeat++;
+	    System.out.print(this.caselle.get(caselle.size() - indexRepeat - 1).ToString());
+	    System.out.print(sep.repeat(13));
+	    System.out.println(this.caselle.get(indexRepeat).ToString());
+	    indexRepeat++;
+	    
+	    // Seconda parte (5 righe)
+	    mult = 1;
+	    max = 11;
+	    for(int i = 1; i <= 4; i++) {
+	    	System.out.print(sep.repeat(mult));
+	        System.out.print(this.caselle.get(caselle.size() - indexRepeat - 1).ToString());
+	        System.out.print(sep.repeat(max));
+	        System.out.println(this.caselle.get(indexRepeat).ToString());
+	        mult++;
+	        max -= 2;
+	        indexRepeat++;
+	    }
+	}
 
 	 @Override
 	    public int calcolaCreditiCosmici(int posizione, int naveBelloGiocatore, int[] menoEsposti) {

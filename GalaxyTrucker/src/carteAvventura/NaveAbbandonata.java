@@ -56,9 +56,9 @@ public class NaveAbbandonata extends Carta {
 			// se si
 			if (risposta.equals("s")) {
 
-				if (giocatore.nave.getEquipaggioTotale() >= equipaggioDaPerdere && isUsed == false) {
+				if (giocatore.getNave().getEquipaggioTotale() >= equipaggioDaPerdere && isUsed == false) {
 					//TODO: Volo.cambiaPosizione(giocatore, giorniDaPerdere,-1)
-					if (giocatore.nave.eliminaEquipaggio(equipaggioDaPerdere)) {
+					if (giocatore.getNave().eliminaEquipaggio(equipaggioDaPerdere)) {
 						isUsed = true;
 						giocatore.aggiungiCrediti(creditiDaAquistare);
 						System.out.println(giocatore.getNome() + " ha accettato e ottenuto " + creditiDaAquistare + " crediti.");

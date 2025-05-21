@@ -311,7 +311,7 @@ public class Game {
 			int posizionePrenotazione = 5;
 			
 			CabinaPartenza cabinaGiocatore = coloreGiocatori[random];
-			giocatore.nave.aggiungiComponente(7, 7, cabinaGiocatore);
+			giocatore.getNave().aggiungiComponente(7, 7, cabinaGiocatore);
 			
 			System.out.println("Ti è stato assegnato il colore " + cabinaGiocatore.getColore());
 			System.out.println("E' il tuo turno, " + giocatore.nome + "\ne' tempo di assemblare la tua nave per avviare il viaggio interspaziale!");
@@ -332,7 +332,7 @@ public class Game {
 					random = (int)(Math.random() * componenti.size());
 					Componente pescata = componenti.get(random);
 					System.out.println("Questa è la tessera che hai scelto:\n" + pescata.toString() + "\n\n Puoi scegliere se tenerla (T), scartartla (S) o prenotarla (P): ");
-					giocatore.nave.stampa();
+					giocatore.getNave().stampa();
 					
 					String sceltaTessera = sc.nextLine();
 					
@@ -347,10 +347,10 @@ public class Game {
 						int x = Character.getNumericValue(xChar);
 						int y = Character.getNumericValue(yChar);
 						
-						giocatore.nave.aggiungiComponente(x, y, pescata);
+						giocatore.getNave().aggiungiComponente(x, y, pescata);
 					} else if(sceltaTessera.toLowerCase() == "p") {
 						if(prenotazioni > 2) continue;
-						giocatore.nave.aggiungiComponente(0, posizionePrenotazione, pescata);
+						giocatore.getNave().aggiungiComponente(0, posizionePrenotazione, pescata);
 						posizionePrenotazione++;
 						prenotazioni++;
 					}
@@ -365,6 +365,41 @@ public class Game {
 			
 			System.out.println("TEMPO SCADUTO, " + giocatore.nome + "! Attendi ora che gli altri giocatori terminimo la fase di assemblaggio delle loro navi!");
 		}
+	}
+	
+	public static void SchermataIniziale(List<Giocatore> giocatori, PlanciaVolo plancia) {
+		System.out.print("\033[H\033[2J");   
+	    System.out.flush();
+		System.out.println("========== VISUALIZZA LA TUA NAVE O LA PLANCIA ==========");
+		
+		giocatori.get(0).getNave().stampa();
+		Scanner sc = new Scanner(System.in);
+		StringBuilder builder = new StringBuilder();
+		
+		for(Giocatore giocatore : giocatori) builder.append(giocatore.getNome() + " - ");
+		builder.append("\nLegenda:\t" + "5. Visualizza Plancia\t 6. Prosegui con il gioco");
+		builder.toString();
+		
+		int scelta = 0;
+		
+		while(scelta != 6) {
+			builder.toString();
+			scelta = sc.nextInt();
+			
+			if(scelta == 5) //TODO: stampare plancia
+			
+			while(scelta < 0 && scelta > giocatori.size()) {
+				builder.toString();
+				scelta = sc.nextInt();
+			}
+			
+			System.out.print("\033[H\033[2J");   
+		    System.out.flush();
+		    
+		    giocatori.get(scelta).getNave().stampa();
+		}
+		
+		sc.close();
 	}
 	
 	public static void StartGame(List<Giocatore> giocatori) {
@@ -399,9 +434,7 @@ public class Game {
 				int scelta = new Random().nextInt(0, mazzo.size());
 				Carta pescata = mazzo.get(scelta);
 				pescata.azione(giocatori);
-				//TODO: ricordarsi di stampare sempre al situazione attuale ----> NAVE, PLANCIA
-				System.out.print("\033[H\033[2J");   
-			    System.out.flush();
+			    SchermataIniziale(giocatori, plancia);
 			}
 			
 			System.out.println("==================== GIOCATORI, SIAMO GIUNTI ALLA FINE DEL VIAGGIO! ====================");
@@ -426,7 +459,6 @@ public class Game {
 		Assemblaggio(giocatori);
 		
 		for(Giocatore giocatore : giocatori) giocatore.InizializzaNave(livello);
-		
 		PlanciaVolo plancia = null;
 		
 		switch(livello) {

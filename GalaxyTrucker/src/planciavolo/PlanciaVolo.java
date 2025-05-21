@@ -65,6 +65,8 @@ public abstract class PlanciaVolo implements GestisciAttacchi {
     		this.getCaselle().get(posizioni[i]).setGiocatorePresente(giocatori.get(i));
     	}
     }
+    
+    public abstract void Stampa();
  
     /**
      * Metodo astratto per calcolare i crediti cosmici guadagnati da un giocatore.

@@ -17,7 +17,7 @@ public class Giocatore {
 	private static int ID_COUNTER = 0;
 	
 	private final int id;
-	public Nave nave = null;
+	private Nave nave = null;
 	public final String nome;
 	private int crediti;
 	private List<String> titoli;
