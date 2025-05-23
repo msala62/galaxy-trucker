@@ -662,7 +662,7 @@ public abstract class Nave {
 			}			
 		}
 		
-		//Poi se si hanno ssegnalini energia si chiede all'utente se vuole attivare anche i motori doppi uno a uno
+		//Poi se si hanno segnalini energia si chiede all'utente se vuole attivare anche i motori doppi uno a uno
 		Scanner sc = new Scanner(System.in);
 		String risposta;
 		for (int i = 0; i < this.plancia.length && this.getEnergia() > 0; i++) 
@@ -730,7 +730,7 @@ public abstract class Nave {
 			
 		}
 		
-		//Poi se si hanno ssegnalini energia si chiede all'utente se vuole attivare anche i motori doppi uno a uno
+		//Poi se si hanno segnalini energia si chiede all'utente se vuole attivare anche i cannoni doppi uno a uno
 		Scanner sc = new Scanner(System.in);
 		String risposta;
 		for (int i = 0; i < this.plancia.length && this.getEnergia() > 0; i++) 
