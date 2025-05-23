@@ -2,6 +2,7 @@ package nave;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import componenti.*;
 import merci.Cargo;
@@ -310,26 +311,170 @@ public abstract class Nave {
 		return false;
 	}
 
-	//TODO Funzione per scambiare merce tra due stive.
-	//TODO overhaul anche di questa funzione. Assegnazione automatica o manuale?
-	public boolean caricaCargo(List<Cargo> cargo) {
+	//Funzione per scambiare merce tra due stive, oppure per scartare la merce contenuta in una stiva
+	public boolean scambiaCargo() 
+	{
+		Scanner sc = new Scanner(System.in);
+		int colonna, riga;
+		
+		System.out.println("Inserire le coordinate della stiva donatrice, ovvero quella DA cui scambiare, scrivendo la sua colonna e la sua riga: ");
+		colonna = sc.nextInt();
+		riga = sc.nextInt();
+		//Controllo se le coordinate sono valide. Continuo a chiederle finche sono giuste oppure viene immesso -1 -1 per uscire dalla funzione con return vero
+		while(isUtilizzabile(this.plancia[riga][colonna]) && !(this.plancia[riga][colonna].getComponente() instanceof Stiva)) 
+		{
+			System.out.println("Le coordinate inserite non corrispondono ad una stiva. Provate con delle nuove coordinate oppure inserite -1 -1 per uscire dalla funzione senza effettuare uno scambio: ");
+			colonna = sc.nextInt();
+			riga = sc.nextInt();
+			if(colonna == -1 && riga == -1) 
+			{
+				sc.close();
+				return true;
+			}	
+		}
+		Stiva donatore = (Stiva) this.plancia[colonna][riga].getComponente();
+		
+		//Se stiva donatrice è vuota, esco con return falso
+		if(donatore.getCargoCorrente().isEmpty()) 
+		{
+			System.out.println("La stiva donatrice e' vuota.");
+			sc.close();
+			return false;
+		}
+		
+		System.out.println("Inserire le coordinate della stiva ricevente, ovvero quella A cui scambiare, scrivendo la sua colonna e la sua riga. Inserire -2 -2 per eiettare il cargo nello spazio al posto di scambiarlo con un'altra stiva: ");
+		colonna = sc.nextInt();
+		riga = sc.nextInt();
+		//Controllo se le coordinate sono valide. Continuo a chiederle finche sono giuste oppure viene immesso -1 -1 per uscire dalla funzione, oppure -2 -2 per eliminare la merce
+		while(isUtilizzabile(this.plancia[riga][colonna]) && !(this.plancia[riga][colonna].getComponente() instanceof Stiva) && (colonna!=-2 && riga!=-2)) 
+		{
+			System.out.println("Le coordinate inserite non corrispondono ad una stiva, o al codice per gettare il cargo nello spazio. Provate con delle nuove coordinate oppure inserite -1 -1 per uscire dalla funzione senza effettuare uno scambio: ");
+			colonna = sc.nextInt();
+			riga = sc.nextInt();
+			if(colonna == -1 && riga == -1) 
+			{
+				sc.close();
+				return true;
+			}
+		}
+		
+		if(riga!=-2 && colonna!=-2) 
+		{
+			//Se le coordinate non sono -2 -2 faccio scegliere quale merce della donatrice si vuole scambiare
+			int selezioneDonatore;
+			Stiva ricevente = (Stiva) this.plancia[colonna][riga].getComponente();
+			
+			donatore.stampaCargoCorrente();
+			System.out.println("Scegliere quale merce scambiare immettendo il relativo numero: ");
+			selezioneDonatore = sc.nextInt();
+			//Controllo validità scelta
+			while(selezioneDonatore < 1 || selezioneDonatore > donatore.getCargoCorrente().size()) 
+			{
+				System.out.println("Errore di digitazione. Inserire un numero tra quelli nella lista soprascritta: ");
+				selezioneDonatore = sc.nextInt();
+			}
+			
+			//Se si prova a scambiare una merce rossa ad una stiva non speciale si esce con return falso
+			if(donatore.getCargoCorrente().get(selezioneDonatore-1).getColore() == ColoreCargo.ROSSO && !ricevente.isSpeciale()) 
+			{
+				System.out.println("La stiva ricevente non puo' accettare merce speciale rossa");
+				sc.close();
+				return false;
+			}
+			
+			//Se la ricevente ha ancora spazio si effettua lo spostamento della merce dalla donatrice alla ricevente e si esce con return falso
+			if(ricevente.getCargoCorrente().size() < ricevente.getSpazioCargo()) 
+			{
+				ricevente.getCargoCorrente().add(donatore.getCargoCorrente().get(selezioneDonatore-1));
+				donatore.getCargoCorrente().remove(selezioneDonatore-1);
+				sc.close();
+				return false;
+			}
+			
+			//Se la ricevente è piena si cheide quale merce si vuol passare dalla ricevente alla donatrice
+			int selezioneRicevente;
+			ricevente.stampaCargoCorrente();
+			System.out.println("Scegliere quale merce scambiare immettendo il relativo numero: ");
+			selezioneRicevente = sc.nextInt();
+			while(selezioneRicevente < 1 || selezioneRicevente > ricevente.getCargoCorrente().size()) 
+			{
+				System.out.println("Errore di digitazione. Inserire un numero tra quelli nella lista soprascritta: ");
+				selezioneRicevente = sc.nextInt();
+			}
+			
+			//Check come prima se donatrice può accogliere merce rossa
+			if(ricevente.getCargoCorrente().get(selezioneRicevente-1).getColore() == ColoreCargo.ROSSO && !donatore.isSpeciale()) 
+			{
+				System.out.println("La stiva donatrice non puo' accettare merce speciale rossa");
+				sc.close();
+				return false;
+			}
+			
+			//Si crea una stiva temporanea dove trattenere la merce del donatore
+			Stiva temp = new Stiva(null, null, null, null, true, true);
+			temp.getCargoCorrente().add(donatore.getCargoCorrente().get(selezioneDonatore-1));
+			//Al donatore si rimuove la merce da scambiare che ora è in temp e si mette quella della ricevente
+			donatore.getCargoCorrente().remove(selezioneDonatore-1);
+			donatore.getCargoCorrente().add(ricevente.getCargoCorrente().get(selezioneRicevente-1));
+			//Alla ricevente si toglie la merce scambiata e si mette quella di temp. Si esce con return falso
+			ricevente.getCargoCorrente().remove(selezioneRicevente-1);
+			ricevente.getCargoCorrente().add(temp.getCargoCorrente().get(0));
+			sc.close();
+			return false;
+		}
+		else 
+		{
+			//Se le coordinate sono -2 -2 si fa scegliere quale merce da eliminare. Si esce con falso
+			int selezioneDonatore;
+			donatore.stampaCargoCorrente();
+			System.out.println("Scegliere quale merce buttare immettendo il relativo numero: ");
+			selezioneDonatore = sc.nextInt();
+			while(selezioneDonatore < 1 || selezioneDonatore > donatore.getCargoCorrente().size()) 
+			{
+				System.out.println("Errore di digitazione. Inserire un numero tra quelli nella lista soprascritta: ");
+				selezioneDonatore = sc.nextInt();
+			}
+			
+			donatore.getCargoCorrente().remove(selezioneDonatore-1);
+			sc.close();
+			return false;
+		}
+		
+	}
+	
+	//Usata per caricare cargo sulla nave
+	public boolean caricaCargo(List<Cargo> cargo) 
+	{
 		if (cargo.isEmpty())
 			return false;
-
-		for (int i = 0; i < plancia.length; i++) {
-			for (int j = 0; j < plancia[0].length; j++) {
+		
+		//Faccio utilizzare all'utente la funzione scambiaCargo per fare spazio alle nuove merci e utilizzo il suo valore di return per uscire dal ciclo
+		System.out.println("Sposta le merci che hai già sulla nave per far spazio a quelle nuove. Quando sei soddisfatto esci digitando -1 -1 e le nuove merci verranno automaticamente aggiunte negli spazi disponibili a bordo. !ATTENZIONE! merci nuove per cui non c'e' spazio verranno automaticamente lasciate a fluttuare nello spazio, perdendole per sempre!");
+		boolean esci=false;
+		while(esci) 
+		{
+			esci = this.scambiaCargo();
+		}
+		
+		//Riempimento stive
+		for (int i = 0; i < plancia.length; i++) 
+		{
+			for (int j = 0; j < plancia[0].length; j++) 
+			{
 				if (cargo.isEmpty())
 					return true;
 
-				if (isUtilizzabile(this.plancia[i][j]) && this.plancia[i][j].getComponente() instanceof Stiva) {
+				if (isUtilizzabile(this.plancia[i][j]) && this.plancia[i][j].getComponente() instanceof Stiva) 
+				{
 					Stiva stiva = (Stiva) this.plancia[i][j].getComponente();
-					while (!cargo.isEmpty() && stiva.aumentaCargoCorrente(cargo.getFirst())) {
+					while (!cargo.isEmpty() && stiva.aumentaCargoCorrente(cargo.getFirst())) 
+					{
 						cargo.removeFirst();
 					}
 				}
 			}
 		}
-
+		
 		return cargo.isEmpty();
 	}
 	
@@ -507,6 +652,7 @@ public abstract class Nave {
 	public int getPotenzaMotrice() {
 		int potenzaMotrice = 0;
 		
+		//Prima si calcola la potenza di tutti i motori regolari perche sempre attivi
 		for (int i = 0; i < this.plancia.length; i++) {
 			for (int j = 0; j < this.plancia[0].length; j++) {
 				if (isUtilizzabile(this.plancia[i][j]) && this.plancia[i][j].getComponente() instanceof Motore) {
@@ -516,20 +662,64 @@ public abstract class Nave {
 			}			
 		}
 		
-		for (int i = 0; i < this.plancia.length; i++) {
-			for (int j = 0; j < this.plancia[0].length; j++) {
-				if (isUtilizzabile(this.plancia[i][j]) && this.plancia[i][j].getComponente() instanceof MotoreDoppio) {
+		//Poi se si hanno ssegnalini energia si chiede all'utente se vuole attivare anche i motori doppi uno a uno
+		Scanner sc = new Scanner(System.in);
+		String risposta;
+		for (int i = 0; i < this.plancia.length && this.getEnergia() > 0; i++) 
+		{
+			for (int j = 0; j < this.plancia[0].length && this.getEnergia() > 0; j++) 
+			{
+				if (isUtilizzabile(this.plancia[i][j]) && this.plancia[i][j].getComponente() instanceof MotoreDoppio) 
+				{
 					MotoreDoppio motore =  (MotoreDoppio) this.plancia[i][j].getComponente();
-					potenzaMotrice = potenzaMotrice + motore.getPotenza();
+					
+					System.out.println("La tua potenza motrice ora e' " + potenzaMotrice + ", e hai ancora " + this.getEnergia() + "segnalini batteria. Vuoi attivare un motore doppio? S/N\n");
+					risposta = sc.nextLine();
+					while(risposta!="S" || risposta!="N")
+					{
+						System.out.println("Input errato. Inserire 'S' per si oppure 'N' per no");
+						risposta = sc.nextLine();
+					}
+					
+					if(risposta=="S") 
+					{
+						//Usato per essere sicuri chje si scali solamente un solo segnalino batteria
+						boolean caricaScalata=false;
+						
+						//Cerco una batteria a cui scalare la carica
+						for (int k = 0; k < this.plancia.length; k++) 
+						{
+							for (int l = 0; l < this.plancia[0].length; l++) 
+							{
+								if (!caricaScalata && (isUtilizzabile(this.plancia[k][l]) && this.plancia[k][l].getComponente() instanceof Batteria)) 
+								{
+									Batteria batteria =  (Batteria) this.plancia[k][l].getComponente();
+									if(batteria.getCarica() > 0)
+									{
+										caricaScalata=true;
+										potenzaMotrice = potenzaMotrice + motore.getPotenza(batteria);
+									}
+								}
+							}
+						}
+					}
+					//Se la risposta è no esco dalla funzione con la potenza corrente
+					else 
+					{
+						sc.close();
+						return potenzaMotrice;
+					}
 				}
 			}			
 		}
-		
+		sc.close();
 		return potenzaMotrice;
 	}
 
 	public double getPotenzaFuoco() {
 		double potenzaFuoco = 0;
+		
+		//Prima si calcola la potenza di tutti i cannoni regolari perche sempre attivi
 		for (int i = 0; i < this.plancia.length; i++) {
 			for (int j = 0; j < this.plancia[0].length; j++) {
 				if (isUtilizzabile(this.plancia[i][j]) && this.plancia[i][j].getComponente() instanceof Cannone) {
@@ -539,6 +729,58 @@ public abstract class Nave {
 			}
 			
 		}
+		
+		//Poi se si hanno ssegnalini energia si chiede all'utente se vuole attivare anche i motori doppi uno a uno
+		Scanner sc = new Scanner(System.in);
+		String risposta;
+		for (int i = 0; i < this.plancia.length && this.getEnergia() > 0; i++) 
+		{
+			for (int j = 0; j < this.plancia[0].length && this.getEnergia() > 0; j++) 
+			{
+				if (isUtilizzabile(this.plancia[i][j]) && this.plancia[i][j].getComponente() instanceof CannoneDoppio) 
+				{
+					CannoneDoppio cannone =  (CannoneDoppio) this.plancia[i][j].getComponente();
+					
+					System.out.println("La tua potenza motrice ora e' " + potenzaFuoco + ", e hai ancora " + this.getEnergia() + "segnalini batteria. Vuoi attivare un motore doppio? S/N\n");
+					risposta = sc.nextLine();
+					while(risposta!="S" || risposta!="N")
+					{
+						System.out.println("Input errato. Inserire 'S' per si oppure 'N' per no");
+						risposta = sc.nextLine();
+					}
+					
+					if(risposta=="S") 
+					{
+						//Usato per essere sicuri chje si scali solamente un solo segnalino batteria
+						boolean caricaScalata=false;
+						
+						//Cerco una batteria a cui scalare la carica
+						for (int k = 0; k < this.plancia.length; k++) 
+						{
+							for (int l = 0; l < this.plancia[0].length; l++) 
+							{
+								if (!caricaScalata && (isUtilizzabile(this.plancia[k][l]) && this.plancia[k][l].getComponente() instanceof Batteria)) 
+								{
+									Batteria batteria =  (Batteria) this.plancia[k][l].getComponente();
+									if(batteria.getCarica() > 0)
+									{
+										caricaScalata=true;
+										potenzaFuoco = potenzaFuoco + cannone.getPotenza(batteria);
+									}
+								}
+							}
+						}
+					}
+					//Se la risposta è no esco dalla funzione con la potenza corrente
+					else 
+					{
+						sc.close();
+						return potenzaFuoco;
+					}
+				}
+			}			
+		}
+		sc.close();
 		return potenzaFuoco;
 	}
 

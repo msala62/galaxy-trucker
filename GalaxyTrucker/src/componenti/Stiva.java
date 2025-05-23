@@ -31,7 +31,6 @@ public class Stiva extends Componente{
 		{
 			if(nuovoCargo.getColore() == ColoreCargo.ROSSO && !this.isSpeciale)	//Check se il cargo che si vuole aggiungere è rosso (non idoneo a stive normali)
 			{
-				System.out.println("Solo le stive speciali possono contenere i carghi pericolosi di colore rosso");
 				return false;
 			}
 			else 
@@ -42,7 +41,6 @@ public class Stiva extends Componente{
 		}
 		else
 		{
-			System.out.println("Spazio insufficiente");
 			return false;
 		}
 			
@@ -66,12 +64,15 @@ public class Stiva extends Componente{
 	public void stampaCargoCorrente() 
 	{
 		StringBuilder sb = new StringBuilder();
+		int i = 1;
 		for (Cargo merce : listaCargo) 
 		{
+			sb.append(i + "/t");
 			sb.append(merce.toString() + "/t");
 			sb.append(merce.getValore() + "/n");
+			i++;
 		}
-		System.out.println("Tipo cargo:/tValore:/n" + sb);
+		System.out.println("/tTipo cargo:/tValore:/n" + sb);
 	}
 	
 	@Override
