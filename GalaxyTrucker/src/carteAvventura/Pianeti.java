@@ -60,7 +60,7 @@ public class Pianeti extends Carta {
 			} 
 
 		}
-
+		scanner.close();
 	}
 
 }

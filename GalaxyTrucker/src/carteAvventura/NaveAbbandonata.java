@@ -77,7 +77,7 @@ public class NaveAbbandonata extends Carta {
 			}
 
 		}
-
+		scanner.close();
 	};
 
 }

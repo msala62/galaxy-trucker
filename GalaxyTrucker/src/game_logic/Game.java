@@ -52,7 +52,7 @@ public class Game {
 			
 			giocatori.add(new Giocatore(nome));
 		}
-		
+		sc.close();
 		return giocatori;
 	}
 	

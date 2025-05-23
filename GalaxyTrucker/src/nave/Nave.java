@@ -19,7 +19,7 @@ public abstract class Nave {
 		this.COLUMNS = columns;
 		this.plancia = new Casella[ROWS][COLUMNS];
 		this.equipaggio = getEquipaggioTotale();
-
+		
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 7; j++) {
 				plancia[i][j] = new Casella(new Coordinata(i, j));
@@ -76,7 +76,7 @@ public abstract class Nave {
 			sbMezzo.append("/t");
 			for (int j = 0; j < COLUMNS; j++) 
 			{
-				if (this.plancia[i][j].utilizzabile) //Se la casella è utilizzabile si cerca il componente associato e ogni sua parte viene appended allo stringbuilder associato. TODO cosa fare se casella è utilizzabile, ma vuota
+				if (this.isUtilizzabile(this.plancia[i][j])) //Se la casella è utilizzabile si cerca il componente associato e ogni sua parte viene appended allo stringbuilder associato. TODO cosa fare se casella è utilizzabile, ma vuota
 				{
 					sbSopra.append(GREEN + "/t" + this.plancia[i][j].getComponente().getConnettoreSU() + "/t" + RESET);
 					sbMezzo.append(GREEN + this.plancia[i][j].getComponente().getConnettoreSX() + "/t" + this.plancia[i][j].getComponente().nomeComponente() + "/t" + this.plancia[i][j].getComponente().getConnettoreDX() + RESET);
@@ -448,6 +448,32 @@ public abstract class Nave {
 		if (cargo.isEmpty())
 			return false;
 		
+		//Creo una lista per sole merci rosse
+		List<Cargo> cargoRosso = new ArrayList<Cargo>();
+		for (Cargo merce : cargo)
+		{
+			if(merce.getColore()==ColoreCargo.ROSSO)
+			{
+				cargoRosso.add(merce);
+				cargo.remove(merce);
+			}
+		}
+		
+		//Ordino le merci rimanenti in ordine decrescente di valore
+		Cargo temp = new Cargo(null);
+		for(int i=0; i<cargo.size()-1; i++)
+		{
+			for(int j=0; j<cargo.size()-i-1; j++)
+			{
+				if(cargo.get(j).getValore()>cargo.get(j+1).getValore())
+				{
+					temp=cargo.get(j);
+					cargo.set(j, cargo.get(j+1));
+					cargo.set(j+1, temp);
+				}
+			}
+		}
+		
 		//Faccio utilizzare all'utente la funzione scambiaCargo per fare spazio alle nuove merci e utilizzo il suo valore di return per uscire dal ciclo
 		System.out.println("Sposta le merci che hai già sulla nave per far spazio a quelle nuove. Quando sei soddisfatto esci digitando -1 -1 e le nuove merci verranno automaticamente aggiunte negli spazi disponibili a bordo. !ATTENZIONE! merci nuove per cui non c'e' spazio verranno automaticamente lasciate a fluttuare nello spazio, perdendole per sempre!");
 		boolean esci=false;
@@ -456,7 +482,26 @@ public abstract class Nave {
 			esci = this.scambiaCargo();
 		}
 		
-		//Riempimento stive
+		//Riempimento stive speciali
+		for(int i=0; i<this.COLUMNS; i++)
+		{
+			for(int j=0; j<this.ROWS; j++)
+			{
+				if(isUtilizzabile(this.plancia[i][j]) && this.plancia[i][j].getComponente() instanceof Stiva)
+				{
+					Stiva stiva = (Stiva) this.plancia[i][j].getComponente();
+					if(stiva.isSpeciale())
+					{
+						while(!cargoRosso.isEmpty() && stiva.aumentaCargoCorrente(cargoRosso.getFirst()))
+						{
+							cargoRosso.removeFirst();
+						}
+					}
+				}
+			}
+		}
+		
+		//Riempimento stive normali
 		for (int i = 0; i < plancia.length; i++) 
 		{
 			for (int j = 0; j < plancia[0].length; j++) 

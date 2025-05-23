@@ -71,6 +71,6 @@ public class StazioneAbbandonata extends Carta {
 			}
 
 		}
-
+		scanner.close();
 	}
 }
