@@ -32,33 +32,39 @@ public class Game {
 	}
 	
 	private static List<Giocatore> InizializzaGiocatori() {
-		Scanner sc = new Scanner(System.in);
 		List<Giocatore> giocatori = new ArrayList<Giocatore>();
 		System.out.print("Quanti giocatori parteciperanno alla parita? (min 2, max 4): ");
+		
+		Scanner sc = new Scanner(System.in);
 		int numeroGiocatori = sc.nextInt();
 		
-		while(numeroGiocatori < 2 && numeroGiocatori > 4) {
-			numeroGiocatori = sc.nextInt();
-		}
+		do {
+	        System.out.print("Quanti giocatori parteciperanno alla partita? (min 2, max 4): ");
+	        numeroGiocatori = sc.nextInt();
+	        sc.nextLine();
+	    } while(numeroGiocatori < 2 || numeroGiocatori > 4);
 		
 		for(int i = 0; i < numeroGiocatori; i++) {
-			System.out.println("Benvenuto giocatore numero " + i+1 + "!" + "\nInserisci pure il tuo nome: ");
-			String nome = sc.nextLine();
-			
-			while(nome == "" && nome.length() < 2) {
-				System.out.println("Il nome deve essere almeno di 2 caratteri, riprova!");
-				nome = sc.nextLine();
-			}
-			
-			giocatori.add(new Giocatore(nome));
+			String nome;
+	        do {
+	            System.out.println("\n\nBenvenuto giocatore numero " + (i+1) + "!" + "\nInserisci pure il tuo nome: ");
+	            nome = sc.nextLine().trim();
+	            
+	            if(nome.isEmpty() || nome.length() < 2) {
+	                System.out.println("Il nome deve essere almeno di 2 caratteri, riprova!");
+	            }
+	        } while(nome.isEmpty() || nome.length() < 2);
+	        
+	        giocatori.add(new Giocatore(nome));
 		}
-		sc.close();
+		
 		return giocatori;
 	}
 	
 	private static List<Componente> GeneraComponenti(List<ComponentBuilder> builders) {
 	    List<Componente> componenti = new ArrayList<>();
 	    Connettore[] direzioni = {Connettore.SINGOLO, Connettore.DOPPIO, Connettore.UNIVERSALE, Connettore.LISCIO};
+	    Direzione[] orientamento = {Direzione.SU, Direzione.GIU, Direzione.DX, Direzione.SX};
 	    Colore[] coloriAlieni = {Colore.MARRONE, Colore.VIOLA};
 	    
 	    for(ComponentBuilder builder : builders) {
@@ -79,8 +85,8 @@ public class Game {
 	                }
 	                else if(builder.tipologia.equals(Scudo.class)) {
 	                    componente = builder.tipologia.getConstructor(
-	                        Connettore.class, Connettore.class, Connettore.class, Connettore.class, Connettore.class, Connettore.class)
-	                        .newInstance(direzioni[sx], direzioni[dx], direzioni[su], direzioni[giu], direzioni[su], direzioni[giu]);
+	                        Connettore.class, Connettore.class, Connettore.class, Connettore.class, Direzione.class, Direzione.class)
+	                        .newInstance(direzioni[sx], direzioni[dx], direzioni[su], direzioni[giu], orientamento[su], orientamento[giu]);
 	                }
 	                else if(builder.tipologia.equals(Batteria.class)) {
 	                    componente = builder.tipologia.getConstructor(
@@ -89,7 +95,7 @@ public class Game {
 	                }
 	                else if(builder.tipologia.equals(Stiva.class)) {
 	                	componente = builder.tipologia.getConstructor(
-		                        Connettore.class, Connettore.class, Connettore.class, Connettore.class, boolean.class)
+		                        Connettore.class, Connettore.class, Connettore.class, Connettore.class, boolean.class, boolean.class)
 		                        .newInstance(direzioni[sx], direzioni[dx], direzioni[su], direzioni[giu], builder.grande, builder.speciale);
 	                }
 	                else {
@@ -278,7 +284,7 @@ public class Game {
 		return mazzo;
 	}
 	
-	private static void Assemblaggio(List<Giocatore> giocatori) {
+	private static void Assemblaggio(List<Giocatore> giocatori, Livello livello) {
 		List<ComponentBuilder> builders = Arrays.asList(
 				new ComponentBuilder(Cannone.class, 25),
 				new ComponentBuilder(CannoneDoppio.class, 11),
@@ -291,7 +297,7 @@ public class Game {
 				new ComponentBuilder(Stiva.class, 6, false, true),//stiva speciale piccola
 				new ComponentBuilder(Motore.class, 21),
 				new ComponentBuilder(MotoreDoppio.class, 9),				
-				new ComponentBuilder(Stiva.class, 3, true, true),//Stiva speciale grande	
+				new ComponentBuilder(Stiva.class, 3, true, true),//Stiva speciale grande
 				new ComponentBuilder(Strutturale.class, 8),			
 				new ComponentBuilder(Cabina.class, 17),						
 				new ComponentBuilder(SupportoAlieni.class, 6, Colore.MARRONE),
@@ -306,12 +312,15 @@ public class Game {
 				};
 		
 		for(Giocatore giocatore : giocatori) {
+			giocatore.InizializzaNave(livello);
 			int random = (int)(Math.random() * 4);
 			int prenotazioni = 0;
 			int posizionePrenotazione = 5;
 			
 			CabinaPartenza cabinaGiocatore = coloreGiocatori[random];
-			giocatore.getNave().aggiungiComponente(7, 7, cabinaGiocatore);
+			giocatore.getNave().aggiungiComponente(2, 3, cabinaGiocatore);
+			
+			if(livello == Livello.III) giocatore.getNave().aggiungiComponente(3, 4, cabinaGiocatore);
 			
 			System.out.println("Ti è stato assegnato il colore " + cabinaGiocatore.getColore());
 			System.out.println("E' il tuo turno, " + giocatore.nome + "\ne' tempo di assemblare la tua nave per avviare il viaggio interspaziale!");
@@ -425,7 +434,7 @@ public class Game {
 			}
 			
 			plancia.PiazzaGiocatori(giocatori);
-			Assemblaggio(giocatori);
+			Assemblaggio(giocatori, livelli.get(counter));
 			
 			System.out.println("==================== GIOCATORI, PRONTI ALLA PARTENZA DEL VIAGGIO SPAZIALE! ====================");
 			giocatori.getFirst().setLeader(true);
@@ -456,7 +465,7 @@ public class Game {
 	public static void StartGame(Livello livello) {
 		List<Giocatore> giocatori = InizializzaGiocatori();
 		List<Carta> mazzo = InizializzaMazzo(livello);
-		Assemblaggio(giocatori);
+		Assemblaggio(giocatori, livello);
 		
 		for(Giocatore giocatore : giocatori) giocatore.InizializzaNave(livello);
 		PlanciaVolo plancia = null;
@@ -512,22 +521,19 @@ public class Game {
 			decisione = sc.nextInt();
 		}
 		
-		sc.close();
-		
 		switch(decisione) {
 		case 1:
 			System.out.println("Ottimo, siete allora pronti per affrontare la vostra prima avventura.");
-			System.out.println("Prima di cominciare però, sappiate che avete a disposizione 3 scelte: ");
+			System.out.println("Prima di cominciare però, sappiate che avete a disposizione 3 scelte: \n");
 			
 			voci = Arrays.asList("Livello 1", "Livello 2", "Livello 3", "Trasporta Intergalattica");
 			StampaMenu("Seleziona il livello desiderato", voci);
+			decisione = sc.nextInt();
 			
 			while(decisione != 1 && decisione != 2 && decisione != 3 && decisione != 4) {
 				System.out.println("Prova a ricontrollare la tua scelta!");
 				decisione = sc.nextInt();
 			}
-			
-			sc.close();
 			
 			if(decisione == 1) StartGame(Livello.I);
 			else if(decisione == 2) StartGame(Livello.II);

@@ -18,7 +18,7 @@ public abstract class Nave {
 		this.ROWS = rows;
 		this.COLUMNS = columns;
 		this.plancia = new Casella[ROWS][COLUMNS];
-		this.equipaggio = getEquipaggioTotale();
+		//this.equipaggio = getEquipaggioTotale();
 		
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 7; j++) {
@@ -35,7 +35,7 @@ public abstract class Nave {
 		return this.plancia;
 	}
 
-	/*	public void stampa() {
+	/*public void stampa() {
 		String RESET = "\u001B[0m";
 		String GREEN = "\u001B[32m";
 		String YELLOW = "\u001B[33m";
@@ -43,19 +43,19 @@ public abstract class Nave {
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 7; j++) {
 				if (this.plancia[i][j].utilizzabile) {
-					System.out.print(GREEN + this.plancia[i][j].getComponente() + "\t" + RESET);
+					System.out.print(GREEN + this.plancia[i][j] + "\t" + RESET);
 				} else {
 					if ((i == 0 && j == 5) || (i == 0 && j == 6)) {
 						System.out.print(YELLOW + this.plancia[i][j].getComponente() == null ? this.plancia[i][j] : this.plancia[i][j].getComponente() + "\t" + RESET);
 					} else {
-						System.out.print("  \t");
+						System.out.print(this.plancia[i][j] + "\t");
 					}
 				}
 	
 			}
 			System.out.println("");
 		}
-	}*///Lasciata in forma di commento nel caso la versione sottostante non funzionasse
+	} *///Lasciata in forma di commento nel caso la versione sottostante non funzionasse
 
 	public void stampa()
 	{
@@ -68,194 +68,139 @@ public abstract class Nave {
 		StringBuilder sbSotto = new StringBuilder();//Per connettore GIU
 		
 		for (int i = 0; i < COLUMNS; i++)//Per mostrare le colonne
-			System.out.print(YELLOW + "/t" + i + "/t" + RESET);
+			System.out.print(YELLOW + "\t" + i + "\t" + RESET);
 		
 		for (int i = 0; i < ROWS; i++) 
 		{
 			sbMezzo.append(YELLOW + i + RESET);//Per mostrare le righe
-			sbMezzo.append("/t");
+			sbMezzo.append("\t");
 			for (int j = 0; j < COLUMNS; j++) 
 			{
 				if (this.isUtilizzabile(this.plancia[i][j])) //Se la casella è utilizzabile si cerca il componente associato e ogni sua parte viene appended allo stringbuilder associato. TODO cosa fare se casella è utilizzabile, ma vuota
 				{
-					sbSopra.append(GREEN + "/t" + this.plancia[i][j].getComponente().getConnettoreSU() + "/t" + RESET);
-					sbMezzo.append(GREEN + this.plancia[i][j].getComponente().getConnettoreSX() + "/t" + this.plancia[i][j].getComponente().nomeComponente() + "/t" + this.plancia[i][j].getComponente().getConnettoreDX() + RESET);
-					sbSotto.append(GREEN + "/t" + this.plancia[i][j].getComponente().getConnettoreGIU() + "/t" + RESET);
+					sbSopra.append(GREEN + "\t" + this.plancia[i][j].getComponente().getConnettoreSU() + "\t" + RESET);
+					sbMezzo.append(GREEN + this.plancia[i][j].getComponente().getConnettoreSX() + "\t" + this.plancia[i][j].getComponente().nomeComponente() + "/t" + this.plancia[i][j].getComponente().getConnettoreDX() + RESET);
+					sbSotto.append(GREEN + "\t" + this.plancia[i][j].getComponente().getConnettoreGIU() + "\t" + RESET);
 				}
 				else //Se la casella non è utilizzabile si appenda due tabulazioni
 				{
-					sbSopra.append("/t/t");
-					sbMezzo.append("/t/t");
-					sbSotto.append("/t/t");
+					sbSopra.append("\t\t");
+					sbMezzo.append("\t\t");
+					sbSotto.append("\t\t");
 				}
 			}
-			System.out.println(sbSopra + "/n" + sbMezzo + "/n" + sbSotto + "/n");//Si printa una riga di componenti alla volta
+			System.out.println(sbSopra + "\n" + sbMezzo + "\n" + sbSotto + "\n");//Si printa una riga di componenti alla volta
 		}
-		System.out.println(sbSopra + "/n" + sbMezzo + "/n" + sbSotto + "/n");//Si printa una riga di componenti alla volta
+		System.out.println(sbSopra + "\n" + sbMezzo + "\n" + sbSotto + "\n");//Si printa una riga di componenti alla volta
 		//Reset degli stringbuilder (spero)
 		sbSopra.setLength(0);
 		sbMezzo.setLength(0);
 		sbSotto.setLength(0);
 	}
 
-	//IMPORTANTE: Y sono le righe e X le colonne
-	public boolean aggiungiComponente(int y, int x, Componente tessera) {
-		Componente inserimento = tessera;
-		
-		for(int i = 0; i < ROWS; i++) {
-			for(int j = 0; j < COLUMNS; j++) {
-				if(y == i && x == j) {
-					if(plancia[y][x].utilizzabile) {
-						if(tessera.equals(Cabina.class)) {
-							this.equipaggio += 2;
-							inserimento = new Cabina(tessera.getConnettoreSX(), tessera.getConnettoreDX(), tessera.getConnettoreSU(), tessera.getConnettoreGIU());
-							((Cabina) inserimento).setEquipaggio(2);
-						} else if(tessera.equals(Scudo.class) && getEnergia() > 0) {
-							for(int k = 0; k < ROWS; k++) {
-								for(int z = 0; z < COLUMNS; z++) {
-									if(isUtilizzabile(plancia[k][z]) && plancia[k][z].getComponente().equals(Batteria.class)) {
-										if(((Batteria) plancia[k][z].getComponente()).getCarica() > 0) {
-											((Batteria) plancia[k][z].getComponente()).scalaCarica();
-											break;											
-										} else {
-											continue;
-										}
-									}
-								}
-							}
-						}
-						
-						int sopra = y - 1;
-						int sotto = y + 1;
-						int destra = x + 1;
-						int sinistra = x - 1;
-						
-						Componente su; 
-						Componente giu; 
-						Componente dx; 
-						Componente sx;
-						
-						// Punti di uscita dall'area della nave e punti proibiti
-						if(y == 0 && (x == 5 || x == 6)) return false;
-						if((x < 0 || x > COLUMNS) && (y < 0 || y > ROWS)) return false;
-						
-						//Posizionamento in cima alla nave
-						if(y == 0) {
-							giu = plancia[y][sotto].getComponente();
-							
-							if(giu == null) {
-								if(tessera.equals(SupportoAlieni.class)) return false;
-								this.plancia[y][x].setComponente(inserimento);
-								return true;								
-							} else {
-								if(tessera.equals(SupportoAlieni.class) && giu.equals(Cabina.class)) {
-									if(tessera.getConnettoreGIU() == giu.getConnettoreSU() || giu.getConnettoreSU() == Connettore.UNIVERSALE) {
-										this.plancia[y][x].setComponente(inserimento);
-										return true;
-									}
-								} else if((tessera.equals(Cannone.class) || tessera.equals(CannoneDoppio.class))) return false; 
-								else {
-									if(tessera.getConnettoreGIU() == giu.getConnettoreSU() || giu.getConnettoreSU() == Connettore.UNIVERSALE) {
-										this.plancia[y][x].setComponente(inserimento);
-										return true;
-									}									
-								}								
-							}
-						}
-						
-						//Posizionamento in fondo alla nave
-						else if(y == 4) {
-							su = plancia[x][sopra].getComponente();
-							
-							if(su == null) {
-								if(tessera.equals(SupportoAlieni.class)) return false;
-								this.plancia[y][x].setComponente(inserimento);
-								return true;
-							} else {
-								if(tessera.equals(SupportoAlieni.class) && su.equals(Cabina.class)) {
-									if(tessera.getConnettoreSU() == su.getConnettoreGIU() || su.getConnettoreGIU() == Connettore.UNIVERSALE) {
-										this.plancia[y][x].setComponente(inserimento);
-										return true;
-									}
-								} else if((tessera.equals(Cannone.class) || tessera.equals(CannoneDoppio.class))) return false;
-								else {
-									if(tessera.getConnettoreSU() == su.getConnettoreGIU() || su.getConnettoreGIU() == Connettore.UNIVERSALE) {
-										this.plancia[y][x].setComponente(inserimento);
-										return true;
-									}							
-									
-								}								
-							}
-						}
-						
-						//Qualsiasi altra posizione centrale
-						else {
-							su = plancia[sopra][x].getComponente();
-							dx = plancia[y][destra].getComponente();
-							sx = plancia[y][sinistra].getComponente();
-							
-							if(sotto > 5 && dx == null) {
-								if(((tessera.getConnettoreSU() == su.getConnettoreGIU()) || su.getConnettoreGIU() == Connettore.UNIVERSALE)
-										&& ((tessera.getConnettoreSX() == sx.getConnettoreDX()) || sx.getConnettoreDX() == Connettore.UNIVERSALE)
-										) {
-									if(tessera.equals(SupportoAlieni.class) && sx.equals(Cabina.class)) {
-										this.plancia[y][x].setComponente(inserimento);
-										return true;										
-									} else if((tessera.equals(Cannone.class) || tessera.equals(CannoneDoppio.class))) {
-										this.plancia[y][x].setComponente(inserimento);
-										return true;
-									}
-									else {
-										this.plancia[y][x].setComponente(inserimento);
-										return true;
-									}
-								}									
-								
-							} else if(sotto > 5 && sx == null) {
-								if(((tessera.getConnettoreSU() == su.getConnettoreGIU()) || su.getConnettoreGIU() == Connettore.UNIVERSALE)
-										&& ((tessera.getConnettoreDX() == dx.getConnettoreSX()) || dx.getConnettoreSX() == Connettore.UNIVERSALE)
-										) {
-									if(tessera.equals(SupportoAlieni.class) && dx.equals(Cabina.class)) {
-										this.plancia[y][x].setComponente(inserimento);
-										return true;										
-									} else if((tessera.equals(Cannone.class) || tessera.equals(CannoneDoppio.class))) {
-										this.plancia[y][x].setComponente(inserimento);
-										return true;
-									}
-									else {
-										this.plancia[y][x].setComponente(inserimento);
-										return true;
-									}
-								}
-								
-							} else {
-								giu = plancia[sotto][x].getComponente();
-									if(((tessera.getConnettoreSU() == su.getConnettoreGIU()) || su.getConnettoreGIU() == Connettore.UNIVERSALE)
-										&& ((tessera.getConnettoreGIU() == giu.getConnettoreSU()) || giu.getConnettoreSU() == Connettore.UNIVERSALE)
-										&& ((tessera.getConnettoreDX() == dx.getConnettoreSX()) || dx.getConnettoreSX() == Connettore.UNIVERSALE)
-										&& ((tessera.getConnettoreSX() == sx.getConnettoreDX()) || sx.getConnettoreDX() == Connettore.UNIVERSALE)
-										) {
-										if(tessera.equals(SupportoAlieni.class) && 
-												(dx.equals(Cabina.class) || sx.equals(Cabina.class) ||
-												 giu.equals(Cabina.class) || su.equals(Cabina.class))) {
-											this.plancia[y][x].setComponente(inserimento);
-											return true;											
-										} else if((tessera.equals(Cannone.class) || tessera.equals(CannoneDoppio.class))) return false;
-										else {
-											this.plancia[y][x].setComponente(inserimento);
-											return true;
-									}
-								}	
-							}
-							
-						}
-					} else {
-						return false;
-					}
-				}
-			}
-		}
-		return false;
+	/**
+	 * Aggiunge un componente alla posizione specificata nella nave, gestendo possibili errori.
+	 * @param y Coordinata Y (riga)
+	 * @param x Coordinata X (colonna)
+	 * @param tessera Componente da aggiungere
+	 */
+	public void aggiungiComponente(int y, int x, Componente tessera) {
+	    try {
+	        if (tessera == null) {
+	            throw new IllegalArgumentException("Il componente non può essere null");
+	        }
+	        
+	        if (x < 0 || x >= COLUMNS || y < 0 || y >= ROWS) {
+	            throw new IndexOutOfBoundsException("Coordinate (" + y + "," + x + ") fuori dai limiti");
+	        }
+
+	        if (!plancia[y][x].utilizzabile) {
+	            throw new IllegalStateException("La cella (" + y + "," + x + ") non è utilizzabile");
+	        }
+
+	        // Controllo spazio occupato
+	        if (plancia[y][x].getComponente() != null) {
+	            throw new IllegalStateException("La cella (" + y + "," + x + ") è già occupata");
+	        }
+
+	        // Gestione speciale per Cabina
+	        if (tessera instanceof Cabina) {
+	            this.equipaggio += 2;
+	            ((Cabina)tessera).setEquipaggio(2);
+	        }
+
+	        // Gestione speciale per Scudo (richiede energia)
+	        if (tessera instanceof Scudo) {
+	            boolean energiaTrovata = false;
+	            for (int i = 0; i < ROWS && !energiaTrovata; i++) {
+	                for (int j = 0; j < COLUMNS && !energiaTrovata; j++) {
+	                    if (plancia[i][j].getComponente() instanceof Batteria) {
+	                        Batteria b = (Batteria)plancia[i][j].getComponente();
+	                        if (b.getCarica() > 0) {
+	                            b.scalaCarica();
+	                            energiaTrovata = true;
+	                        }
+	                    }
+	                }
+	            }
+	            if (!energiaTrovata) {
+	                throw new IllegalStateException("Energia insufficiente per posizionare lo scudo");
+	            }
+	        }
+
+	        boolean connessioneValida = true;
+	        
+	        // Controllo componente sopra
+	        if (y > 0 && plancia[y-1][x].getComponente() != null) {
+	            Componente sopra = plancia[y-1][x].getComponente();
+	            connessioneValida &= connettoriCompatibili(tessera.getConnettoreSU(), sopra.getConnettoreGIU());
+	        }
+	        
+	        // Controllo componente sotto
+	        if (y < ROWS-1 && plancia[y+1][x].getComponente() != null) {
+	            Componente sotto = plancia[y+1][x].getComponente();
+	            connessioneValida &= connettoriCompatibili(tessera.getConnettoreGIU(), sotto.getConnettoreSU());
+	        }
+	        
+	        // Controllo componente a sinistra
+	        if (x > 0 && plancia[y][x-1].getComponente() != null) {
+	            Componente sinistra = plancia[y][x-1].getComponente();
+	            connessioneValida &= connettoriCompatibili(tessera.getConnettoreSX(), sinistra.getConnettoreDX());
+	        }
+	        
+	        // Controllo componente a destra
+	        if (x < COLUMNS-1 && plancia[y][x+1].getComponente() != null) {
+	            Componente destra = plancia[y][x+1].getComponente();
+	            connessioneValida &= connettoriCompatibili(tessera.getConnettoreDX(), destra.getConnettoreSX());
+	        }
+
+	        if (!connessioneValida) {
+	            throw new IllegalStateException("Connettori incompatibili con i componenti adiacenti");
+	        }
+
+	        plancia[y][x].setComponente(tessera);
+	        
+	    } catch (IndexOutOfBoundsException e) {
+	        System.err.println("Errore di posizionamento: " + e.getMessage());
+	    } catch (IllegalStateException e) {
+	        System.err.println("Errore nelle regole di gioco: " + e.getMessage());
+	    } catch (IllegalArgumentException e) {
+	        System.err.println("Errore nei parametri: " + e.getMessage());
+	    } catch (Exception e) {
+	        System.err.println("Errore imprevisto durante l'aggiunta del componente: " + e.getMessage());
+	        e.printStackTrace();
+	    }
+	}
+
+	/**
+	 * Metodo per verificare la compatibilità tra due connettori. Prende due connettorin e controlla la compatibilità di connessione.
+	 * @param Connettore c1: primo connettore
+	 * @param Connettore c2: secondo connettore
+	 */
+	private boolean connettoriCompatibili(Connettore c1, Connettore c2) {
+	    return c1 == c2 || 
+	           c1 == Connettore.UNIVERSALE || 
+	           c2 == Connettore.UNIVERSALE;
 	}
 	
 	protected boolean isUtilizzabile(Casella casella) {
@@ -277,7 +222,7 @@ public abstract class Nave {
 		return energia;
 	}
 
-	public int getEquipaggioTotale() {
+	/*public int getEquipaggioTotale() {
 		int equipaggioTotale = 0;
 		
 		for (int i = 0; i < plancia.length; i++) {
@@ -290,7 +235,7 @@ public abstract class Nave {
 			}
 		}
 		return equipaggioTotale;
-	}
+	} */
 
 	// GEORGE: metodo per eliminare l'equipaggio dalla nave
 	public boolean eliminaEquipaggio(int equipaggioDaEliminare) {
