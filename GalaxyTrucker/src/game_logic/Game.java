@@ -311,6 +311,8 @@ public class Game {
 				new CabinaPartenza(Connettore.UNIVERSALE, Connettore.UNIVERSALE, Connettore.UNIVERSALE, Connettore.UNIVERSALE, ColoreGiocatore.VERDE)
 				};
 		
+		Scanner sc = new Scanner(System.in);
+		
 		for(Giocatore giocatore : giocatori) {
 			giocatore.InizializzaNave(livello);
 			int random = (int)(Math.random() * 4);
@@ -322,50 +324,46 @@ public class Game {
 			
 			if(livello == Livello.III) giocatore.getNave().aggiungiComponente(3, 4, cabinaGiocatore);
 			
-			System.out.println("Ti è stato assegnato il colore " + cabinaGiocatore.getColore());
+			System.out.println("\n\nTi è stato assegnato il colore " + cabinaGiocatore.getColore());
 			System.out.println("E' il tuo turno, " + giocatore.nome + "\ne' tempo di assemblare la tua nave per avviare il viaggio interspaziale!");
 			System.out.println("Da questo momento in poi hai tempo 2 minuti esatti per scegliere le tue tessere.");
 			clessidra.start(120);
 			
 			while(!clessidra.isTimeEnded()) {
-				System.out.println("SCEGLI UNA TESSERA COMPONENTE TRA QUELLE PROPOSTE: ");
+				System.out.print("\033[H\033[2J");
 				System.out.println("Attualmente rimangono sul banco: " + componenti.size() + " tessere");
-				
-				Scanner sc = new Scanner(System.in);
+				System.out.println("\n\nPESCA UNA TESSERA (premi invio): ");
 				String scelta = sc.nextLine();
 				
-				if(!scelta.isEmpty()) {
-					System.out.print("\033[H\033[2J");
-				    System.out.flush();
+				if(!scelta.isEmpty()) continue;
+
+				random = (int)(Math.random() * componenti.size());
+				Componente pescata = componenti.get(random);
+				System.out.println("Questa è la tessera che hai scelto:\n" + pescata.toString() + "\n\n Puoi scegliere se tenerla (T), scartartla (S) o prenotarla (P): ");
+				//giocatore.getNave().stampa();
+				
+				String sceltaTessera = sc.nextLine();
+				
+				if(sceltaTessera.equalsIgnoreCase("t")) {
+					componenti.remove(random);
+					System.out.println("Ottimo! dimmi ora in che cella vuoi posizionarlo (Ricordati che le caselle partono da 00 e non da 11!)");
+					String posizione = sc.nextLine();
 					
-					random = (int)(Math.random() * componenti.size());
-					Componente pescata = componenti.get(random);
-					System.out.println("Questa è la tessera che hai scelto:\n" + pescata.toString() + "\n\n Puoi scegliere se tenerla (T), scartartla (S) o prenotarla (P): ");
-					giocatore.getNave().stampa();
-					
-					String sceltaTessera = sc.nextLine();
-					
-					if(sceltaTessera.toLowerCase() == "t") {
-						componenti.remove(random);
-						System.out.println("Ottimo! dimmi ora in che cella vuoi posizionarlo (Ricordati che le caselle partono da 00 e non da 11!)");
-						String posizione = sc.nextLine();
-						
-						char xChar = posizione.charAt(0);
-						char yChar = posizione.charAt(1);
-						
-						int x = Character.getNumericValue(xChar);
-						int y = Character.getNumericValue(yChar);
+					try {						
+						int x = Character.getNumericValue(posizione.charAt(0));
+						int y = Character.getNumericValue(posizione.charAt(1));
 						
 						giocatore.getNave().aggiungiComponente(x, y, pescata);
-					} else if(sceltaTessera.toLowerCase() == "p") {
-						if(prenotazioni > 2) continue;
-						giocatore.getNave().aggiungiComponente(0, posizionePrenotazione, pescata);
-						posizionePrenotazione++;
-						prenotazioni++;
+					} catch(Exception e) {
+						System.out.println("Coordinate errate. Impossibile inserire");
 					}
+					
+				} else if(sceltaTessera.equalsIgnoreCase("p") && prenotazioni < 3) {
+					componenti.remove(random);
+					giocatore.getNave().aggiungiComponente(0, posizionePrenotazione, pescata);
+					posizionePrenotazione++;
+					prenotazioni++;
 				}
-				
-				sc.close();
 				
 				//Clears screen: https://www.quora.com/How-do-I-clear-the-console-screen-in-Java
 				System.out.print("\033[H\033[2J");   
@@ -374,6 +372,8 @@ public class Game {
 			
 			System.out.println("TEMPO SCADUTO, " + giocatore.nome + "! Attendi ora che gli altri giocatori terminimo la fase di assemblaggio delle loro navi!");
 		}
+		
+		sc.close();
 	}
 	
 	public static void SchermataIniziale(List<Giocatore> giocatori, PlanciaVolo plancia) {
