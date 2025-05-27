@@ -18,10 +18,10 @@ public class CapitanoDaCrociera extends Titolo {
 		 */
 
 		if (cabina.getEquipaggio() > 0
-			&& cabina.getConnettoreDX() == Connettore.LISCIO
-			|| cabina.getConnettoreSX() == Connettore.LISCIO
-			|| cabina.getConnettoreGIU() == Connettore.LISCIO
-			|| cabina.getConnettoreSU() == Connettore.LISCIO)
+			    && (cabina.getConnettoreDX() == Connettore.LISCIO
+			        || cabina.getConnettoreSX() == Connettore.LISCIO
+			        || cabina.getConnettoreGIU() == Connettore.LISCIO
+			        || cabina.getConnettoreSU() == Connettore.LISCIO))
 			return true;
 		return false;
 		

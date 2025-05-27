@@ -22,7 +22,7 @@ public class TrasportatoreSupremo extends Titolo {
 			for (int j = 0; j < plancia[0].length; j++) {
 				if (plancia[i][j].isUtilizzabile()) {
 					Componente c = plancia[i][j].getComponente();
-					if (c.tryGetCargoCorrente() > 0) {
+					if (c != null && c.tryGetCargoCorrente() > 0) {
 						count++;
 					}
 				}

@@ -26,7 +26,7 @@ public class Batterista extends Titolo {
 				plancia = nave.getPlancia();
 				if (plancia[i][j].isUtilizzabile()) {
 					Componente c = plancia[i][j].getComponente();
-					if (c.getRichiedeBatterie()) {
+					if (c != null && c.getRichiedeBatterie()) {
 						count++;
 					}
 				}
