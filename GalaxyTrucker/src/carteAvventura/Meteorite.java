@@ -46,9 +46,9 @@ public class Meteorite {
 	}
 
 	private boolean hasLatoLiscio(Componente comp) {
-		 if (comp == null) 
-	            return false;
-	        
+		if (comp == null)
+			return false;
+
 		switch (direzione) {
 
 		case SU:
@@ -75,22 +75,21 @@ public class Meteorite {
 
 	public void applicaSu(Giocatore giocatore) {
 		System.out.println("\n Meteorite:");
-	    System.out.println("Tipo: " + dimensione + ", Direzione: " + direzione + ", Coordinata: " + dado);
+		System.out.println("Tipo: " + dimensione + ", Direzione: " + direzione + ", Coordinata: " + dado);
 
 		Casella c = getCasellaDacolpire(giocatore.getNave(), direzione, dado);
 		if (c != null) {
-			 System.out.println("\n Colpisce la nave in posizione: [" + c.getPosizione() + "]");
+			System.out.println("\n Colpisce la nave in posizione: [" + c.getPosizione() + "]");
 			if (dimensione == Dimensione.PICCOLO) {
 				if (hasLatoLiscio(c.getComponente())) {
 					System.out.println("Il meteorite piccolo ha colpito un lato liscio: nessun danno.");
 				} else if (proteggeComp(giocatore.getNave(), direzione)) {
 					System.out.println("Scudo attivato: componente salvo.");
-				}
-				else {
+				} else {
 					// giocatore.getNave().distruggiComponente(c);
 					System.out.println("Componente distrutto dal meteorite piccolo!");
 				}
-				
+
 			} else {
 				// Meteorite grosso – nessuna difesa se non con cannone (non gestito qui)
 				// giocatore.getNave().distruggiComponente(c);
@@ -125,7 +124,7 @@ public class Meteorite {
 		case SX:
 			if (coordinata >= 0 && coordinata < nave.getPlancia().length) {
 				for (int j = 0; j < nave.getPlancia()[0].length; j++) {
-
+					if (nave.getPlancia()[coordinata][j].getComponente() != null)
 						return nave.getPlancia()[coordinata][j];
 				}
 			}
