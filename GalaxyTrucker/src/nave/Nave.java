@@ -1,7 +1,9 @@
 package nave;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Scanner;
 
 import componenti.*;
@@ -777,5 +779,116 @@ public abstract class Nave {
 
 	public int getEquipaggio() {
 		return equipaggio;
+	}
+	//GEORGE: Metodo aggiunto per eliminare un componente dalla nave a causa di un evento negativo
+	public void eliminaComponente(int y, int x) {
+		//verifica coordinate
+        if (y < 0 || y >= ROWS || x < 0 || x >= COLUMNS || plancia[y][x].getComponente() == null) {
+            System.out.println("Nessun componente da distruggere alle coordinate specificate (" + y + "," + x + ")");
+            return;
+        }
+
+        Componente daEliminare = plancia[y][x].getComponente();
+        plancia[y][x].setComponente(null); // Remove the component
+
+        System.out.println("Componente " + daEliminare.nomeComponente() + " distrutto a (" + y + "," + x + ").");
+        
+        //verifica componenti disconnessi 
+        List<Coordinata> componentiDisconnessi = cercaComponentiDisconnessi();
+        for (Coordinata coord : componentiDisconnessi) {
+            Componente disconnesso = plancia[coord.getX()][coord.getY()].getComponente();
+            if (disconnesso != null) {
+                plancia[coord.getX()][coord.getY()].setComponente(null);
+                System.out.println("Componente " + disconnesso.nomeComponente() + " a (" + coord.getX() + "," + coord.getY() + ") si è staccato.");
+     
+            }
+        }
+    }
+
+ //GEORGE: Cerca i componenti che si disconnettono dalla nave a causa dell'eliminazione di un altro componente
+	private List<Coordinata> cercaComponentiDisconnessi() {
+	    List<Coordinata> disconnessi = new ArrayList<>();
+	    
+	    // Trova le cabine di partenza
+	    List<Coordinata> cabineIniziali = new ArrayList<>();
+	    for (int riga = 0; riga < ROWS; riga++) {
+	        for (int colonna = 0; colonna < COLUMNS; colonna++) {
+	            if (plancia[riga][colonna].getComponente() instanceof CabinaPartenza) {
+	                cabineIniziali.add(new Coordinata(riga, colonna));
+	            }
+	        }
+	    }
+
+	    if (cabineIniziali.isEmpty()) {
+	        // Se non c'è una cabina di partenza, tutti i componenti sono considerati scollegati (o la nave è distrutta)
+	        for (int riga = 0; riga < ROWS; riga++) {
+	            for (int colonna = 0; colonna < COLUMNS; colonna++) {
+	                if (plancia[riga][colonna].getComponente() != null) {
+	                    disconnessi.add(new Coordinata(riga, colonna));
+	                }
+	            }
+	        }
+	        return disconnessi;
+	    }
+
+	    boolean[][] visitato = new boolean[ROWS][COLUMNS];
+	    List<Coordinata> componentiConnessi = new ArrayList<>();
+	    Queue<Coordinata> coda = new LinkedList<>();
+
+	    for (Coordinata inizio : cabineIniziali) {
+	        if (plancia[inizio.getX()][inizio.getY()].getComponente() != null && !visitato[inizio.getX()][inizio.getY()]) {
+	            coda.offer(inizio);
+	            visitato[inizio.getX()][inizio.getY()] = true;
+	            componentiConnessi.add(inizio);
+
+	            while (!coda.isEmpty()) {
+	                Coordinata corrente = coda.poll();
+	                int riga = corrente.getX();
+	                int colonna = corrente.getY();
+	                Componente componenteCorrente = plancia[riga][colonna].getComponente();
+
+	                // verifica i vicini
+	                int[][] direzioni = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}}; // DESTRA, SINISTRA, GIÙ, SU
+	                for (int[] direzione : direzioni) {
+	                    int nuovaRiga = riga + direzione[0];
+	                    int nuovaColonna = colonna + direzione[1];
+
+	                    if (nuovaRiga >= 0 && nuovaRiga < ROWS && nuovaColonna >= 0 && nuovaColonna < COLUMNS && !visitato[nuovaRiga][nuovaColonna]) {
+	                        Componente componenteVicino = plancia[nuovaRiga][nuovaColonna].getComponente();
+	                        if (componenteVicino != null) {
+	                            // Controlla la compatibilità della connessione tra componenteCorrente e componenteVicino
+	                            boolean connesso = false;
+	                            if (direzione[0] == 0 && direzione[1] == 1) { // DESTRA
+	                                connesso = connettoriCompatibili(componenteCorrente.getConnettoreDX(), componenteVicino.getConnettoreSX());
+	                            } else if (direzione[0] == 0 && direzione[1] == -1) { // SINISTRA
+	                                connesso = connettoriCompatibili(componenteCorrente.getConnettoreSX(), componenteVicino.getConnettoreDX());
+	                            } else if (direzione[0] == 1 && direzione[1] == 0) { // GIÙ
+	                                connesso = connettoriCompatibili(componenteCorrente.getConnettoreGIU(), componenteVicino.getConnettoreSU());
+	                            } else if (direzione[0] == -1 && direzione[1] == 0) { // SU
+	                                connesso = connettoriCompatibili(componenteCorrente.getConnettoreSU(), componenteVicino.getConnettoreGIU());
+	                            }
+
+	                            if (connesso) {
+	                                visitato[nuovaRiga][nuovaColonna] = true;
+	                                coda.offer(new Coordinata(nuovaRiga, nuovaColonna));
+	                                componentiConnessi.add(new Coordinata(nuovaRiga, nuovaColonna));
+	                            }
+	                        }
+	                    }
+	                }
+	            }
+	        }
+	    }
+
+	    // Raccogli tutti i componenti che non sono stati visitati
+	    for (int riga = 0; riga < ROWS; riga++) {
+	        for (int colonna = 0; colonna < COLUMNS; colonna++) {
+	            if (plancia[riga][colonna].getComponente() != null && !visitato[riga][colonna]) {
+	                disconnessi.add(new Coordinata(riga, colonna));
+	            }
+	        }
+	    }
+
+	    return disconnessi;
 	}
 }
