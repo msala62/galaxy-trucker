@@ -65,7 +65,7 @@ public class Cannonata {
 			case SU:
 				if (coordinata > 0 && coordinata <= nave.getPlancia()[0].length) {
 					for (int i = 0; i < nave.getPlancia().length; i++) {
-						if (nave.getPlancia()[i][coordinata] != null)
+						if (nave.getPlancia()[i][coordinata].getComponente() != null)
 							return nave.getPlancia()[i][coordinata];
 					}
 				}
@@ -74,7 +74,7 @@ public class Cannonata {
 			case GIU:
 				if (coordinata > 0 && coordinata <= nave.getPlancia()[0].length) {
 					for (int i = nave.getPlancia().length; i > 0; i--) {
-						if (nave.getPlancia()[i][coordinata] != null)
+						if (nave.getPlancia()[i][coordinata].getComponente() != null)
 							return nave.getPlancia()[i][coordinata];
 					}
 				}
@@ -83,7 +83,7 @@ public class Cannonata {
 			case SX:
 				if (coordinata > 0 && coordinata <= nave.getPlancia().length) {
 					for (int j = 0; j < nave.getPlancia()[0].length; j++) {
-						if (nave.getPlancia()[coordinata][j] != null)
+						if (nave.getPlancia()[coordinata][j].getComponente() != null)
 							return nave.getPlancia()[coordinata][j];
 					}
 				}
@@ -92,7 +92,7 @@ public class Cannonata {
 			case DX:
 				if (coordinata > 0 && coordinata <= nave.getPlancia().length) {
 					for (int j = nave.getPlancia()[0].length; j > 0; j--) {
-						if (nave.getPlancia()[coordinata][j] != null)
+						if (nave.getPlancia()[coordinata][j].getComponente() != null)
 							return nave.getPlancia()[coordinata][j];
 					}
 				}

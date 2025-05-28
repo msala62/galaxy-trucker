@@ -104,11 +104,11 @@ public class ZonaDiGuerra extends Carta {
 	private Giocatore minorEquipaggio(List<Giocatore> giocatori) {
 		Giocatore gMinorEquipaggio = giocatori.getFirst();
 		for (int i = 0; i < giocatori.size(); i++) {
-			if (giocatori.get(i).getNave().getEquipaggioTotale() < gMinorEquipaggio.getNave().getEquipaggioTotale())
+			if (giocatori.get(i).getNave().getEquipaggio() < gMinorEquipaggio.getNave().getEquipaggio())
 				gMinorEquipaggio = giocatori.get(i);
 
-			else if (giocatori.get(i).getNave().getEquipaggioTotale() == gMinorEquipaggio.getNave()
-					.getEquipaggioTotale()) {
+			else if (giocatori.get(i).getNave().getEquipaggio() == gMinorEquipaggio.getNave()
+					.getEquipaggio()) {
 			} // pareggi si risolvono penalizzando il giocatore più avanti nella rotta:DA FARE
 				// DOPO
 

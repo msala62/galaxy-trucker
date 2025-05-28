@@ -46,6 +46,9 @@ public class Meteorite {
 	}
 
 	private boolean hasLatoLiscio(Componente comp) {
+		 if (comp == null) 
+	            return false;
+	        
 		switch (direzione) {
 
 		case SU:
@@ -59,7 +62,6 @@ public class Meteorite {
 		case SX:
 			if (comp.getConnettoreSX() == Connettore.LISCIO)
 				return true;
-
 			break;
 		case DX:
 			if (comp.getConnettoreDX() == Connettore.LISCIO)
@@ -105,7 +107,7 @@ public class Meteorite {
 		case SU:
 			if (coordinata >= 0 && coordinata < nave.getPlancia()[0].length) {
 				for (int i = 0; i < nave.getPlancia().length; i++) {
-					if (nave.getPlancia()[i][coordinata] != null)
+					if (nave.getPlancia()[i][coordinata].getComponente() != null)
 						return nave.getPlancia()[i][coordinata];
 				}
 			}
@@ -114,7 +116,7 @@ public class Meteorite {
 		case GIU:
 			if (coordinata >= 0 && coordinata < nave.getPlancia()[0].length) {
 				for (int i = nave.getPlancia().length - 1; i >= 0; i--) {
-					if (nave.getPlancia()[i][coordinata] != null)
+					if (nave.getPlancia()[i][coordinata].getComponente() != null)
 						return nave.getPlancia()[i][coordinata];
 				}
 			}
@@ -123,7 +125,7 @@ public class Meteorite {
 		case SX:
 			if (coordinata >= 0 && coordinata < nave.getPlancia().length) {
 				for (int j = 0; j < nave.getPlancia()[0].length; j++) {
-					if (nave.getPlancia()[coordinata][j] != null)
+
 						return nave.getPlancia()[coordinata][j];
 				}
 			}
@@ -132,7 +134,7 @@ public class Meteorite {
 		case DX:
 			if (coordinata >= 0 && coordinata < nave.getPlancia().length) {
 				for (int j = nave.getPlancia()[0].length - 1; j >= 0; j--) {
-					if (nave.getPlancia()[coordinata][j] != null)
+					if (nave.getPlancia()[coordinata][j].getComponente() != null)
 						return nave.getPlancia()[coordinata][j];
 				}
 			}

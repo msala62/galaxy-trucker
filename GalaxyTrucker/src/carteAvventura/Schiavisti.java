@@ -59,7 +59,7 @@ public class Schiavisti extends Carta {
 				} else if (potenza< potenzaRichiesta) {
 
 					System.out.println("Potenza insufficiente: subisce la perdita di equipaggio!");
-					if (giocatore.getNave().getEquipaggioTotale() < equipaggioDaPerdere) {
+					if (giocatore.getNave().getEquipaggio() < equipaggioDaPerdere) {
 						System.out.println("Equipaggio insufficiente )");
 						System.out.println("Giocatore costretto ad abbandonare la corsa");
 						//TODO: giocatore.abbandonaCorsa();

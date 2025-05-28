@@ -56,7 +56,7 @@ public class NaveAbbandonata extends Carta {
 			// se si
 			if (risposta.equals("s")) {
 
-				if (giocatore.getNave().getEquipaggioTotale() >= equipaggioDaPerdere && isUsed == false) {
+				if (giocatore.getNave().getEquipaggio() >= equipaggioDaPerdere && isUsed == false) {
 					//TODO: Volo.cambiaPosizione(giocatore, giorniDaPerdere,-1)
 					if (giocatore.getNave().eliminaEquipaggio(equipaggioDaPerdere)) {
 						isUsed = true;

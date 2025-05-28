@@ -211,7 +211,7 @@ public abstract class Nave {
 		int energia = 0;
 		
 		for(int i = 0; i < ROWS; i++) {
-			for(int j = 0; i < COLUMNS; j++) {
+			for(int j = 0; j < COLUMNS; j++) {
 				if(isUtilizzabile(this.plancia[i][j]) && this.plancia[i][j].getComponente().equals(Batteria.class)) {
 					Batteria batteria = (Batteria)this.plancia[i][j].getComponente();
 					energia += batteria.getCarica();
@@ -239,11 +239,12 @@ public abstract class Nave {
 
 	// GEORGE: metodo per eliminare l'equipaggio dalla nave
 	public boolean eliminaEquipaggio(int equipaggioDaEliminare) {
-		if (equipaggioDaEliminare == 0)
-			return true;
+		
 		
 		for (int i = 0; i < plancia.length; i++) {
 			for (int j = 0; j < plancia[0].length; j++) {
+				if (equipaggioDaEliminare == 0)
+					return true;
 				if (isUtilizzabile(this.plancia[i][j]) && this.plancia[i][j].getComponente() instanceof CabinaPartenza) {
 					CabinaPartenza c = (CabinaPartenza) this.plancia[i][j].getComponente();
 					while (c.getEquipaggio() != 0 && equipaggioDaEliminare > 0) {
@@ -253,7 +254,7 @@ public abstract class Nave {
 				}
 			}
 		}
-		return false;
+		return equipaggioDaEliminare == 0;
 	}
 
 	//Funzione per scambiare merce tra due stive, oppure per scartare la merce contenuta in una stiva
@@ -665,13 +666,13 @@ public abstract class Nave {
 					
 					System.out.println("La tua potenza motrice ora e' " + potenzaMotrice + ", e hai ancora " + this.getEnergia() + "segnalini batteria. Vuoi attivare un motore doppio? S/N\n");
 					risposta = sc.nextLine();
-					while(risposta!="S" || risposta!="N")
+					while(!risposta.equalsIgnoreCase("S") || !risposta.equalsIgnoreCase("N"))
 					{
 						System.out.println("Input errato. Inserire 'S' per si oppure 'N' per no");
 						risposta = sc.nextLine();
 					}
 					
-					if(risposta=="S") 
+					if(risposta.equalsIgnoreCase("S")) 
 					{
 						//Usato per essere sicuri chje si scali solamente un solo segnalino batteria
 						boolean caricaScalata=false;
@@ -733,13 +734,13 @@ public abstract class Nave {
 					
 					System.out.println("La tua potenza motrice ora e' " + potenzaFuoco + ", e hai ancora " + this.getEnergia() + "segnalini batteria. Vuoi attivare un motore doppio? S/N\n");
 					risposta = sc.nextLine();
-					while(risposta!="S" || risposta!="N")
+					while(!risposta.equalsIgnoreCase("S") || !risposta.equalsIgnoreCase("N"))
 					{
 						System.out.println("Input errato. Inserire 'S' per si oppure 'N' per no");
 						risposta = sc.nextLine();
 					}
 					
-					if(risposta=="S") 
+					if(risposta.equalsIgnoreCase("S")) 
 					{
 						//Usato per essere sicuri chje si scali solamente un solo segnalino batteria
 						boolean caricaScalata=false;

@@ -53,7 +53,7 @@ public class StazioneAbbandonata extends Carta {
 
 			// se si
 			if (risposta.equals("s")) {
-				if (giocatore.getNave().getEquipaggioTotale() < equipaggioRichiesto) {
+				if (giocatore.getNave().getEquipaggio() < equipaggioRichiesto) {
 					System.out.println("gioicatore non può attraccare alla stazione"); //equipaggio minore di quello richiesto
 				} else {
 //TODO:				Volo.cambiaPosizione(giocatore, giorniDaPerdere,-1)/
@@ -67,7 +67,7 @@ public class StazioneAbbandonata extends Carta {
 
 			// se no
 			else {
-				System.out.println("(giocatore.getNome() + \" ha rifiutato l'offerta.\"");
+				System.out.println(giocatore.getNome() + " ha rifiutato l'offerta.");
 			}
 
 		}
