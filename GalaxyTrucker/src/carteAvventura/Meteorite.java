@@ -86,13 +86,13 @@ public class Meteorite {
 				} else if (proteggeComp(giocatore.getNave(), direzione)) {
 					System.out.println("Scudo attivato: componente salvo.");
 				} else {
-					// giocatore.getNave().distruggiComponente(c);
+					 giocatore.getNave().eliminaComponente(c.getPosizione().getX(), c.getPosizione().getY());
 					System.out.println("Componente distrutto dal meteorite piccolo!");
 				}
 
 			} else {
 				// Meteorite grosso – nessuna difesa se non con cannone (non gestito qui)
-				// giocatore.getNave().distruggiComponente(c);
+				 giocatore.getNave().eliminaComponente(c.getPosizione().getX(), c.getPosizione().getY());
 				System.out.println("Componente distrutto dal meteorite grosso!");
 			}
 		} else {

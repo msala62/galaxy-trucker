@@ -52,7 +52,7 @@ public class Cannonata {
 			if (dimensione == Dimensione.LEGGERA && proteggeComp(giocatore.getNave(), direzione)) {
 				System.out.println("Scudo attivato: componente salvo.");
 			} else {
-				//giocatore.getNave().distruggiComponente(c);
+				 giocatore.getNave().eliminaComponente(c.getPosizione().getX(), c.getPosizione().getY());
 				System.out.println("Componente distrutto!");
 			}
 		} else {

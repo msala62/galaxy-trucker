@@ -25,7 +25,7 @@ public class Sabotaggio extends Carta {
 			int j= random.nextInt(12)+1;
 			if (gMinorEquipaggio.getNave().getPlancia()[i][j].isUtilizzabile() && gMinorEquipaggio.getNave().getPlancia()[i][j].getComponente()!=null)
 			{
-				//TODO: gMinorEquipaggio.getNave().distruggiComponente(i, j);
+				 gMinorEquipaggio.getNave().eliminaComponente(i, j);
 				colpito = true;
 			} else {
 				tentativi++;
