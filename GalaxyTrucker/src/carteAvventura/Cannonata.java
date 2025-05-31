@@ -61,39 +61,49 @@ public class Cannonata {
 	}
 
 	public Casella getCasellaDacolpire(Nave nave, Cannonata.Direzione direzione, int coordinata) {
+		Casella[][] plancia = nave.getPlancia();
+		int ROWS = plancia.length;
+		int COLS = plancia[0].length;
+
+		if (ROWS == 0 || COLS == 0) return null;
+
 		switch (direzione) {
 			case SU:
-				if (coordinata > 0 && coordinata <= nave.getPlancia()[0].length) {
-					for (int i = 0; i < nave.getPlancia().length; i++) {
-						if (nave.getPlancia()[i][coordinata].getComponente() != null)
-							return nave.getPlancia()[i][coordinata];
+				if (coordinata >= 1 && coordinata <= COLS) {
+					int actualColumnIndex = coordinata - 1;
+					for (int i = 0; i < ROWS; i++) {
+						if (plancia[i][actualColumnIndex].getComponente() != null)
+							return plancia[i][actualColumnIndex];
 					}
 				}
 				return null;
-   
+
 			case GIU:
-				if (coordinata > 0 && coordinata <= nave.getPlancia()[0].length) {
-					for (int i = nave.getPlancia().length; i > 0; i--) {
-						if (nave.getPlancia()[i][coordinata].getComponente() != null)
-							return nave.getPlancia()[i][coordinata];
+				if (coordinata >= 1 && coordinata <= COLS) {
+					int actualColumnIndex = coordinata - 1;
+					for (int i = ROWS - 1; i >= 0; i--) {
+						if (plancia[i][actualColumnIndex].getComponente() != null)
+							return plancia[i][actualColumnIndex];
 					}
 				}
 				return null;
 
 			case SX:
-				if (coordinata > 0 && coordinata <= nave.getPlancia().length) {
-					for (int j = 0; j < nave.getPlancia()[0].length; j++) {
-						if (nave.getPlancia()[coordinata][j].getComponente() != null)
-							return nave.getPlancia()[coordinata][j];
+				if (coordinata >= 1 && coordinata <= ROWS) {
+					int actualRowIndex = coordinata - 1;
+					for (int j = 0; j < COLS; j++) {
+						if (plancia[actualRowIndex][j].getComponente() != null)
+							return plancia[actualRowIndex][j];
 					}
 				}
 				return null;
 
 			case DX:
-				if (coordinata > 0 && coordinata <= nave.getPlancia().length) {
-					for (int j = nave.getPlancia()[0].length; j > 0; j--) {
-						if (nave.getPlancia()[coordinata][j].getComponente() != null)
-							return nave.getPlancia()[coordinata][j];
+				if (coordinata >= 1 && coordinata <= ROWS) {
+					int actualRowIndex = coordinata - 1;
+					for (int j = COLS - 1; j >= 0; j--) {
+						if (plancia[actualRowIndex][j].getComponente() != null)
+							return plancia[actualRowIndex][j];
 					}
 				}
 				return null;

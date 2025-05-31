@@ -13,6 +13,7 @@ import java.util.List;
 import componenti.Cannone;
 import game_logic.Giocatore;
 import nave.*;
+import planciavolo.PlanciaVolo;
 import merci.*;
 
 public class Contrabbandieri extends Carta {
@@ -23,9 +24,7 @@ public class Contrabbandieri extends Carta {
 	private int cargoDaPerdere;
 	private boolean isSconfitto = false;
 
-	private boolean getIsSconfitto() {
-		return isSconfitto;
-	}
+
 
 	public Contrabbandieri(Livello livello, double potenzaRichiesta, int giorniDaPerdere, int cargoDaPerdere,
 			List<Cargo> cargo)
@@ -46,19 +45,21 @@ public class Contrabbandieri extends Carta {
 	}
 
 	@Override
-	public void azione(List<Giocatore> giocatori) {
-		System.out.println(">> Carta Avventura: Contrabbandieri");
+	public void azione(List<Giocatore> giocatori, PlanciaVolo plancia) {
+		System.out.println("Evento: Contrabbandieri");
 		System.out.println("Potenza richiesta per sconfiggerli: " + potenzaRichiesta);
 		for (Giocatore giocatore : giocatori) {
-			double potenza = giocatore.getNave().getPotenzaFuoco();
-			System.out.println("Giocatore: " + giocatore.getNome());
-			System.out.println("  Potenza di fuoco: " + potenza);
 			if (isSconfitto)
-				break;
+				return;
+			
+			double potenza = giocatore.getNave().getPotenzaFuoco();
+			System.out.println("==================== Giocatore: " + giocatore.getNome()+"========================");
+			System.out.println("  Potenza di fuoco: " + potenza);
+
 
 			if (potenza > potenzaRichiesta) {
 				isSconfitto = true;
-				// TODO:Volo.cambiaPosizione(giocatore, giorniDaPerdere,-1);
+				plancia.spostamentoGiocatore(giocatore, -giorniDaPerdere);
 				giocatore.getNave().caricaCargo(cargo);
 				System.out.println("  Risultato: VITTORIA");
 				System.out.println("  Il giocatore sconfigge i contrabbandieri e carica le seguenti merci: " + cargo);

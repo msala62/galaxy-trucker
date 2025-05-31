@@ -9,6 +9,7 @@ package carteAvventura;
 
 import java.util.*;
 import game_logic.Giocatore;
+import planciavolo.PlanciaVolo;
 
 public class NaveAbbandonata extends Carta {
 
@@ -32,18 +33,18 @@ public class NaveAbbandonata extends Carta {
 	}
 
 	@Override
-	public void azione(List<Giocatore> giocatori) {
+	public void azione(List<Giocatore> giocatori, PlanciaVolo plancia) {
 		Scanner scanner = new Scanner(System.in);
 		System.out.println("Evento: Nave Abbandonata!");
 		System.out.println("Il primo giocatore che accetta può perdere " + equipaggioDaPerdere
-				+ " membri dell’equipaggio per ottenere " + creditiDaAquistare + " crediti, ma perderà "
+				+ " membri dell'equipaggio per ottenere " + creditiDaAquistare + " crediti, ma perderà "
 				+ giorniDaPerdere + " giorni di volo.");
 
 		for (Giocatore giocatore : giocatori) {
 			if (isUsed)
 				break;
 
-			System.out.println("Giocatore: " + giocatore.getNome());
+			System.out.println("==================== Giocatore: " + giocatore.getNome()+"========================");
 			System.out.print("Vuoi accettare l'offerta? (s/n): ");
 			String risposta = scanner.nextLine().trim().toLowerCase();
 
@@ -56,8 +57,8 @@ public class NaveAbbandonata extends Carta {
 			// se si
 			if (risposta.equals("s")) {
 
-				if (giocatore.getNave().getEquipaggio() >= equipaggioDaPerdere && isUsed == false) {
-					//TODO: Volo.cambiaPosizione(giocatore, giorniDaPerdere,-1)
+				if (giocatore.getNave().getEquipaggioTotale() >= equipaggioDaPerdere && isUsed == false) {
+					plancia.spostamentoGiocatore(giocatore, -giorniDaPerdere);
 					if (giocatore.getNave().eliminaEquipaggio(equipaggioDaPerdere)) {
 						isUsed = true;
 						giocatore.aggiungiCrediti(creditiDaAquistare);
@@ -73,11 +74,10 @@ public class NaveAbbandonata extends Carta {
 
 			// se no
 			else {
-				System.out.println("(giocatore.getNome() + \" ha rifiutato l'offerta.\"");
+				System.out.println(giocatore.getNome() + " ha rifiutato l'offerta.");
 			}
 
 		}
-		scanner.close();
 	};
 
 }

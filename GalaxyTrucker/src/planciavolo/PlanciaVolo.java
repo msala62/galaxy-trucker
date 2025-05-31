@@ -58,6 +58,13 @@ public abstract class PlanciaVolo implements GestisciAttacchi {
         this.posizioniArrivo = new int[numPosizioniArrivo]; 
 
     }
+    public void PiazzaGiocatori(List<Giocatore> giocatori) {
+    	for(int i = 0; i < giocatori.size(); i++) {
+    		int[] posizioni = {1, 3, 4, 5};
+    		this.getCaselle().get(posizioni[i]).setGiocatorePresente(giocatori.get(i));
+    	}
+    }
+    
  
     public abstract void Stampa();
     
@@ -285,4 +292,5 @@ public abstract class PlanciaVolo implements GestisciAttacchi {
 	  public List<Giocatore> getOrdineArrivo() {
 	       return ordineArrivo;
 	   }
+
 }

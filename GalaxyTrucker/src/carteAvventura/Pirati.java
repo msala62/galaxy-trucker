@@ -7,6 +7,7 @@ package carteAvventura;
 import java.util.List;
 
 import game_logic.Giocatore;
+import planciavolo.PlanciaVolo;
 
 public class Pirati extends Carta {
 
@@ -40,14 +41,16 @@ public class Pirati extends Carta {
 	
 
 	@Override
-	public void azione(List<Giocatore> giocatori) {
+	public void azione(List<Giocatore> giocatori, PlanciaVolo plancia) {
 		System.out.println("Evento: Attacco dei Pirati");
         System.out.println("Potenza richiesta per sconfiggere i pirati: " + potenzaRichiesta);
         System.out.println("Chi riesce li sconfigge e guadagna " + creditiDaAquistare + " crediti.");
 		for (Giocatore giocatore: giocatori) {
+			System.out.println("==================== Giocatore: " + giocatore.getNome()+"========================");
 				if (!isSconfitto) {
 				if (giocatore.getNave().getPotenzaFuoco() > potenzaRichiesta) {
-					// TODO:Volo.cambiaPosizione(giocatore, giorniDaPerdere,-1);
+					plancia.spostamentoGiocatore(giocatore, -giorniDaPerdere);
+					
 					isSconfitto = true;
                     System.out.println(" I pirati sono stati sconfitti da " + giocatore.getNome() + "!");
 					if (giocatore.isLeader()) {

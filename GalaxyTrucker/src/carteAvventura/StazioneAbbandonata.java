@@ -12,6 +12,7 @@ package carteAvventura;
 import java.util.*;
 import game_logic.Giocatore;
 import merci.*;
+import planciavolo.PlanciaVolo;
 
 public class StazioneAbbandonata extends Carta {
 
@@ -35,13 +36,14 @@ public class StazioneAbbandonata extends Carta {
 	}
 
 	@Override
-	public void azione(List<Giocatore> giocatori) {
+	public void azione(List<Giocatore> giocatori, PlanciaVolo plancia) {
 		Scanner scanner = new Scanner(System.in);
 		for (Giocatore giocatore : giocatori) {
+			
 			if (isUsed)
 				break;
 
-			System.out.println("Giocatore: " + giocatore.getNome());
+			System.out.println("==================== Giocatore: " + giocatore.getNome()+"========================");
 			System.out.print("Vuoi accettare l'offerta? (s/n): ");
 			String risposta = scanner.nextLine().trim().toLowerCase();
 
@@ -53,10 +55,10 @@ public class StazioneAbbandonata extends Carta {
 
 			// se si
 			if (risposta.equals("s")) {
-				if (giocatore.getNave().getEquipaggio() < equipaggioRichiesto) {
+				if (giocatore.getNave().getEquipaggioTotale() < equipaggioRichiesto) {
 					System.out.println("gioicatore non può attraccare alla stazione"); //equipaggio minore di quello richiesto
 				} else {
-//TODO:				Volo.cambiaPosizione(giocatore, giorniDaPerdere,-1)/
+					plancia.spostamentoGiocatore(giocatore, -giorniDaPerdere);
 					giocatore.getNave().caricaCargo(cargo);
 					isUsed=true;
 					System.out.println(giocatore.getNome() + " ha accettato e ottenuto " + cargo + " cargo.");
@@ -71,6 +73,5 @@ public class StazioneAbbandonata extends Carta {
 			}
 
 		}
-		scanner.close();
 	}
 }

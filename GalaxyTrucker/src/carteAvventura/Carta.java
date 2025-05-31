@@ -2,6 +2,7 @@ package carteAvventura;
 
 import java.util.*;
 import game_logic.*;
+import planciavolo.PlanciaVolo;
 
 public abstract class Carta {
 	
@@ -15,9 +16,7 @@ public abstract class Carta {
 		this.setNome(nome);
 	}
 	
-	public void azione(List<Giocatore> giocatori) {
-				
-	}
+	public abstract void azione(List<Giocatore> giocatori, PlanciaVolo Plancia);
 
 	public String getNome() {
 		return nome;

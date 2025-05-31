@@ -2,6 +2,7 @@ package carteAvventura;
 
 import java.util.List;
 import game_logic.Giocatore;
+import planciavolo.PlanciaVolo;
 
 public class Schiavisti extends Carta {
 
@@ -32,20 +33,21 @@ public class Schiavisti extends Carta {
 		       "Sconfitto: " + isSconfitto;
 	}
 
-
-	public void azione(List<Giocatore> giocatori) {
+	
+	@Override
+	public void azione(List<Giocatore> giocatori, PlanciaVolo plancia) {
 		
 		System.out.println("Evento: Attacco Schiavisti");
 		System.out.println("Potenza richiesta per sconfiggerli: " + potenzaRichiesta);
 		System.out.println("Se non sconfitti, i giocatori perdono " + equipaggioDaPerdere + " membri dell'equipaggio.");
 		
 		for (Giocatore giocatore: giocatori) {
-			System.out.println(">> Giocatore: " + giocatore.getNome());
+			System.out.println("==================== Giocatore: " + giocatore.getNome()+"========================");
 			double potenza = giocatore.getNave().getPotenzaFuoco();
 			System.out.println("Potenza di fuoco: " + potenza);
 			if (!isSconfitto) {
 				if (potenza > potenzaRichiesta) {
-					// TODO:Volo.cambiaPosizione(giocatore, giorniDaPerdere,-1);
+					plancia.spostamentoGiocatore(giocatore, -giorniDaPerdere);
 					System.out.println("Gli Schiavisti sono stati sconfitti da " + giocatore.getNome());
 					System.out.println("Perde " + giorniDaPerdere + " giorni di volo.");
 					isSconfitto = true;
@@ -59,7 +61,7 @@ public class Schiavisti extends Carta {
 				} else if (potenza< potenzaRichiesta) {
 
 					System.out.println("Potenza insufficiente: subisce la perdita di equipaggio!");
-					if (giocatore.getNave().getEquipaggio() < equipaggioDaPerdere) {
+					if (giocatore.getNave().getEquipaggioTotale() < equipaggioDaPerdere) {
 						System.out.println("Equipaggio insufficiente )");
 						System.out.println("Giocatore costretto ad abbandonare la corsa");
 						//TODO: giocatore.abbandonaCorsa();

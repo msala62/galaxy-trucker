@@ -26,7 +26,7 @@ public class Test {
     private static void printPlayerState(Giocatore giocatore) {
         System.out.println("\n--- Player State: " + giocatore.getNome() + " ---");
         System.out.println("Credits: " + giocatore.getCrediti());
-        System.out.println("Total Crew: " + giocatore.getNave().getEquipaggio()); // Assuming getEquipaggioTotale exists and is correct
+        System.out.println("Total Crew: " + giocatore.getNave().getEquipaggioTotale()); // Assuming getEquipaggioTotale exists and is correct
         System.out.println("Ship Layout:");
         giocatore.getNave().stampa(); // Uses the improved stampa method
         System.out.println("------------------------------------");
@@ -114,7 +114,7 @@ public class Test {
             // Call the action method for the card
             // NOTE: If action() methods require user input, you will need to provide it manually in the console.
             // To automate, pass a mocked Scanner to action() methods after refactoring them.
-            card.azione(players);
+            card.azione(players,planciaVolo);
 
             System.out.println("\n===== POST-CARD #" + cardCount + " STATUS =====");
             for (Giocatore player : players) {

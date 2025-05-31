@@ -513,7 +513,7 @@ public class Game {
 			while(!mazzo.isEmpty()) {
 				int scelta = new Random().nextInt(0, mazzo.size());
 				Carta pescata = mazzo.get(scelta);
-				pescata.azione(giocatori);
+				pescata.azione(giocatori, plancia);
 			    SchermataIniziale(giocatori, plancia);
 			}
 			
@@ -562,7 +562,7 @@ public class Game {
 		while(!mazzo.isEmpty()) {
 			int scelta = new Random().nextInt(0, mazzo.size());
 			Carta pescata = mazzo.get(scelta);
-			pescata.azione(giocatori);
+			pescata.azione(giocatori,plancia);
 		}
 		
 		System.out.println("==================== GIOCATORI, SIAMO GIUNTI ALLA FINE DEL VIAGGIO! ====================");

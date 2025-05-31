@@ -13,11 +13,11 @@ import componenti.Componente;
 import componenti.Connettore;
 import game_logic.Giocatore;
 import nave.*;
+import planciavolo.PlanciaVolo;
 
 public class PioggiaDiMeteoriti extends Carta {
 
 	private List<Meteorite> meteoriti;
-	private Random random = new Random();
 
 	public PioggiaDiMeteoriti(Livello livello, List<Meteorite> Meteoriti) {
 		super(livello, "Pioggia Di Meteoriti");
@@ -30,11 +30,11 @@ public class PioggiaDiMeteoriti extends Carta {
 	}
 
 	@Override
-	public void azione(List<Giocatore> giocatori) {
+	public void azione(List<Giocatore> giocatori, PlanciaVolo plancia) {
 		System.out.println("evento: Pioggia di Meteoriti");
 	    System.out.println(" Ogni giocatore sarà colpito");
 		for (Giocatore giocatore : giocatori) {
-			 System.out.println("\n>> Giocatore: " + giocatore.getNome());
+			System.out.println("==================== Giocatore: " + giocatore.getNome()+"========================");
 			for (Meteorite meteorite : meteoriti) {
 				meteorite.applicaSu(giocatore);
 			}

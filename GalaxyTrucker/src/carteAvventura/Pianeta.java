@@ -15,4 +15,10 @@ public class Pianeta {
 	public List<Cargo> getPianeta() {
 		return cargo;
 	}
+	
+	@Override
+	public String toString() {
+		return cargo.toString();
+		
+	}
 }

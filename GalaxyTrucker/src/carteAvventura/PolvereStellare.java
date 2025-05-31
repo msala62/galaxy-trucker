@@ -10,6 +10,7 @@ import componenti.Componente;
 import componenti.Connettore;
 import game_logic.Giocatore;
 import nave.*;
+import planciavolo.PlanciaVolo;
 
 public class PolvereStellare extends Carta {
 	private int giorniDaPerdere;
@@ -26,7 +27,7 @@ public class PolvereStellare extends Carta {
 	}
 
 	@Override
-	public void azione(List<Giocatore> giocatori) {
+	public void azione(List<Giocatore> giocatori, PlanciaVolo plancia) {
 		System.out.println("Evento: Polvere Stellare");
 		System.out.println("Ogni giocatore perderà 1 giorno di volo per ogni connettore esposto sulla propria nave.");
 		for (Giocatore giocatore : giocatori) {
@@ -38,10 +39,10 @@ public class PolvereStellare extends Carta {
 				}
 			}
 
-			System.out.println("\n>> Giocatore: " + giocatore.getNome());
+			System.out.println("==================== Giocatore: " + giocatore.getNome()+"========================");
 			System.out.println("Connettori esposti trovati: " + giorniDaPerdere);
 			System.out.println("Perde " + giorniDaPerdere + " giorni di volo.");
-			// TODO: Volo.cambiaPosizione(giocatore, giorniDaPerdere , -1)
+			plancia.spostamentoGiocatore(giocatore, -giorniDaPerdere);
 		}
 
         System.out.println("Fine effetto Polvere Stellare");

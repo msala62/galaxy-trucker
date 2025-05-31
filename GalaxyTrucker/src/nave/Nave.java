@@ -1,6 +1,7 @@
 package nave;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -20,7 +21,6 @@ public abstract class Nave {
 		this.ROWS = rows;
 		this.COLUMNS = columns;
 		this.plancia = new Casella[ROWS][COLUMNS];
-		//this.equipaggio = getEquipaggioTotale();
 		
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 7; j++) {
@@ -214,7 +214,7 @@ public abstract class Nave {
 		
 		for(int i = 0; i < ROWS; i++) {
 			for(int j = 0; j < COLUMNS; j++) {
-				if(isUtilizzabile(this.plancia[i][j]) && this.plancia[i][j].getComponente().equals(Batteria.class)) {
+				if(isUtilizzabile(this.plancia[i][j]) && this.plancia[i][j].getComponente() instanceof Batteria) {
 					Batteria batteria = (Batteria)this.plancia[i][j].getComponente();
 					energia += batteria.getCarica();
 				}
@@ -224,7 +224,7 @@ public abstract class Nave {
 		return energia;
 	}
 
-	/*public int getEquipaggioTotale() {
+	public int getEquipaggioTotale() {
 		int equipaggioTotale = 0;
 		
 		for (int i = 0; i < plancia.length; i++) {
@@ -237,7 +237,7 @@ public abstract class Nave {
 			}
 		}
 		return equipaggioTotale;
-	} */
+	} 
 
 	// GEORGE: metodo per eliminare l'equipaggio dalla nave
 	public boolean eliminaEquipaggio(int equipaggioDaEliminare) {
@@ -276,7 +276,7 @@ public abstract class Nave {
 			riga = sc.nextInt();
 			if(colonna == -1 && riga == -1) 
 			{
-				sc.close();
+				
 				return true;
 			}	
 		}
@@ -286,7 +286,7 @@ public abstract class Nave {
 		if(donatore.getCargoCorrente().isEmpty()) 
 		{
 			System.out.println("La stiva donatrice e' vuota.");
-			sc.close();
+			
 			return false;
 		}
 		
@@ -301,7 +301,7 @@ public abstract class Nave {
 			riga = sc.nextInt();
 			if(colonna == -1 && riga == -1) 
 			{
-				sc.close();
+				
 				return true;
 			}
 		}
@@ -326,7 +326,7 @@ public abstract class Nave {
 			if(donatore.getCargoCorrente().get(selezioneDonatore-1).getColore() == ColoreCargo.ROSSO && !ricevente.isSpeciale()) 
 			{
 				System.out.println("La stiva ricevente non puo' accettare merce speciale rossa");
-				sc.close();
+				
 				return false;
 			}
 			
@@ -335,7 +335,7 @@ public abstract class Nave {
 			{
 				ricevente.getCargoCorrente().add(donatore.getCargoCorrente().get(selezioneDonatore-1));
 				donatore.getCargoCorrente().remove(selezioneDonatore-1);
-				sc.close();
+				
 				return false;
 			}
 			
@@ -354,7 +354,7 @@ public abstract class Nave {
 			if(ricevente.getCargoCorrente().get(selezioneRicevente-1).getColore() == ColoreCargo.ROSSO && !donatore.isSpeciale()) 
 			{
 				System.out.println("La stiva donatrice non puo' accettare merce speciale rossa");
-				sc.close();
+				
 				return false;
 			}
 			
@@ -367,7 +367,7 @@ public abstract class Nave {
 			//Alla ricevente si toglie la merce scambiata e si mette quella di temp. Si esce con return falso
 			ricevente.getCargoCorrente().remove(selezioneRicevente-1);
 			ricevente.getCargoCorrente().add(temp.getCargoCorrente().get(0));
-			sc.close();
+			
 			return false;
 		}
 		else 
@@ -384,7 +384,7 @@ public abstract class Nave {
 			}
 			
 			donatore.getCargoCorrente().remove(selezioneDonatore-1);
-			sc.close();
+			
 			return false;
 		}
 		
@@ -398,13 +398,13 @@ public abstract class Nave {
 		
 		//Creo una lista per sole merci rosse
 		List<Cargo> cargoRosso = new ArrayList<Cargo>();
-		for (Cargo merce : cargo)
-		{
-			if(merce.getColore()==ColoreCargo.ROSSO)
-			{
-				cargoRosso.add(merce);
-				cargo.remove(merce);
-			}
+		Iterator<Cargo> iterator = cargo.iterator();
+		while (iterator.hasNext()) {
+		    Cargo merce = iterator.next();
+		    if (merce.getColore() == ColoreCargo.ROSSO) {
+		        cargoRosso.add(merce);
+		        iterator.remove();
+		    }
 		}
 		
 		//Ordino le merci rimanenti in ordine decrescente di valore
@@ -668,7 +668,7 @@ public abstract class Nave {
 					
 					System.out.println("La tua potenza motrice ora e' " + potenzaMotrice + ", e hai ancora " + this.getEnergia() + "segnalini batteria. Vuoi attivare un motore doppio? S/N\n");
 					risposta = sc.nextLine();
-					while(!risposta.equalsIgnoreCase("S") || !risposta.equalsIgnoreCase("N"))
+					while(!risposta.equalsIgnoreCase("S") && !risposta.equalsIgnoreCase("N"))
 					{
 						System.out.println("Input errato. Inserire 'S' per si oppure 'N' per no");
 						risposta = sc.nextLine();
@@ -699,13 +699,12 @@ public abstract class Nave {
 					//Se la risposta è no esco dalla funzione con la potenza corrente
 					else 
 					{
-						sc.close();
+						
 						return potenzaMotrice;
 					}
 				}
 			}			
 		}
-		sc.close();
 		return potenzaMotrice;
 	}
 
@@ -736,7 +735,7 @@ public abstract class Nave {
 					
 					System.out.println("La tua potenza motrice ora e' " + potenzaFuoco + ", e hai ancora " + this.getEnergia() + "segnalini batteria. Vuoi attivare un motore doppio? S/N\n");
 					risposta = sc.nextLine();
-					while(!risposta.equalsIgnoreCase("S") || !risposta.equalsIgnoreCase("N"))
+					while(!risposta.equalsIgnoreCase("S") && !risposta.equalsIgnoreCase("N"))
 					{
 						System.out.println("Input errato. Inserire 'S' per si oppure 'N' per no");
 						risposta = sc.nextLine();
@@ -767,19 +766,15 @@ public abstract class Nave {
 					//Se la risposta è no esco dalla funzione con la potenza corrente
 					else 
 					{
-						sc.close();
+						
 						return potenzaFuoco;
 					}
 				}
 			}			
 		}
-		sc.close();
 		return potenzaFuoco;
 	}
 
-	public int getEquipaggio() {
-		return equipaggio;
-	}
 	//GEORGE: Metodo aggiunto per eliminare un componente dalla nave a causa di un evento negativo
 	public void eliminaComponente(int y, int x) {
 		//verifica coordinate

@@ -12,6 +12,7 @@ import java.util.List;
 import componenti.*;
 import game_logic.Giocatore;
 import nave.Nave;
+import planciavolo.PlanciaVolo;
 
 public class SpazioAperto extends Carta {
 
@@ -20,12 +21,12 @@ public class SpazioAperto extends Carta {
 	}
 
 	@Override
-	public void azione(List<Giocatore> giocatori) {
+	public void azione(List<Giocatore> giocatori, PlanciaVolo plancia) {
 		 System.out.println(" Carta Avventura: Spazio Aperto");
 		    System.out.println("Ogni giocatore dichiara la potenza motrice e avanza sulla rotta.");
 
 		for (Giocatore giocatore : giocatori) {
-			System.out.println("Giocatore: " + giocatore.getNome());
+			System.out.println("==================== Giocatore: " + giocatore.getNome()+"========================");
 	        int potenza = giocatore.getNave().getPotenzaMotrice();
 	        
 			if (potenza < 1) {
@@ -35,7 +36,7 @@ public class SpazioAperto extends Carta {
 			} else {
 				System.out.println("  Potenza motrice dichiarata: " + potenza);
 	            System.out.println("  Il giocatore avanza di " + (int) potenza + " spazi vuoti sulla rotta.");
-//TODO:			 Volo.cambiaPosizione(giocatore, giocatore.nave.getPotenzaMotrice , 1) 
+	            plancia.spostamentoGiocatore(giocatore, giocatore.getNave().getPotenzaMotrice());
 			}
 		}
 	}

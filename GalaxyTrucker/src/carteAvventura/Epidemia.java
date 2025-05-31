@@ -8,6 +8,7 @@ import java.util.List;
 import componenti.CabinaPartenza;
 import game_logic.Giocatore;
 import nave.Nave;
+import planciavolo.PlanciaVolo;
 
 public class Epidemia extends Carta {
 
@@ -16,12 +17,13 @@ public class Epidemia extends Carta {
 		// TODO Auto-generated constructor stub
 	}
 	
-	
-    public void azione(List<Giocatore> giocatori) {
+	@Override
+    public void azione(List<Giocatore> giocatori, PlanciaVolo plancia) {
 	
     	for (int x=0; x<giocatori.size(); x++)
     	{
     		Giocatore giocatore = giocatori.get(x);
+    		System.out.println("==================== Giocatore: " + giocatore.getNome()+"========================");
     		for (int i= 0; i<giocatore.getNave().getPlancia().length; i++ )
     		{
         		for (int j= 0; j<giocatore.getNave().getPlancia()[0].length; j++ )

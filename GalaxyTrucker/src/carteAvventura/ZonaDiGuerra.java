@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Random;
 
 import game_logic.Giocatore;
+import planciavolo.PlanciaVolo;
 
 public class ZonaDiGuerra extends Carta {
 
@@ -27,14 +28,15 @@ public class ZonaDiGuerra extends Carta {
 		return "Carta: " + getNome() + "\n" + "Livello: " + getLivello() + "\n" + "Cannonate: " + cannonate;
 	}
 
-	public void azione(List<Giocatore> giocatori) {
+	@Override
+	public void azione(List<Giocatore> giocatori, PlanciaVolo plancia) {
 		System.out.println("evento: Zona di Guerra");
 		System.out.println(
 				"Tre penalità verranno applicate ai giocatori peggiori per: Equipaggio, Potenza Motrice, Potenza di Fuoco.");
 
 		Giocatore gEquipaggio = minorEquipaggio(giocatori);
 		System.out.println(">> Giocatore con minor equipaggio: " + gEquipaggio.getNome());
-		penalitaMinorEquipaggio(gEquipaggio);
+		penalitaMinorEquipaggio(gEquipaggio, plancia);
 
 		Giocatore gMotore = minorPotenzaMotrice(giocatori);
 		System.out.println(">> Giocatore con minor potenza motrice: " + gMotore.getNome());
@@ -42,15 +44,14 @@ public class ZonaDiGuerra extends Carta {
 
 		Giocatore gFuoco = minorPotenzaFuoco(giocatori);
 		System.out.println(">> Giocatore con minor potenza di fuoco: " + gFuoco.getNome());
-		penalitaMinorPotenzaFuoco(gFuoco);
+		penalitaMinorPotenzaFuoco(gFuoco, plancia);
 	}
 
-	private void penalitaMinorEquipaggio(Giocatore giocatore) {
+	private void penalitaMinorEquipaggio(Giocatore giocatore, PlanciaVolo plancia) {
 		 System.out.println(">> Penalità per minor equipaggio:");
 		if (this.livello == Livello.I) {
 			System.out.println("Perde 3 giorni di volo.");
-			/* Volo.cambiaPosizione(giocatore, 3, -1) */
-			// TODO: implementare cambio posizione
+			plancia.spostamentoGiocatore(giocatore, -3);
 
 		} else if (this.livello == Livello.II) {
 			 System.out.println("Subisce cannonate");
@@ -60,7 +61,7 @@ public class ZonaDiGuerra extends Carta {
 
 		} else {
 			System.out.println("Perde cargo");
-			// giocatore.getNave().eliminaCargo(null)
+			giocatore.getNave().eliminaCargo(2);
 		}
 	}
 
@@ -73,8 +74,7 @@ public class ZonaDiGuerra extends Carta {
 
 		else if (this.livello == Livello.II) {
 			System.out.println("Perde Merci");
-			// giocatore.getNave().eliminaCargo(null)
-
+			giocatore.getNave().eliminaCargo(2);
 		} else {
 			System.out.println("Subisce cannonate");
 			for (Cannonata cannonata : cannonate) {
@@ -83,7 +83,7 @@ public class ZonaDiGuerra extends Carta {
 		}
 	}
 
-	private void penalitaMinorPotenzaFuoco(Giocatore giocatore) {
+	private void penalitaMinorPotenzaFuoco(Giocatore giocatore, PlanciaVolo plancia) {
 
 		if (this.livello == Livello.I) {
 			System.out.println("Subisce cannonate");
@@ -93,7 +93,7 @@ public class ZonaDiGuerra extends Carta {
 
 		} else if (this.livello == Livello.II) {
 			System.out.println("Perde 4 giorni di volo.");
-			// Volo.cambiaPosizione(giocatore, 4, -1);
+			plancia.spostamentoGiocatore(giocatore, -4);
 
 		} else {
 			System.out.println("Perde 4 Equipaggi.");
@@ -104,14 +104,13 @@ public class ZonaDiGuerra extends Carta {
 	private Giocatore minorEquipaggio(List<Giocatore> giocatori) {
 		Giocatore gMinorEquipaggio = giocatori.getFirst();
 		for (int i = 0; i < giocatori.size(); i++) {
-			if (giocatori.get(i).getNave().getEquipaggio() < gMinorEquipaggio.getNave().getEquipaggio())
+			if (giocatori.get(i).getNave().getEquipaggioTotale() < gMinorEquipaggio.getNave().getEquipaggioTotale())
 				gMinorEquipaggio = giocatori.get(i);
 
-			else if (giocatori.get(i).getNave().getEquipaggio() == gMinorEquipaggio.getNave()
-					.getEquipaggio()) {
-			} // pareggi si risolvono penalizzando il giocatore più avanti nella rotta:DA FARE
-				// DOPO
-
+			else if (giocatori.get(i).getNave().getEquipaggioTotale() == gMinorEquipaggio.getNave()
+					.getEquipaggioTotale()) {
+				gMinorEquipaggio = giocatori.get(i);
+			}
 		}
 
 		return gMinorEquipaggio;

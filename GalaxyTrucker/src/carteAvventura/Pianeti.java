@@ -11,6 +11,7 @@ package carteAvventura;
 import java.util.*;
 
 import game_logic.Giocatore;
+import planciavolo.PlanciaVolo;
 
 public class Pianeti extends Carta {
 	private int giorniDaPerdere; // I giorni di volo da scarifiare per poter caricare dei merci
@@ -38,21 +39,22 @@ public class Pianeti extends Carta {
 	}
 
 	@Override
-	public void azione(List<Giocatore> giocatori) {
+	public void azione(List<Giocatore> giocatori, PlanciaVolo plancia) {
 		Scanner scanner = new Scanner(System.in);
 		for (Giocatore giocatore : giocatori) {
 			if (pianetiDisponibili.isEmpty()) {
 				System.out.println("Nessun pianeta disponibile per il giocatore " + giocatore.getNome()); // Tutti i pianeti sono già stati attaccati
 				continue;
 			}
-			System.out.println("\n" + giocatore.getNome() + ", scegli un pianeta su cui atterrare (oppure -1 per passare):");
+			System.out.println("==================== Giocatore: " + giocatore.getNome()+"========================");
+			System.out.println("\n scegli un pianeta su cui atterrare (oppure -1 per passare):");
 			for (int i = 0; i < pianetiDisponibili.size(); i++) {
 				System.out.println(i + ": " + pianetiDisponibili.get(i));
 			}
 			int pianetaScelta = scanner.nextInt();
 			if (pianetaScelta >= 0 && pianetaScelta < pianetiDisponibili.size()) {
-				// TODO:Volo.cambiaPosizione(giocatore, giorniDaPerdere,-1)
-				// giocatore.nave.caricaMerci(pianetiDisponibili(pianetaScelta));
+				plancia.spostamentoGiocatore(giocatore, -giorniDaPerdere);
+				giocatore.getNave().caricaCargo(pianetiDisponibili.get(pianetaScelta).getPianeta());
 				pianetiDisponibili.remove(pianetaScelta);
 
 			}else {
@@ -60,7 +62,7 @@ public class Pianeti extends Carta {
 			} 
 
 		}
-		scanner.close();
+		
 	}
 
 }
