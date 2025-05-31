@@ -59,6 +59,8 @@ public abstract class PlanciaVolo implements GestisciAttacchi {
 
     }
  
+    public abstract void Stampa();
+    
     /**
      * Metodo astratto per calcolare i crediti cosmici guadagnati da un giocatore.
      *Poi implementato dalle sottoclassi.
