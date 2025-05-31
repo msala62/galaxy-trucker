@@ -1,5 +1,6 @@
 package planciavolo;
 import java.util.ArrayList;
+
 import java.util.List;
 import game_logic.Giocatore;
 
@@ -188,8 +189,8 @@ public abstract class PlanciaVolo implements GestisciAttacchi {
     }
     /**
      * Metodo per registrare l'arrivo (posizione arrivo ) di un giocatore
-     *  e tenere traccia dell'ordine di arrivo.
-     * @param numeroGiocatore L'identificativo del giocatore che è arrivato.
+      * e tenere traccia dell'ordine di arrivo.
+      * @param giocatore Il giocatore che è arrivato.
      */ 
     public void registraArrivo(Giocatore giocatore) {
     	// Registra il giocatore nell'ordine di arrivo se ci sono ancora posizioni disponibili.
