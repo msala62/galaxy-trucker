@@ -1,7 +1,6 @@
 package planciavolo;
 import java.util.ArrayList;
 import java.util.List;
-
 import game_logic.Giocatore;
 
 /**
@@ -21,7 +20,7 @@ public abstract class PlanciaVolo implements GestisciAttacchi {
     protected int valoreCargo;          //  Valore totale del cargo trasportato
     protected int danno;               // Danno subito dalla navicella
     private Casella posizioneCorrenteCasella;    // Per tracciare casella( posizione ) corrente del giocatore
-    private List<Integer> ordineArrivo = new ArrayList<>(); // Ordine di arrivo dei giocatori
+    private List<Giocatore> ordineArrivo = new ArrayList<>(); // Ordine di arrivo dei giocatori
     private int[] posizioniArrivo;            // Array per memorizzare le Posizioni di arrivo dal giocatore (1°, 2°, 3°, 4°)
 
     /**
@@ -31,7 +30,7 @@ public abstract class PlanciaVolo implements GestisciAttacchi {
      * @param posizioneIniziale La posizione iniziale di giocatore sulla plancia.
      * @param numPosizioniArrivo I numeri di posizioni di arrivo disponibili per giocatori .
      */
-    public PlanciaVolo(int numeroDiCaselle, int[] creditiCosmici , int posizioneIniziale, int numPosizioniArrivo) {
+    public PlanciaVolo(int numeroDiCaselle, int[] creditiCosmici ,int posizioneIniziale, int numPosizioniArrivo) {
     	this.caselle = new ArrayList<>();
     	/**
          * Crea una lista di oggetti Casella per rappresentare le posizioni sulla plancia.
@@ -50,7 +49,7 @@ public abstract class PlanciaVolo implements GestisciAttacchi {
      // Trova e imposta la casella iniziale del giocatore.
         for (Casella casella : this.caselle) {
             if (casella.getNumeroPosizione() == posizioneIniziale) {
-            	this.posizioneCorrenteCasella = casella;
+         this.posizioneCorrenteCasella = casella;
                 break;
             }
         }
@@ -58,15 +57,6 @@ public abstract class PlanciaVolo implements GestisciAttacchi {
         this.posizioniArrivo = new int[numPosizioniArrivo]; 
 
     }
-    
-    public void PiazzaGiocatori(List<Giocatore> giocatori) {
-    	for(int i = 0; i < giocatori.size(); i++) {
-    		int[] posizioni = {1, 3, 4, 5};
-    		this.getCaselle().get(posizioni[i]).setGiocatorePresente(giocatori.get(i));
-    	}
-    }
-    
-    public abstract void Stampa();
  
     /**
      * Metodo astratto per calcolare i crediti cosmici guadagnati da un giocatore.
@@ -201,10 +191,10 @@ public abstract class PlanciaVolo implements GestisciAttacchi {
      *  e tenere traccia dell'ordine di arrivo.
      * @param numeroGiocatore L'identificativo del giocatore che è arrivato.
      */ 
-    public void registraArrivo(int numeroGiocatore) {
+    public void registraArrivo(Giocatore giocatore) {
     	// Registra il giocatore nell'ordine di arrivo se ci sono ancora posizioni disponibili.
         if (ordineArrivo.size() < posizioniArrivo.length) {     
-            ordineArrivo.add(numeroGiocatore);
+            ordineArrivo.add(giocatore);
         }
     }
     
@@ -285,5 +275,11 @@ public abstract class PlanciaVolo implements GestisciAttacchi {
         // Aggiungi il giocatore alla nuova casella
         posizioneCorrenteCasella.setGiocatorePresente(giocatore);
     }
-
+	/**
+	 * Ritorna lista dei giocatori in ordine di  arrivo .Fornisce accesso diretto alla lista dei 
+	 * giocatori nell'ordine in cui hanno raggiunto la plancia.
+    */
+	  public List<Giocatore> getOrdineArrivo() {
+	       return ordineArrivo;
+	   }
 }
