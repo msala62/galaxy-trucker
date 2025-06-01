@@ -260,7 +260,6 @@ public abstract class Nave {
 			riga = sc.nextInt();
 			if(colonna == -1 && riga == -1) 
 			{
-				sc.close();
 				return true;
 			}	
 		}
@@ -270,7 +269,6 @@ public abstract class Nave {
 		if(donatore.getCargoCorrente().isEmpty()) 
 		{
 			System.out.println("La stiva donatrice e' vuota.");
-			sc.close();
 			return false;
 		}
 		
@@ -285,7 +283,6 @@ public abstract class Nave {
 			riga = sc.nextInt();
 			if(colonna == -1 && riga == -1) 
 			{
-				sc.close();
 				return true;
 			}
 		}
@@ -310,7 +307,6 @@ public abstract class Nave {
 			if(donatore.getCargoCorrente().get(selezioneDonatore-1).getColore() == ColoreCargo.ROSSO && !ricevente.isSpeciale()) 
 			{
 				System.out.println("La stiva ricevente non puo' accettare merce speciale rossa");
-				sc.close();
 				return false;
 			}
 			
@@ -319,7 +315,6 @@ public abstract class Nave {
 			{
 				ricevente.getCargoCorrente().add(donatore.getCargoCorrente().get(selezioneDonatore-1));
 				donatore.getCargoCorrente().remove(selezioneDonatore-1);
-				sc.close();
 				return false;
 			}
 			
@@ -338,7 +333,6 @@ public abstract class Nave {
 			if(ricevente.getCargoCorrente().get(selezioneRicevente-1).getColore() == ColoreCargo.ROSSO && !donatore.isSpeciale()) 
 			{
 				System.out.println("La stiva donatrice non puo' accettare merce speciale rossa");
-				sc.close();
 				return false;
 			}
 			
@@ -351,7 +345,6 @@ public abstract class Nave {
 			//Alla ricevente si toglie la merce scambiata e si mette quella di temp. Si esce con return falso
 			ricevente.getCargoCorrente().remove(selezioneRicevente-1);
 			ricevente.getCargoCorrente().add(temp.getCargoCorrente().get(0));
-			sc.close();
 			return false;
 		}
 		else 
@@ -368,7 +361,6 @@ public abstract class Nave {
 			}
 			
 			donatore.getCargoCorrente().remove(selezioneDonatore-1);
-			sc.close();
 			return false;
 		}
 	}
@@ -682,13 +674,11 @@ public abstract class Nave {
 					//Se la risposta è no esco dalla funzione con la potenza corrente
 					else 
 					{
-						sc.close();
 						return potenzaMotrice;
 					}
 				}
 			}			
 		}
-		sc.close();
 		return potenzaMotrice;
 	}
 
@@ -750,13 +740,11 @@ public abstract class Nave {
 					//Se la risposta è no esco dalla funzione con la potenza corrente
 					else 
 					{
-						sc.close();
 						return potenzaFuoco;
 					}
 				}
 			}			
 		}
-		sc.close();
 		return potenzaFuoco;
 	}
 
