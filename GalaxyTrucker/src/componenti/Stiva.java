@@ -81,16 +81,16 @@ public class Stiva extends Componente{
 		if (!this.isSpeciale) 
 		{
 			if (this.spazioCargo > 2)
-				return "Stiva*";
+				return String.format("%1$5S", "STI ");
 			else
-				return "Stiva";
+				return String.format("%1$5S", "sti ");
 		}
 		else 
 		{
 			if (this.spazioCargo > 1)
-				return "StivaS*";
+				return String.format("%1$5S", "STS ");
 			else
-				return "StivaS";
+				return String.format("%1$5S", "sts ");
 		}
 	}
 	

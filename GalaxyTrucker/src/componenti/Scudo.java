@@ -66,7 +66,7 @@ public class Scudo extends Componente {
 	
 	@Override
 	public String nomeComponente() {
-		return "Scudo";
+		return String.format("%1$5S", "scu ");
 	}
 
 }

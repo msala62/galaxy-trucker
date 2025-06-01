@@ -29,9 +29,9 @@ public class Batteria extends Componente {
 	@Override
 	public String nomeComponente() {
 		if(this.grande)
-			return "Bat*";
+			return String.format("%1$5S", "BAT ");
 		else
-			return "Bat";
+			return String.format("%1$5S", "bat ");
 	}
 
 }

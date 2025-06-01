@@ -22,8 +22,8 @@ public abstract class Nave {
 		this.COLUMNS = columns;
 		this.plancia = new Casella[ROWS][COLUMNS];
 		
-		for (int i = 0; i < 5; i++) {
-			for (int j = 0; j < 7; j++) {
+		for (int i = 0; i < ROWS; i++) {
+			for (int j = 0; j < COLUMNS; j++) {
 				plancia[i][j] = new Casella(new Coordinata(i, j));
 			}
 		}
@@ -37,28 +37,6 @@ public abstract class Nave {
 		return this.plancia;
 	}
 
-	/*public void stampa() {
-		String RESET = "\u001B[0m";
-		String GREEN = "\u001B[32m";
-		String YELLOW = "\u001B[33m";
-	
-		for (int i = 0; i < 5; i++) {
-			for (int j = 0; j < 7; j++) {
-				if (this.plancia[i][j].utilizzabile) {
-					System.out.print(GREEN + this.plancia[i][j] + "\t" + RESET);
-				} else {
-					if ((i == 0 && j == 5) || (i == 0 && j == 6)) {
-						System.out.print(YELLOW + this.plancia[i][j].getComponente() == null ? this.plancia[i][j] : this.plancia[i][j].getComponente() + "\t" + RESET);
-					} else {
-						System.out.print(this.plancia[i][j] + "\t");
-					}
-				}
-	
-			}
-			System.out.println("");
-		}
-	} *///Lasciata in forma di commento nel caso la versione sottostante non funzionasse
-
 	public void stampa()
 	{
 		String RESET = "\u001B[0m";
@@ -69,35 +47,41 @@ public abstract class Nave {
 		StringBuilder sbMezzo = new StringBuilder();//Per connettori SX DX e nome componente
 		StringBuilder sbSotto = new StringBuilder();//Per connettore GIU
 		
-		for (int i = 0; i < COLUMNS; i++)//Per mostrare le colonne
-			System.out.print(YELLOW + "\t" + i + "\t" + RESET);
+		//Stampa il numero delle colonne. Cambia se la nave è di lvl 3 perché è più grande. ogni numero occupa 25 spazi: 12 prima + 11 dopo + il numero in se
+		if(this instanceof NaveLivello3)
+			for (int i = 3; i < 12; i++)
+				System.out.print(YELLOW + String.format("%1$25S", i + String.format("%1$11s", "")) + RESET);
+		else
+			for (int i = 3; i < 10; i++)
+				System.out.print(YELLOW + String.format("%1$25S", i + String.format("%1$11s", "")) + RESET);
+		System.out.print("\n");
 		
-		for (int i = 0; i < ROWS; i++) 
+		//Stampa dei componenti veri e propri assiame al numero della riga. Non si parte dalla riga 0 per evitare di stampare inutili spazi vuoti e per essere più veritieri al gioco fisico. 
+		for (int i = 4; i < 10; i++) 
 		{
-			sbMezzo.append(YELLOW + i + RESET);//Per mostrare le righe
-			sbMezzo.append("\t");
-			for (int j = 0; j < COLUMNS; j++) 
+			int riga=i;
+			sbMezzo.append(YELLOW + riga + RESET);//Per mostrare le righe
+			for (int j = 3; j < 12; j++) 
 			{
-				if (this.isUtilizzabile(this.plancia[i][j])) //Se la casella è utilizzabile si cerca il componente associato e ogni sua parte viene appended allo stringbuilder associato. TODO cosa fare se casella è utilizzabile, ma vuota
+				if (this.isUtilizzabile(this.plancia[i][j])) //Se la casella è utilizzabile si cerca il componente associato e ogni sua parte viene appended allo stringbuilder associato.
 				{
-					sbSopra.append(GREEN + "\t" + this.plancia[i][j].getComponente().getConnettoreSU() + "\t" + RESET);
-					sbMezzo.append(GREEN + this.plancia[i][j].getComponente().getConnettoreSX() + "\t" + this.plancia[i][j].getComponente().nomeComponente() + "/t" + this.plancia[i][j].getComponente().getConnettoreDX() + RESET);
-					sbSotto.append(GREEN + "\t" + this.plancia[i][j].getComponente().getConnettoreGIU() + "\t" + RESET);
+					sbSopra.append(GREEN + String.format("%1$9s", "") + this.plancia[i][j].getComponente().getConnettoreSU().toString() + String.format("%1$6s", "") + RESET);//9 spazi prima + 10 occupati dal connettore + 16 dopo = 25
+					sbMezzo.append(GREEN + this.plancia[i][j].getComponente().getConnettoreSX().toString() + this.plancia[i][j].getComponente().nomeComponente() + this.plancia[i][j].getComponente().getConnettoreDX().toString() + RESET);//10 connettore + 5 componente + 10 connettore = 25
+					sbSotto.append(GREEN + String.format("%1$9s", "") + this.plancia[i][j].getComponente().getConnettoreGIU().toString() + String.format("%1$6s", "") + RESET);//9 spazi prima + 10 occupati dal connettore + 16 dopo = 25
 				}
-				else //Se la casella non è utilizzabile si appenda due tabulazioni
+				else //Se la casella non è utilizzabile, oppure è vuota si appendano 25 spazi, spazio occupato dai componenti pieni, per far rimanere tutto allineato
 				{
-					sbSopra.append("\t\t");
-					sbMezzo.append("\t\t");
-					sbSotto.append("\t\t");
+					sbSopra.append(String.format("%1$25s", ""));
+					sbMezzo.append(String.format("%1$25s", ""));
+					sbSotto.append(String.format("%1$25s", ""));
 				}
 			}
 			System.out.println(sbSopra + "\n" + sbMezzo + "\n" + sbSotto + "\n");//Si printa una riga di componenti alla volta
+			//Reset degli stringbuilder
+			sbSopra.setLength(0);
+			sbMezzo.setLength(0);
+			sbSotto.setLength(0);
 		}
-		System.out.println(sbSopra + "\n" + sbMezzo + "\n" + sbSotto + "\n");//Si printa una riga di componenti alla volta
-		//Reset degli stringbuilder (spero)
-		sbSopra.setLength(0);
-		sbMezzo.setLength(0);
-		sbSotto.setLength(0);
 	}
 
 	/**
@@ -276,7 +260,7 @@ public abstract class Nave {
 			riga = sc.nextInt();
 			if(colonna == -1 && riga == -1) 
 			{
-				
+				sc.close();
 				return true;
 			}	
 		}
@@ -286,7 +270,7 @@ public abstract class Nave {
 		if(donatore.getCargoCorrente().isEmpty()) 
 		{
 			System.out.println("La stiva donatrice e' vuota.");
-			
+			sc.close();
 			return false;
 		}
 		
@@ -301,7 +285,7 @@ public abstract class Nave {
 			riga = sc.nextInt();
 			if(colonna == -1 && riga == -1) 
 			{
-				
+				sc.close();
 				return true;
 			}
 		}
@@ -326,7 +310,7 @@ public abstract class Nave {
 			if(donatore.getCargoCorrente().get(selezioneDonatore-1).getColore() == ColoreCargo.ROSSO && !ricevente.isSpeciale()) 
 			{
 				System.out.println("La stiva ricevente non puo' accettare merce speciale rossa");
-				
+				sc.close();
 				return false;
 			}
 			
@@ -335,7 +319,7 @@ public abstract class Nave {
 			{
 				ricevente.getCargoCorrente().add(donatore.getCargoCorrente().get(selezioneDonatore-1));
 				donatore.getCargoCorrente().remove(selezioneDonatore-1);
-				
+				sc.close();
 				return false;
 			}
 			
@@ -354,7 +338,7 @@ public abstract class Nave {
 			if(ricevente.getCargoCorrente().get(selezioneRicevente-1).getColore() == ColoreCargo.ROSSO && !donatore.isSpeciale()) 
 			{
 				System.out.println("La stiva donatrice non puo' accettare merce speciale rossa");
-				
+				sc.close();
 				return false;
 			}
 			
@@ -367,7 +351,7 @@ public abstract class Nave {
 			//Alla ricevente si toglie la merce scambiata e si mette quella di temp. Si esce con return falso
 			ricevente.getCargoCorrente().remove(selezioneRicevente-1);
 			ricevente.getCargoCorrente().add(temp.getCargoCorrente().get(0));
-			
+			sc.close();
 			return false;
 		}
 		else 
@@ -384,10 +368,9 @@ public abstract class Nave {
 			}
 			
 			donatore.getCargoCorrente().remove(selezioneDonatore-1);
-			
+			sc.close();
 			return false;
 		}
-		
 	}
 	
 	//Usata per caricare cargo sulla nave
@@ -699,12 +682,13 @@ public abstract class Nave {
 					//Se la risposta è no esco dalla funzione con la potenza corrente
 					else 
 					{
-						
+						sc.close();
 						return potenzaMotrice;
 					}
 				}
 			}			
 		}
+		sc.close();
 		return potenzaMotrice;
 	}
 
@@ -766,12 +750,13 @@ public abstract class Nave {
 					//Se la risposta è no esco dalla funzione con la potenza corrente
 					else 
 					{
-						
+						sc.close();
 						return potenzaFuoco;
 					}
 				}
 			}			
 		}
+		sc.close();
 		return potenzaFuoco;
 	}
 

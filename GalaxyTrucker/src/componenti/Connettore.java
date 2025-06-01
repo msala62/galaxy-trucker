@@ -3,18 +3,18 @@ package componenti;
 public enum Connettore {
 	SINGOLO, DOPPIO, UNIVERSALE, LISCIO; //(lato) liscio = nessun connettore
 	
-	public String toString(Connettore connettore) 
+	public String toString() 
 	{
-		switch(connettore) 
+		switch(this) 
 		{
 			case SINGOLO:
-				return "-";
+				return String.format("%1$10S", "-     ");
 				
 			case DOPPIO:
-				return "=";
+				return String.format("%1$10S", "=     ");
 				
 			case UNIVERSALE:
-				return "-=";
+				return String.format("%1$10S", "#     ");
 				
 			default:
 				return "";

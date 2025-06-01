@@ -66,9 +66,9 @@ public abstract class Componente {
 	// Se c'è * dopo all'abbreviazione significa che il componente è la versione
 	// grande di se stesso
 	public String toString() {
-		String componente = "\t" + connettoreSU.toString(connettoreSU) + "\n" + connettoreSX.toString(connettoreSX)
-				+ "\t" + this.nomeComponente() + "\t" + connettoreDX.toString(connettoreDX) + "\n\t"
-				+ connettoreGIU.toString(connettoreGIU);
+		String componente = "\t" + connettoreSU.toString() + "\n" + connettoreSX.toString()
+				+ "\t" + this.nomeComponente() + "\t" + connettoreDX.toString() + "\n\t"
+				+ connettoreGIU.toString();
 
 		return componente;
 	}

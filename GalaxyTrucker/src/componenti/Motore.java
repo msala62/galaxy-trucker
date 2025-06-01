@@ -22,6 +22,6 @@ public class Motore extends Componente {
 	
 	@Override
 	public String nomeComponente() {
-		return "Mot";
+		return String.format("%1$5S", "mot ");
 	}
 }

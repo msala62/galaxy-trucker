@@ -29,7 +29,7 @@ public class CabinaPartenza extends Componente {
 
 	@Override
 	public String nomeComponente() {
-		return "CabPart";
+		return String.format("%1$5S", "CAB ");
 	}
 	
 	public ColoreGiocatore getColore() {

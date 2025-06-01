@@ -8,7 +8,7 @@ public class Strutturale extends Componente {
 
 	@Override
 	public String nomeComponente() {
-		return "Strut";
+		return String.format("%1$5S", "str ");
 	}
 
 }

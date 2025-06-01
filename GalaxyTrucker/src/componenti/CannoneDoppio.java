@@ -27,7 +27,7 @@ public class CannoneDoppio extends Cannone {
 	
 	@Override
 	public String nomeComponente() {
-		return "Can*";
+		return String.format("%1$5S", "CAN ");
 	}
 	
 }

@@ -71,7 +71,7 @@ public class Cannone extends Componente {
 	
 	@Override
 	public String nomeComponente() {
-		return "Can";
+		return String.format("%1$5S", "can ");
 	}
 
 }
