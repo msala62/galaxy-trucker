@@ -91,7 +91,7 @@ public class Meteorite {
 				}
 
 			} else {
-				// Meteorite grosso – nessuna difesa se non con cannone (non gestito qui)
+				// Meteorite grosso – nessuna difesa se non con cannone (non gestito qui) TODO
 				 giocatore.getNave().eliminaComponente(c.getPosizione().getX(), c.getPosizione().getY());
 				System.out.println("Componente distrutto dal meteorite grosso!");
 			}

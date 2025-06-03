@@ -109,32 +109,19 @@ public abstract class Nave {
 	        if (plancia[y][x].getComponente() != null) {
 	            throw new IllegalStateException("La cella (" + y + "," + x + ") è già occupata");
 	        }
+	        
+	        //Lo scudo dovrebbe essere come cannoni/motori doppi: posizionabile sempre, ma utilizzabile al costo di un segnalino batteria
 
-	        // Gestione speciale per Cabina
-	        if (tessera instanceof Cabina) {
-	            this.equipaggio += 2;
-	            ((Cabina)tessera).setEquipaggio(2);
+	        if(!(tessera instanceof CabinaPartenza)) 
+	        {
+	        	//Controllo che il componente sia collegato ad un altro componente TODO ancora da perfezionare
+	        	if(((y > 0 && isUtilizzabile(plancia[y-1][x]) && plancia[y-1][x].getComponente().getConnettoreGIU()==Connettore.LISCIO) || (y > 0 && !isUtilizzabile(plancia[y-1][x])) || (y > 0 && plancia[y-1][x].getComponente() == null))
+	        		&& ((y < ROWS-1 && isUtilizzabile(plancia[y+1][x]) && plancia[y+1][x].getComponente().getConnettoreSU()==Connettore.LISCIO) || (y < ROWS-1 && !isUtilizzabile(plancia[y+1][x])) || (y < ROWS-1 && plancia[y+1][x].getComponente() == null)) 
+	        		&& ((x > 0 && isUtilizzabile(plancia[y][x-1]) && plancia[y][x-1].getComponente().getConnettoreDX()==Connettore.LISCIO) || (x > 0 && !isUtilizzabile(plancia[y][x-1])) || (x > 0 && plancia[y][x-1].getComponente() == null))
+	        		&& ((x < COLUMNS-1 && isUtilizzabile(plancia[y][x+1]) && plancia[y][x+1].getComponente().getConnettoreSX()==Connettore.LISCIO) || (x < COLUMNS-1 && !isUtilizzabile(plancia[y][x+1])) || (x < COLUMNS-1 && plancia[y][x+1].getComponente() == null)))
+	        			throw new IllegalStateException("Il componente deve essere connesso ad almeno un altro componente");
 	        }
-
-	        // Gestione speciale per Scudo (richiede energia)//TODO lo scudo dovrebbe essere come cannoni/motori doppi: posizionabile sempre, ma utilizzabile al costo di un segnalino batteria
-	        if (tessera instanceof Scudo) {
-	            boolean energiaTrovata = false;
-	            for (int i = 0; i < ROWS && !energiaTrovata; i++) {
-	                for (int j = 0; j < COLUMNS && !energiaTrovata; j++) {
-	                    if (plancia[i][j].getComponente() instanceof Batteria) {
-	                        Batteria b = (Batteria)plancia[i][j].getComponente();
-	                        if (b.getCarica() > 0) {
-	                            b.scalaCarica();
-	                            energiaTrovata = true;
-	                        }
-	                    }
-	                }
-	            }
-	            if (!energiaTrovata) {
-	                throw new IllegalStateException("Energia insufficiente per posizionare lo scudo");
-	            }
-	        }
-
+	        
 	        boolean connessioneValida = true;
 	        
 	        // Controllo componente sopra
@@ -164,8 +151,14 @@ public abstract class Nave {
 	        if (!connessioneValida) {
 	            throw new IllegalStateException("Connettori incompatibili con i componenti adiacenti");
 	        }
-
+	        
 	        plancia[y][x].setComponente(tessera);
+	        
+	        //Gestione speciale per Cabina. Spostato qua altrimenti l'equipaggio della nave veniva aumentato prima di esser sicuri di poter posizionare la cabina
+	        //TODO scelta equipaggio alieno
+	        if (tessera instanceof Cabina) {
+	            this.equipaggio += 2;
+	        }
 	        
 	    } catch (IndexOutOfBoundsException e) {
 	        System.err.println("Errore di posizionamento: " + e.getMessage());
@@ -186,8 +179,8 @@ public abstract class Nave {
 	 */
 	private boolean connettoriCompatibili(Connettore c1, Connettore c2) {
 	    return c1 == c2 || 
-	           c1 == Connettore.UNIVERSALE || 
-	           c2 == Connettore.UNIVERSALE;
+	           (c1 == Connettore.UNIVERSALE && c2!=Connettore.LISCIO) || 
+	           (c2 == Connettore.UNIVERSALE && c1!=Connettore.LISCIO);
 	}
 	
 	protected boolean isUtilizzabile(Casella casella) {
