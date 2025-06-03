@@ -17,7 +17,7 @@ import java.util.Random;
 import componenti.*;
 import merci.Cargo;
 import planciavolo.*;
-import titoli.TitoliBuilder;
+//import titoli.TitoliBuilder;
 import titoli.Titolo;
 
 public class Game {
@@ -34,7 +34,7 @@ public class Game {
 		System.out.println("================================================");
 	}
 	
-	private static List<Titolo> generaTitoli(int nGiocatori)
+	/*private static List<Titolo> generaTitoli(int nGiocatori)
 		{
 			//verifica ngiocatori ricevuto
 			if (nGiocatori <= 1 || nGiocatori > 4)
@@ -50,7 +50,7 @@ public class Game {
 			     titoli = Collections.emptyList(); // fallback per evitare null
 			}
 			return titoli;
-		}
+		}*/
 
 	private void assegnaTitoli(List<Giocatore> giocatori, List<Titolo> titoli)
 
@@ -103,11 +103,9 @@ public class Game {
 
 
 	private static List<Giocatore> InizializzaGiocatori() {
-		List<Giocatore> giocatori = new ArrayList<Giocatore>();
-		System.out.print("Quanti giocatori parteciperanno alla parita? (min 2, max 4): ");
-		
+		List<Giocatore> giocatori = new ArrayList<Giocatore>();		
 		Scanner sc = new Scanner(System.in);
-		int numeroGiocatori = sc.nextInt();
+		int numeroGiocatori = 0;
 		
 		do {
 	        System.out.print("Quanti giocatori parteciperanno alla partita? (min 2, max 4): ");
@@ -402,6 +400,7 @@ public class Game {
 			
 			while(!clessidra.isTimeEnded()) {
 				System.out.print("\033[H\033[2J");
+				System.out.flush();
 				System.out.println("Attualmente rimangono sul banco: " + componenti.size() + " tessere");
 				System.out.println("\n\nPESCA UNA TESSERA (premi invio): ");
 				String scelta = sc.nextLine();
@@ -411,12 +410,14 @@ public class Game {
 				random = (int)(Math.random() * componenti.size());
 				Componente pescata = componenti.get(random);
 				System.out.println("Questa è la tessera che hai scelto:\n" + pescata.toString() + "\n\n Puoi scegliere se tenerla (T), scartartla (S) o prenotarla (P): ");
-				//giocatore.getNave().stampa();
 				
 				String sceltaTessera = sc.nextLine();
 				
 				if(sceltaTessera.equalsIgnoreCase("t")) {
 					componenti.remove(random);
+					System.out.print("\033[H\033[2J");
+					System.out.flush();
+					giocatore.getNave().stampa();
 					System.out.println("Ottimo! dimmi ora in che cella vuoi posizionarlo (Ricordati che le caselle partono da 00 e non da 11!)");
 					String posizione = sc.nextLine();
 					
@@ -478,8 +479,6 @@ public class Game {
 		    
 		    giocatori.get(scelta).getNave().stampa();
 		}
-		
-		sc.close();
 	}
 	
 	public static void StartGame(List<Giocatore> giocatori) {
@@ -618,8 +617,11 @@ public class Game {
 			System.out.println("https://www.craniocreations.it/storage/media/product_downloads/179/2052/Galaxy-Trucker_ITA_Rules_compressed.pdf");
 			break;
 		default:
+			sc.close();
 			return;
 		}
+		
+		sc.close();
 	}
 
 }

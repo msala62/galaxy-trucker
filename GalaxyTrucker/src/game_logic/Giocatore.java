@@ -36,13 +36,13 @@ public class Giocatore {
 	public void InizializzaNave(Livello livello) {
 		switch(livello) {
 		case Livello.I:
-			this.nave = new NaveLivello1(13, 13);
+			this.nave = new NaveLivello1();
 			break;
 		case Livello.II:
-			this.nave = new NaveLivello2(13, 13);
+			this.nave = new NaveLivello2();
 			break;
 		case Livello.III:
-			this.nave = new NaveLivello3(13, 13);
+			this.nave = new NaveLivello3();
 			break;
 		default:
 			break;
