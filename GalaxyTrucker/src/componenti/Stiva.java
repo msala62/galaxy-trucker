@@ -83,14 +83,14 @@ public class Stiva extends Componente{
 			if (this.spazioCargo > 2)
 				return String.format("%1$5S", "STI ");
 			else
-				return String.format("%1$5S", "sti ");
+				return String.format("%1$5s", "sti ");
 		}
 		else 
 		{
 			if (this.spazioCargo > 1)
 				return String.format("%1$5S", "STS ");
 			else
-				return String.format("%1$5S", "sts ");
+				return String.format("%1$5s", "sts ");
 		}
 	}
 	

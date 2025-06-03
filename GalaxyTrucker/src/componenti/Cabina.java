@@ -50,7 +50,7 @@ public class Cabina extends CabinaPartenza {
 	
 	@Override
 	public String nomeComponente() {
-		return String.format("%1$5S", "cab ");
+		return String.format("%1$5s", "cab ");
 	}
 	
 }

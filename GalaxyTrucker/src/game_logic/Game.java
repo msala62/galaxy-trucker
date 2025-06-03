@@ -389,9 +389,7 @@ public class Game {
 			int posizionePrenotazione = 5;
 			
 			CabinaPartenza cabinaGiocatore = coloreGiocatori[random];
-			giocatore.getNave().aggiungiComponente(2, 3, cabinaGiocatore);
-			
-			if(livello == Livello.III) giocatore.getNave().aggiungiComponente(3, 4, cabinaGiocatore);
+			giocatore.getNave().aggiungiComponente(6, 6, cabinaGiocatore);
 			
 			System.out.println("\n\nTi è stato assegnato il colore " + cabinaGiocatore.getColore());
 			System.out.println("E' il tuo turno, " + giocatore.nome + "\ne' tempo di assemblare la tua nave per avviare il viaggio interspaziale!");
@@ -437,7 +435,7 @@ public class Game {
 					prenotazioni++;
 				}
 				
-				//Clears screen: https://www.quora.com/How-do-I-clear-the-console-screen-in-Java
+				//Clears screen: https://www.quora.com/How-do-I-clear-the-console-screen-in-Java (Nota: in Eclipse non funziona, funziona solo nella console vera e propria)
 				System.out.print("\033[H\033[2J");   
 			    System.out.flush();
 			}

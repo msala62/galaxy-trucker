@@ -7,9 +7,9 @@ import game_logic.ColoreGiocatore;
 public class TestStampa {
 
 	public static void main(String[] args) {
-		NaveLivello1 nave1 = new NaveLivello1(13, 13);
-		NaveLivello2 nave2 = new NaveLivello2(13, 13);
-		NaveLivello3 nave3 = new NaveLivello3(13, 13);
+		NaveLivello1 nave1 = new NaveLivello1();
+		NaveLivello2 nave2 = new NaveLivello2();
+		NaveLivello3 nave3 = new NaveLivello3();
 		Strutturale componente = new Strutturale(Connettore.UNIVERSALE, Connettore.UNIVERSALE, Connettore.UNIVERSALE, Connettore.UNIVERSALE);
 		CabinaPartenza cabina = new CabinaPartenza(Connettore.UNIVERSALE, Connettore.UNIVERSALE, Connettore.UNIVERSALE, Connettore.UNIVERSALE, ColoreGiocatore.VERDE);
 		

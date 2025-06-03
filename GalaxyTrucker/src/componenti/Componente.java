@@ -61,18 +61,15 @@ public abstract class Componente {
 		return connettoreGIU;
 	}
 
-	// Ogni connettore ha un metodo toString per rappresentarlo nella nave. Idem i
-	// componeneti (nomeComponente) che usano un'abbreviazione del proprio nome.
-	// Se c'è * dopo all'abbreviazione significa che il componente è la versione
-	// grande di se stesso
-	public String toString() {
-		String componente = "\t" + connettoreSU.toString() + "\n" + connettoreSX.toString()
-				+ "\t" + this.nomeComponente() + "\t" + connettoreDX.toString() + "\n\t"
-				+ connettoreGIU.toString();
-
-		return componente;
+	public String toString() 
+	{
+		String componente = String.format("%1$8s", "") + connettoreSU.toString() + String.format("%1$6s", "") + "\n"
+				+ connettoreSX.toString() + this.nomeComponente() + connettoreDX.toString() + "\n" 
+				+ String.format("%1$8s", "") + connettoreGIU.toString() + String.format("%1$6s", "");
+		
+		return componente;		
 	}
-
+	
 	public abstract String nomeComponente();
 
 	// GEORGE: metodo aggiunto per ottenere il valore dell'attributo

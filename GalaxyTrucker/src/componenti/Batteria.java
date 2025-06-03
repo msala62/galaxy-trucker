@@ -31,7 +31,7 @@ public class Batteria extends Componente {
 		if(this.grande)
 			return String.format("%1$5S", "BAT ");
 		else
-			return String.format("%1$5S", "bat ");
+			return String.format("%1$5s", "bat ");
 	}
 
 }

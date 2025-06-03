@@ -8,16 +8,16 @@ public enum Connettore {
 		switch(this) 
 		{
 			case SINGOLO:
-				return String.format("%1$10S", "-     ");
+				return String.format("%1$10s", "-     ");
 				
 			case DOPPIO:
-				return String.format("%1$10S", "=     ");
+				return String.format("%1$10s", "=     ");
 				
 			case UNIVERSALE:
-				return String.format("%1$10S", "#     ");
+				return String.format("%1$10s", "#     ");
 				
-			default:
-				return "";
+			default://LISCIO
+				return String.format("%1$10s", "");
 		}
 	}
 }

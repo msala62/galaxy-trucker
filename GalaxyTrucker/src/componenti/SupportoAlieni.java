@@ -19,9 +19,9 @@ public class SupportoAlieni extends Componente {
 	@Override
 	public String nomeComponente() {
 		if(this.colore==Colore.MARRONE)
-			return String.format("%1$5S", "suM ");
+			return String.format("%1$5s", "suM ");
 		else
-			return String.format("%1$5S", "suV ");
+			return String.format("%1$5s", "suV ");
 	}
 
 }

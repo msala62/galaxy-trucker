@@ -47,21 +47,16 @@ public abstract class Nave {
 		StringBuilder sbMezzo = new StringBuilder();//Per connettori SX DX e nome componente
 		StringBuilder sbSotto = new StringBuilder();//Per connettore GIU
 		
-		//Stampa il numero delle colonne. Cambia se la nave è di lvl 3 perché è più grande. ogni numero occupa 25 spazi: 12 prima + 11 dopo + il numero in se
-		if(this instanceof NaveLivello3)
-			for (int i = 3; i < 12; i++)
-				System.out.print(YELLOW + String.format("%1$25S", i + String.format("%1$11s", "")) + RESET);
-		else
-			for (int i = 3; i < 10; i++)
+		//Stampa il numero delle colonne. Ogni numero occupa 25 spazi: 12 prima + 11 dopo + il numero in se
+		for (int i = 2; i < 11; i++)
 				System.out.print(YELLOW + String.format("%1$25S", i + String.format("%1$11s", "")) + RESET);
 		System.out.print("\n");
 		
 		//Stampa dei componenti veri e propri assiame al numero della riga. Non si parte dalla riga 0 per evitare di stampare inutili spazi vuoti e per essere più veritieri al gioco fisico. 
-		for (int i = 4; i < 10; i++) 
+		for (int i = 3; i < 10; i++) 
 		{
-			int riga=i;
-			sbMezzo.append(YELLOW + riga + RESET);//Per mostrare le righe
-			for (int j = 3; j < 12; j++) 
+			sbMezzo.append(YELLOW + i + RESET);//Per mostrare le righe
+			for (int j = 2; j < 12; j++) 
 			{
 				if (this.isUtilizzabile(this.plancia[i][j])) //Se la casella è utilizzabile si cerca il componente associato e ogni sua parte viene appended allo stringbuilder associato.
 				{
@@ -69,7 +64,13 @@ public abstract class Nave {
 					sbMezzo.append(GREEN + this.plancia[i][j].getComponente().getConnettoreSX().toString() + this.plancia[i][j].getComponente().nomeComponente() + this.plancia[i][j].getComponente().getConnettoreDX().toString() + RESET);//10 connettore + 5 componente + 10 connettore = 25
 					sbSotto.append(GREEN + String.format("%1$9s", "") + this.plancia[i][j].getComponente().getConnettoreGIU().toString() + String.format("%1$6s", "") + RESET);//9 spazi prima + 10 occupati dal connettore + 16 dopo = 25
 				}
-				else //Se la casella non è utilizzabile, oppure è vuota si appendano 25 spazi, spazio occupato dai componenti pieni, per far rimanere tutto allineato
+				else if(this.plancia[i][j].utilizzabile && this.plancia[i][j].getComponente()==null) //Se la casella è utilizzabile, ma vuota si appendano 24 slash e uno spazio per far capire all'utente durante la fase di assemblaggio che potrebbe posizionare qua un componente
+				{
+					sbSopra.append(" |//////////////////////|");
+					sbMezzo.append("|//////////////////////| ");
+					sbSotto.append(" |//////////////////////|");
+				}
+				else //Se la casella non è utilizzabile si appendano 25 spazi, spazio occupato dai componenti pieni, per far rimanere tutto allineato
 				{
 					sbSopra.append(String.format("%1$25s", ""));
 					sbMezzo.append(String.format("%1$25s", ""));
@@ -115,7 +116,7 @@ public abstract class Nave {
 	            ((Cabina)tessera).setEquipaggio(2);
 	        }
 
-	        // Gestione speciale per Scudo (richiede energia)
+	        // Gestione speciale per Scudo (richiede energia)//TODO lo scudo dovrebbe essere come cannoni/motori doppi: posizionabile sempre, ma utilizzabile al costo di un segnalino batteria
 	        if (tessera instanceof Scudo) {
 	            boolean energiaTrovata = false;
 	            for (int i = 0; i < ROWS && !energiaTrovata; i++) {
