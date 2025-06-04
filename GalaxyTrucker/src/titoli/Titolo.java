@@ -4,7 +4,7 @@ import java.util.List;
 import game_logic.Giocatore;
 import nave.*;
 
-public class Titolo {
+public abstract class Titolo {
 
 	private String titolo;
 	private String descrizione;
@@ -39,7 +39,8 @@ public class Titolo {
 		return proprietario;
 	}
 
-	public String stampaTitolo() {
+	@Override 
+	public String toString() {
 		return titolo + ": " + descrizione;
 	}
 
@@ -49,16 +50,19 @@ public class Titolo {
 			this.proprietario = giocatore;
 			this.isOwned = true;
 			return true;	
+		} else if (isOwned) {
+			System.out.println(toString());
+			System.out.println("il titolo era assegnato a:" + proprietario.getNome() + "ma adesso e stato trasferito a: "+ giocatore.getNome());
+			this.proprietario = giocatore;
+			return true;	
 		}
+		
 		return false;
 		
 	}
 
-	protected int contatore(Nave nave) {
-
-		return -1;
-	}
-
+	protected abstract int contatore(Nave nave);
+	
 	public boolean assegnaCrediti() {
 		if (proprietario != null) { 
 			proprietario.aggiungiCrediti(creditiPremio);

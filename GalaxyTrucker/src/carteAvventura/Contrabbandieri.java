@@ -10,9 +10,7 @@
 package carteAvventura;
 
 import java.util.List;
-import componenti.Cannone;
 import game_logic.Giocatore;
-import nave.*;
 import planciavolo.PlanciaVolo;
 import merci.*;
 

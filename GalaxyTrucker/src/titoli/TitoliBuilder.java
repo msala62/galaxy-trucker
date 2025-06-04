@@ -22,23 +22,5 @@ public class TitoliBuilder {
 		return allTitoli;
 	}
 
-	/*private void titolibuilder() {
-		
-	}
-	public TitoliBuilder(int nGiocatori) {
-		if (nGiocatori <= 1 || nGiocatori > 4)
-			throw new IllegalArgumentException("Numero richiesto non valido.");
-		titoliCreation();
-		Collections.shuffle(allTitoli, new Random());
-		titoli = new ArrayList<>(allTitoli.subList(0, nGiocatori));
-	}
 
-	
-	public Titolo getTitoloByNome(String nome) {
-		for (Titolo titolo : titoli) {
-			if (titolo.stampaTitolo().startsWith(nome))
-				return titolo;
-		}
-		return null;
-	}*/
 } 

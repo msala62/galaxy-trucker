@@ -1,8 +1,6 @@
 package game_logic;
 
 import java.util.Scanner;
-import java.util.concurrent.ThreadLocalRandom;
-
 import alieni.Colore;
 
 import carteAvventura.*;
@@ -10,15 +8,11 @@ import carteAvventura.Meteorite.Dimensione;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-
 import componenti.*;
 import merci.Cargo;
 import planciavolo.*;
-//import titoli.TitoliBuilder;
-import titoli.Titolo;
 
 public class Game {
 	private final static Clessidra clessidra = new Clessidra();
@@ -34,74 +28,6 @@ public class Game {
 		System.out.println("================================================");
 	}
 	
-	/*private static List<Titolo> generaTitoli(int nGiocatori)
-		{
-			//verifica ngiocatori ricevuto
-			if (nGiocatori <= 1 || nGiocatori > 4)
-				throw new IllegalArgumentException("Numero di giocatori non valido (deve essere tra 2 e 4)");
-			TitoliBuilder builder = new TitoliBuilder();
-			//generare una lista di titoli = nGiocatori
-			List<Titolo> titoli;
-			try {
-				// get random titoli based on the players size
-				titoli = new ArrayList<>(builder.getAllTitoli().subList(0, nGiocatori));
-			} catch (Exception e) {
-				 e.printStackTrace();
-			     titoli = Collections.emptyList(); // fallback per evitare null
-			}
-			return titoli;
-		}*/
-
-	private void assegnaTitoli(List<Giocatore> giocatori, List<Titolo> titoli)
-
-	{
-		List<Giocatore> copiaGiocatori = new ArrayList<>(giocatori);
-		for(Titolo titolo : titoli)
-		{
-			if (titolo.assegnaTitolo(titolo.valutazione(copiaGiocatori)))
-			{
-				System.out.println(titolo.stampaTitolo() + "assegnato a:" + titolo.getProprietario().getNome());
-				for (int i=0; i<copiaGiocatori.size();i++)
-				{
-					if (copiaGiocatori.get(i).getNome().startsWith(titolo.getProprietario().getNome()))
-					{
-						copiaGiocatori.remove(i);	
-					}
-				}
-			}
-			else {
-				System.out.println("errore durante l'assegnazione del titolo");
-			}
-			
-		}
-	}
-
-	private void titoloDifeso(List<Giocatore> giocatori, List<Titolo> titoli, Livello livello) {
-		List<Giocatore> copiaGiocatori = new ArrayList<>(giocatori);
-		List <Titolo> copiaTitoli = new ArrayList<>(titoli);
-		assegnaTitoli(giocatori, titoli);
-		int i=0;
-		for(Titolo titolo : titoli)
-		{
-			//verifica se il proprietario e' ancora lo stesso
-			if (titolo.getProprietario().equals(copiaTitoli.get(i).getProprietario()))
-			{
-				System.out.println(titolo.getProprietario().getNome() + " ha difeso il suo titolo:" + titolo.stampaTitolo());
-				if (livello.II != null)
-				{
-					titolo.passaAGold();
-				}
-			}
-			else {
-				System.out.println(titolo.getProprietario().getNome() + " ha difeso il suo titolo:" + titolo.stampaTitolo());
-				System.out.println("errore durante l'assegnazione del titolo");
-			}
-			
-		}
-	}
-
-
-
 	private static List<Giocatore> InizializzaGiocatori() {
 		List<Giocatore> giocatori = new ArrayList<Giocatore>();		
 		Scanner sc = new Scanner(System.in);

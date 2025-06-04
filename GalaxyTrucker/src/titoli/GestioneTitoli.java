@@ -1,99 +1,132 @@
 package titoli;
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import carteAvventura.Livello;
 import game_logic.Giocatore;
 
 public class GestioneTitoli {
 
-	private static List<Titolo> generaTitoli(int nGiocatori) {
-		// verifica ngiocatori ricevuto
-		if (nGiocatori <= 1 || nGiocatori > 4)
-			throw new IllegalArgumentException("Numero di giocatori non valido (deve essere tra 2 e 4)");
-		TitoliBuilder builder = new TitoliBuilder();
-		// generare una lista di titoli = nGiocatori
-		List<Titolo> titoli;
-		try {
-			// get random titoli based on the players size
-			titoli = new ArrayList<>(builder.getAllTitoli().subList(0, nGiocatori));
-		} catch (Exception e) {
-			e.printStackTrace();
-			titoli = Collections.emptyList(); // fallback per evitare null
+	public static List<Titolo> generaTitoli(int nGiocatori) {
+		if (nGiocatori < 2 || nGiocatori > 4) {
+			throw new IllegalArgumentException(
+					"Numero di giocatori (" + nGiocatori + ") non valido. Deve essere tra 2 e 4.");
 		}
-		return titoli;
+
+		TitoliBuilder builder = new TitoliBuilder();
+		List<Titolo> allAvailableTitoli = builder.getAllTitoli();
+
+		if (allAvailableTitoli == null) {
+			throw new IllegalStateException("TitoliBuilder ha restituito una lista di titoli nulla.");
+		}
+
+		if (allAvailableTitoli.isEmpty()) {
+			throw new IllegalStateException("Nessun titolo disponibile dal TitoliBuilder.");
+		}
+
+		return new ArrayList<>(allAvailableTitoli.subList(0, nGiocatori));
 	}
 
-	private void assegnaTitoli(List<Giocatore> giocatori, List<Titolo> titoli)
+	public static void assegnaTitoli(List<Giocatore> giocatori, List<Titolo> titoli) {
+		if (giocatori == null || giocatori.isEmpty()) {
+			System.out.println("Nessun giocatore fornito per l'assegnazione dei titoli.");
+			return;
+		}
+		if (titoli == null || titoli.isEmpty()) {
+			System.out.println("Nessun titolo fornito per l'assegnazione.");
+			return;
+		}
 
-	{
-		List<Giocatore> copiaGiocatori = new ArrayList<>(giocatori);
+		List<Giocatore> candidatiRimanenti = new ArrayList<>(giocatori); // Lista dei candidati
 		for (Titolo titolo : titoli) {
-			Giocatore potenzialeProprietario = titolo.valutazione(copiaGiocatori);
-
-			if (potenzialeProprietario != null) {
-
-				if (titolo.assegnaTitolo(potenzialeProprietario)) {
-					System.out.println(titolo.stampaTitolo() + "assegnato a:" + titolo.getProprietario().getNome());
-					// Rimuovi il giocatore che ha vinto questo titolo dalla lista dei candidati per
-					// i titoli successivi
-					copiaGiocatori.remove(titolo.getProprietario());
-				} else {
-					System.out.println("errore durante l'assegnazione del titolo");
-				}
-			} else
-
-			{
-				System.out.println("Nessun giocatore idoneo trovato per il titolo: " + titolo.stampaTitolo());
+			if (candidatiRimanenti.isEmpty()) {
+				System.out.println("Non ci sono più giocatori candidati per i titoli rimanenti.");
+				break;
 			}
 
+			Giocatore potenzialeProprietario = titolo.valutazione(candidatiRimanenti);
+
+			if (potenzialeProprietario != null) {
+				if (titolo.assegnaTitolo(potenzialeProprietario)) {
+					System.out.println(titolo.toString() + " assegnato a: " + potenzialeProprietario.getNome());
+
+					// eliminare il giocatore che ha ottenuto il titolo dalla lista
+					candidatiRimanenti.remove(potenzialeProprietario);
+				} else {
+					// L'assegnazione è fallita. Se Titolo.assegnaTitolo() ritorna false
+					System.out.println("Impossibile assegnare " + titolo.toString() + " a "
+							+ potenzialeProprietario.getNome()
+							+ ". Il titolo potrebbe essere già detenuto o il giocatore non idoneo secondo le regole di Titolo.assegnaTitolo().");
+				}
+			} else {
+				System.out.println("Nessun giocatore idoneo trovato per il titolo: " + titolo.toString());
+			}
 		}
 	}
 
-	private void titoloDifeso(List<Giocatore> giocatori, List<Titolo> titoli, Livello livello) {
+	// Gestisce la logica per i titoli difesi, riassegnando i titoli e aggiornandoli
+	// a versioni Argento o Oro se difesi.
+	public static void titoloDifeso(List<Giocatore> giocatori, List<Titolo> titoli, Livello livello) {
+		if (giocatori == null || giocatori.isEmpty()) {
+			System.out.println("Nessun giocatore fornito per la gestione della difesa dei titoli.");
+			return;
+		}
+		if (titoli == null || titoli.isEmpty()) {
+			System.out.println("Nessun titolo fornito per la gestione della difesa.");
+			return;
+		}
 
-		java.util.Map<Titolo, Giocatore> proprietariPrecedenti = new java.util.HashMap<>();
+		// Salva i proprietari precedenti
+		Map<Titolo, Giocatore> proprietariPrecedenti = new HashMap<>();
 		for (Titolo t : titoli) {
 			if (t.getProprietario() != null) {
 				proprietariPrecedenti.put(t, t.getProprietario());
 			}
 		}
-		assegnaTitoli(giocatori, titoli);
 
-		for (int i = 0; i < titoli.size(); i++) {
+		// Riassegna i titoli in base alle performance attuali
+		System.out.println(
+				"\n ======================== Inizio riassegnazione titoli per la fase di difesa ========================");
+		assegnaTitoli(giocatori, titoli); // Riassegna i titoli
 
-			Titolo titoloCorrente = titoli.get(i);
+		// Controlla chi ha difeso/perso i titoli e assegna crediti/upgrade
+		System.out.println("\n======================== Valutazione difesa titoli: ======================== ");
+		for (Titolo titoloCorrente : titoli) {
 			Giocatore proprietarioAttuale = titoloCorrente.getProprietario();
 			Giocatore proprietarioPrecedente = proprietariPrecedenti.get(titoloCorrente);
 
 			if (proprietarioAttuale != null && proprietarioAttuale.equals(proprietarioPrecedente)) {
-				// Logica per titolo difeso
-
+				// Titolo difeso dallo stesso giocatore
 				System.out.println(
-						proprietarioAttuale.getNome() + " ha difeso il suo titolo:" + titoloCorrente.stampaTitolo());
-				if (livello == Livello.II ) {
-					titoloCorrente.passaAdArgento();
-					if (titoloCorrente.assegnaCrediti()) {
-						System.out.println(proprietarioAttuale.getNome() + " ha guadagnato:" + titoloCorrente.getCreditoPremio()
-								+ " crediti");
-					}
+						proprietarioAttuale.getNome() + " ha difeso il suo titolo: " + titoloCorrente.toString());
 
+				if (livello == Livello.II) {
+					titoloCorrente.passaAdArgento();
+					System.out.print("  Il titolo è stato potenziato ad Argento. ");
 				} else {
 					titoloCorrente.passaAGold();
-					if (titoloCorrente.assegnaCrediti()) {
-						System.out.println(proprietarioAttuale.getNome() + " ha guadagnato:"
-								+ titoloCorrente.getCreditoPremio() + " crediti");
-					}
-
+					System.out.print("  Il titolo è stato potenziato ad Oro. ");
 				}
-			} else if (proprietarioPrecedente!=null && !proprietarioAttuale.equals(proprietarioPrecedente) ) {
-				System.out.println(proprietarioPrecedente.getNome() + " Non ha difeso il suo titolo:"
-						+ titoloCorrente.stampaTitolo());
+				if (titoloCorrente.assegnaCrediti()) {
+					System.out.println(proprietarioAttuale.getNome() + " ha guadagnato "
+							+ titoloCorrente.getCreditoPremio() + " crediti.");
+				} else {
 
+					System.out.println("Errore nell'assegnazione dei crediti a " + proprietarioAttuale.getNome()
+							+ " per il titolo difeso.");
+				}
+			} else if (proprietarioPrecedente != null
+					&& (proprietarioAttuale == null || !proprietarioAttuale.equals(proprietarioPrecedente))) {
+				// Il proprietario precedente ha perso il titolo
+				System.out.print(proprietarioPrecedente.getNome() + " non ha difeso il suo titolo: "
+						+ titoloCorrente.toString());
+				if (proprietarioAttuale != null) {
+					System.out.println("Nuovo proprietario: " + proprietarioAttuale.getNome() + ".");
+				} else {
+					System.out.println("Il titolo è ora non assegnato.");
+				}
 			}
-
 		}
 	}
-
 }
