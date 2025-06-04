@@ -1,6 +1,5 @@
 package game_logic;
 
-import java.util.Scanner;
 import alieni.Colore;
 
 import carteAvventura.*;
@@ -16,6 +15,7 @@ import planciavolo.*;
 
 public class Game {
 	private final static Clessidra clessidra = new Clessidra();
+	private static LettoreInput sc = new LettoreInput();
 	
 	private static void StampaMenu(String titolo, List<String> voci) 
 	{
@@ -29,21 +29,20 @@ public class Game {
 	}
 	
 	private static List<Giocatore> InizializzaGiocatori() {
-		List<Giocatore> giocatori = new ArrayList<Giocatore>();		
-		Scanner sc = new Scanner(System.in);
+		List<Giocatore> giocatori = new ArrayList<Giocatore>();
 		int numeroGiocatori = 0;
 		
 		do {
 	        System.out.print("Quanti giocatori parteciperanno alla partita? (min 2, max 4): ");
-	        numeroGiocatori = sc.nextInt();
-	        sc.nextLine();
+	        numeroGiocatori = sc.leggiInt();
+	        sc.leggiString();
 	    } while(numeroGiocatori < 2 || numeroGiocatori > 4);
 		
 		for(int i = 0; i < numeroGiocatori; i++) {
 			String nome;
 	        do {
 	            System.out.println("\n\nBenvenuto giocatore numero " + (i+1) + "!" + "\nInserisci pure il tuo nome: ");
-	            nome = sc.nextLine().trim();
+	            nome = sc.leggiString().trim();
 	            
 	            if(nome.isEmpty() || nome.length() < 2) {
 	                System.out.println("Il nome deve essere almeno di 2 caratteri, riprova!");
@@ -306,13 +305,10 @@ public class Game {
 				new CabinaPartenza(Connettore.UNIVERSALE, Connettore.UNIVERSALE, Connettore.UNIVERSALE, Connettore.UNIVERSALE, ColoreGiocatore.VERDE)
 				};
 		
-		Scanner sc = new Scanner(System.in);
-		
 		for(Giocatore giocatore : giocatori) {
 			giocatore.InizializzaNave(livello);
 			int random = (int)(Math.random() * 4);
 			int prenotazioni = 0;
-			int posizionePrenotazione = 5;
 			
 			CabinaPartenza cabinaGiocatore = coloreGiocatori[random];
 			giocatore.getNave().aggiungiComponente(6, 6, cabinaGiocatore);
@@ -327,40 +323,77 @@ public class Game {
 				System.out.flush();
 				System.out.println("Attualmente rimangono sul banco: " + componenti.size() + " tessere");
 				System.out.println("\n\nPESCA UNA TESSERA (premi invio): ");
-				String scelta = sc.nextLine();
+				String scelta = sc.leggiString();
 				
 				if(!scelta.isEmpty()) continue;
 
 				random = (int)(Math.random() * componenti.size());
 				Componente pescata = componenti.get(random);
-				System.out.println("Questa è la tessera che hai scelto:\n" + pescata.toString() + "\n\n Puoi scegliere se tenerla (T), scartartla (S) o prenotarla (P): ");
-				
-				String sceltaTessera = sc.nextLine();
-				
-				if(sceltaTessera.equalsIgnoreCase("t")) {
-					componenti.remove(random);
-					System.out.print("\033[H\033[2J");
-					System.out.flush();
-					giocatore.getNave().stampa();
-					System.out.println("Ottimo! dimmi ora in che cella vuoi posizionarlo (Ricordati che le caselle partono da 00 e non da 11!)");
-					String posizione = sc.nextLine();
+
+				boolean ripeti=true;
+				while(ripeti) 
+				{
+					ripeti=false;
+					System.out.println("Questa è la tessera che hai scelto:\n" + pescata.toString() + "\n\n Puoi scegliere se tenerla (T), ruotarla in senso orario (D), ruotarla in senso antiorario (A), scartartla (S), prenotarla (P), o inserire una tessera prenotata (scartando quella attuale)(I): ");
 					
-					try {						
-						int x = Character.getNumericValue(posizione.charAt(0));
-						int y = Character.getNumericValue(posizione.charAt(1));
+					String sceltaTessera = sc.leggiString();
+					if(sceltaTessera.equalsIgnoreCase("t")) {
+						componenti.remove(random);
+						System.out.print("\033[H\033[2J");
+						System.out.flush();
+						giocatore.getNave().stampa();
+						System.out.println("Ottimo! dimmi ora in che cella vuoi posizionarlo scrivendo le coordionate separate da una virgola (Ricordati che le caselle partono da 0,0 e non da 1,1!)");
+						String posizione = sc.leggiString();
+						String[] coordinate = posizione.split(",");
 						
-						giocatore.getNave().aggiungiComponente(x, y, pescata);
-					} catch(Exception e) {
-						System.out.println("Coordinate errate. Impossibile inserire");
+						try {						
+							int x = Integer.parseInt(coordinate[0]);
+							int y = Integer.parseInt(coordinate[1]);
+							
+							giocatore.getNave().aggiungiComponente(x, y, pescata);
+						} catch(Exception e) {
+							System.out.println("Coordinate errate. Impossibile inserire. Riprova");
+							ripeti=true;
+						}
+					} else if(sceltaTessera.equalsIgnoreCase("p") && prenotazioni < 2) {
+						componenti.remove(random);
+						giocatore.aggiungiComponentiPrenotati(pescata);
+						prenotazioni++;
 					}
-					
-				} else if(sceltaTessera.equalsIgnoreCase("p") && prenotazioni < 3) {
-					componenti.remove(random);
-					giocatore.getNave().aggiungiComponente(0, posizionePrenotazione, pescata);
-					posizionePrenotazione++;
-					prenotazioni++;
+					else if(sceltaTessera.equalsIgnoreCase("i")) 
+					{
+						if(prenotazioni>0) 
+						{
+							ripeti=true;
+							int i=1;
+							for (Componente prenotato : giocatore.getComponentiPrenotati()) 
+							{
+								System.out.println(i + "\n" + prenotato.toString());
+								i++;
+							}
+							System.out.println("Scegliere quale tessera piazzare scegliendola con il numero associato ");
+							i=Integer.parseInt(sc.leggiString());
+							pescata=giocatore.getComponentiPrenotati().get(i-1);
+							giocatore.getComponentiPrenotati().remove(i-1);
+							prenotazioni--;
+						}
+						else
+							System.out.println("Nessuna prenotazione effettuata");
+						
+					}
+					else if(sceltaTessera.equalsIgnoreCase("d")) 
+					{
+						ripeti=true;
+						pescata.ruota('o');
+					}
+					else if(sceltaTessera.equalsIgnoreCase("a")) 
+					{
+						ripeti=true;
+						pescata.ruota('a');
+						
+					}
 				}
-				
+
 				//Clears screen: https://www.quora.com/How-do-I-clear-the-console-screen-in-Java (Nota: in Eclipse non funziona, funziona solo nella console vera e propria)
 				System.out.print("\033[H\033[2J");   
 			    System.out.flush();
@@ -368,8 +401,6 @@ public class Game {
 			
 			System.out.println("TEMPO SCADUTO, " + giocatore.nome + "! Attendi ora che gli altri giocatori terminimo la fase di assemblaggio delle loro navi!");
 		}
-		
-		sc.close();
 	}
 	
 	public static void SchermataIniziale(List<Giocatore> giocatori, PlanciaVolo plancia) {
@@ -378,7 +409,6 @@ public class Game {
 		System.out.println("========== VISUALIZZA LA TUA NAVE O LA PLANCIA ==========");
 		
 		giocatori.get(0).getNave().stampa();
-		Scanner sc = new Scanner(System.in);
 		StringBuilder builder = new StringBuilder();
 		
 		for(Giocatore giocatore : giocatori) builder.append(giocatore.getNome() + " - ");
@@ -389,13 +419,13 @@ public class Game {
 		
 		while(scelta != 6) {
 			builder.toString();
-			scelta = sc.nextInt();
+			scelta = sc.leggiInt();
 			
 			if(scelta == 5) //TODO: stampare plancia
 			
 			while(scelta < 0 && scelta > giocatori.size()) {
 				builder.toString();
-				scelta = sc.nextInt();
+				scelta = sc.leggiInt();
 			}
 			
 			System.out.print("\033[H\033[2J");   
@@ -503,49 +533,83 @@ public class Game {
 	}
 	
 	public static void main(String[] args) {
-		String[] vociTmp = new String[] {"Avvia una partita", "Informazioni sul regolamento", "Esci"};
+		String[] vociTmp = new String[] {"Avvia una partita", "Informazioni sul regolamento", "Legenda componenti", "Esci"};
 		List<String> voci = Arrays.asList(vociTmp);
-		StampaMenu("BENVENUTO SU GALAXY TRUCKER", voci);
 		
-		Scanner sc = new Scanner(System.in);
-		int decisione = sc.nextInt();
+		int decisione;//Usato per la scelta nel menu
 		
-		while(decisione != 1 && decisione != 2 && decisione != 3) {
-			System.out.println("Prova a ricontrollare la tua scelta!");
-			decisione = sc.nextInt();
-		}
+		boolean ripeti = true;//Usato per il ciclo
 		
-		switch(decisione) {
-		case 1:
-			System.out.println("Ottimo, siete allora pronti per affrontare la vostra prima avventura.");
-			System.out.println("Prima di cominciare però, sappiate che avete a disposizione 3 scelte: \n");
+		while(ripeti) 
+		{
+			ripeti=false;
 			
-			voci = Arrays.asList("Livello 1", "Livello 2", "Livello 3", "Trasporta Intergalattica");
-			StampaMenu("Seleziona il livello desiderato", voci);
-			decisione = sc.nextInt();
+			StampaMenu("BENVENUTO SU GALAXY TRUCKER", voci);
+			decisione = sc.leggiInt();
 			
 			while(decisione != 1 && decisione != 2 && decisione != 3 && decisione != 4) {
 				System.out.println("Prova a ricontrollare la tua scelta!");
-				decisione = sc.nextInt();
+				decisione = sc.leggiInt();
 			}
 			
-			if(decisione == 1) StartGame(Livello.I);
-			else if(decisione == 2) StartGame(Livello.II);
-			else if(decisione == 3) StartGame(Livello.III);
-			else {
-				List<Giocatore> giocatori = InizializzaGiocatori();
-				StartGame(giocatori);
+			switch(decisione) {
+			case 1:
+				System.out.println("Ottimo, siete allora pronti per affrontare la vostra prima avventura.");
+				System.out.println("Prima di cominciare però, sappiate che avete a disposizione 3 scelte: \n");
+				
+				voci = Arrays.asList("Livello 1", "Livello 2", "Livello 3", "Trasporta Intergalattica");
+				StampaMenu("Seleziona il livello desiderato", voci);
+				decisione = sc.leggiInt();
+				
+				while(decisione != 1 && decisione != 2 && decisione != 3 && decisione != 4) {
+					System.out.println("Prova a ricontrollare la tua scelta!");
+					decisione = sc.leggiInt();
+				}
+				
+				if(decisione == 1) StartGame(Livello.I);
+				else if(decisione == 2) StartGame(Livello.II);
+				else if(decisione == 3) StartGame(Livello.III);
+				else {
+					List<Giocatore> giocatori = InizializzaGiocatori();
+					StartGame(giocatori);
+				}
+			case 2:
+				System.out.println("Ecco a te la pagina dedicata al regolamento del gioco: ");
+				System.out.println("https://www.craniocreations.it/storage/media/product_downloads/179/2052/Galaxy-Trucker_ITA_Rules_compressed.pdf");
+				System.out.println("\n\nPremi qualsiasi tasto per tornare al menu ");
+				ripeti=true;
+				break;
+				
+			case 3:
+				System.out.println("Simboli connettori:\n"
+						+ "Connettore singolo: -\n"
+						+ "Connettore doppio: =\n"
+						+ "Connettore universale: #\n");
+				System.out.println("Abbreviazioni componenti:\n"
+						+ "Batteria piccola: bat\n"
+						+ "Batteria grande: BAT\n"
+						+ "Cabina di partenza: CAB\n"
+						+ "Cabina:\tcab\nCannone: can\n"
+						+ "Cannone doppio: CAN\n"
+						+ "Motore: mot\n"
+						+ "Motore doppio: MOT\n"
+						+ "Scudo: scu\n"
+						+ "Stiva normale piccola: sti\n"
+						+ "Stiva normale grande: STI\n"
+						+ "Stiva speciale piccola:sts\n"
+						+ "Stiva speciale grande:STS\n"
+						+ "Componente strutturale:str\n"
+						+ "Supporto alieni marrone:suM\n"
+						+ "Supporto alieni viola:suV\n"
+						+ "I motori vengono sempre generati puntati verso il basso e non possono venire ruotati, invece i cannoni vengono sempre generati puntati verso l'alto.");
+				System.out.println("\n\nPremi qualsiasi tasto per tornare al menu ");
+				ripeti=true;
+				break;
+				
+			default:
+				return;
 			}
-		case 2:
-			System.out.println("Ecco a te la pagina dedicata al regolamento del gioco: ");
-			System.out.println("https://www.craniocreations.it/storage/media/product_downloads/179/2052/Galaxy-Trucker_ITA_Rules_compressed.pdf");
-			break;
-		default:
-			sc.close();
-			return;
 		}
-		
-		sc.close();
 	}
 
 }

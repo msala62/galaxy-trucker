@@ -5,9 +5,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.Scanner;
 
 import componenti.*;
+import game_logic.LettoreInput;
 import merci.Cargo;
 import merci.Cargo.ColoreCargo;
 
@@ -17,6 +17,9 @@ public abstract class Nave {
 	protected Casella[][] plancia;
 	protected int equipaggio;
 
+
+	private static LettoreInput sc = new LettoreInput();
+	
 	public Nave(int rows, int columns, int[][] caselleUtilizzabili) {
 		this.ROWS = rows;
 		this.COLUMNS = columns;
@@ -240,18 +243,17 @@ public abstract class Nave {
 	//Funzione per scambiare merce tra due stive, oppure per scartare la merce contenuta in una stiva
 	public boolean scambiaCargo() 
 	{
-		Scanner sc = new Scanner(System.in);
 		int colonna, riga;
 		
 		System.out.println("Inserire le coordinate della stiva donatrice, ovvero quella DA cui scambiare, scrivendo la sua colonna e la sua riga: ");
-		colonna = sc.nextInt();
-		riga = sc.nextInt();
+		colonna = sc.leggiInt();
+		riga = sc.leggiInt();
 		//Controllo se le coordinate sono valide. Continuo a chiederle finche sono giuste oppure viene immesso -1 -1 per uscire dalla funzione con return vero
 		while(isUtilizzabile(this.plancia[riga][colonna]) && !(this.plancia[riga][colonna].getComponente() instanceof Stiva)) 
 		{
 			System.out.println("Le coordinate inserite non corrispondono ad una stiva. Provate con delle nuove coordinate oppure inserite -1 -1 per uscire dalla funzione senza effettuare uno scambio: ");
-			colonna = sc.nextInt();
-			riga = sc.nextInt();
+			colonna = sc.leggiInt();
+			riga = sc.leggiInt();
 			if(colonna == -1 && riga == -1) 
 			{
 				return true;
@@ -267,14 +269,14 @@ public abstract class Nave {
 		}
 		
 		System.out.println("Inserire le coordinate della stiva ricevente, ovvero quella A cui scambiare, scrivendo la sua colonna e la sua riga. Inserire -2 -2 per eiettare il cargo nello spazio al posto di scambiarlo con un'altra stiva: ");
-		colonna = sc.nextInt();
-		riga = sc.nextInt();
+		colonna = sc.leggiInt();
+		riga = sc.leggiInt();
 		//Controllo se le coordinate sono valide. Continuo a chiederle finche sono giuste oppure viene immesso -1 -1 per uscire dalla funzione, oppure -2 -2 per eliminare la merce
 		while(isUtilizzabile(this.plancia[riga][colonna]) && !(this.plancia[riga][colonna].getComponente() instanceof Stiva) && (colonna!=-2 && riga!=-2)) 
 		{
 			System.out.println("Le coordinate inserite non corrispondono ad una stiva, o al codice per gettare il cargo nello spazio. Provate con delle nuove coordinate oppure inserite -1 -1 per uscire dalla funzione senza effettuare uno scambio: ");
-			colonna = sc.nextInt();
-			riga = sc.nextInt();
+			colonna = sc.leggiInt();
+			riga = sc.leggiInt();
 			if(colonna == -1 && riga == -1) 
 			{
 				return true;
@@ -289,12 +291,12 @@ public abstract class Nave {
 			
 			donatore.stampaCargoCorrente();
 			System.out.println("Scegliere quale merce scambiare immettendo il relativo numero: ");
-			selezioneDonatore = sc.nextInt();
+			selezioneDonatore = sc.leggiInt();
 			//Controllo validità scelta
 			while(selezioneDonatore < 1 || selezioneDonatore > donatore.getCargoCorrente().size()) 
 			{
 				System.out.println("Errore di digitazione. Inserire un numero tra quelli nella lista soprascritta: ");
-				selezioneDonatore = sc.nextInt();
+				selezioneDonatore = sc.leggiInt();
 			}
 			
 			//Se si prova a scambiare una merce rossa ad una stiva non speciale si esce con return falso
@@ -316,11 +318,11 @@ public abstract class Nave {
 			int selezioneRicevente;
 			ricevente.stampaCargoCorrente();
 			System.out.println("Scegliere quale merce scambiare immettendo il relativo numero: ");
-			selezioneRicevente = sc.nextInt();
+			selezioneRicevente = sc.leggiInt();
 			while(selezioneRicevente < 1 || selezioneRicevente > ricevente.getCargoCorrente().size()) 
 			{
 				System.out.println("Errore di digitazione. Inserire un numero tra quelli nella lista soprascritta: ");
-				selezioneRicevente = sc.nextInt();
+				selezioneRicevente = sc.leggiInt();
 			}
 			
 			//Check come prima se donatrice può accogliere merce rossa
@@ -347,11 +349,11 @@ public abstract class Nave {
 			int selezioneDonatore;
 			donatore.stampaCargoCorrente();
 			System.out.println("Scegliere quale merce buttare immettendo il relativo numero: ");
-			selezioneDonatore = sc.nextInt();
+			selezioneDonatore = sc.leggiInt();
 			while(selezioneDonatore < 1 || selezioneDonatore > donatore.getCargoCorrente().size()) 
 			{
 				System.out.println("Errore di digitazione. Inserire un numero tra quelli nella lista soprascritta: ");
-				selezioneDonatore = sc.nextInt();
+				selezioneDonatore = sc.leggiInt();
 			}
 			
 			donatore.getCargoCorrente().remove(selezioneDonatore-1);
@@ -625,7 +627,6 @@ public abstract class Nave {
 		}
 		
 		//Poi se si hanno segnalini energia si chiede all'utente se vuole attivare anche i motori doppi uno a uno
-		Scanner sc = new Scanner(System.in);
 		String risposta;
 		for (int i = 0; i < this.plancia.length && this.getEnergia() > 0; i++) 
 		{
@@ -636,11 +637,11 @@ public abstract class Nave {
 					MotoreDoppio motore =  (MotoreDoppio) this.plancia[i][j].getComponente();
 					
 					System.out.println("La tua potenza motrice ora e' " + potenzaMotrice + ", e hai ancora " + this.getEnergia() + "segnalini batteria. Vuoi attivare un motore doppio? S/N\n");
-					risposta = sc.nextLine();
+					risposta = sc.leggiString();
 					while(!risposta.equalsIgnoreCase("S") && !risposta.equalsIgnoreCase("N"))
 					{
 						System.out.println("Input errato. Inserire 'S' per si oppure 'N' per no");
-						risposta = sc.nextLine();
+						risposta = sc.leggiString();
 					}
 					
 					if(risposta.equalsIgnoreCase("S")) 
@@ -691,7 +692,6 @@ public abstract class Nave {
 		}
 		
 		//Poi se si hanno segnalini energia si chiede all'utente se vuole attivare anche i cannoni doppi uno a uno
-		Scanner sc = new Scanner(System.in);
 		String risposta;
 		for (int i = 0; i < this.plancia.length && this.getEnergia() > 0; i++) 
 		{
@@ -702,11 +702,11 @@ public abstract class Nave {
 					CannoneDoppio cannone =  (CannoneDoppio) this.plancia[i][j].getComponente();
 					
 					System.out.println("La tua potenza motrice ora e' " + potenzaFuoco + ", e hai ancora " + this.getEnergia() + "segnalini batteria. Vuoi attivare un motore doppio? S/N\n");
-					risposta = sc.nextLine();
+					risposta = sc.leggiString();
 					while(!risposta.equalsIgnoreCase("S") && !risposta.equalsIgnoreCase("N"))
 					{
 						System.out.println("Input errato. Inserire 'S' per si oppure 'N' per no");
-						risposta = sc.nextLine();
+						risposta = sc.leggiString();
 					}
 					
 					if(risposta.equalsIgnoreCase("S")) 

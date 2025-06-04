@@ -11,6 +11,7 @@ package carteAvventura;
 
 import java.util.*;
 import game_logic.Giocatore;
+import game_logic.LettoreInput;
 import merci.*;
 import planciavolo.PlanciaVolo;
 
@@ -21,6 +22,8 @@ public class StazioneAbbandonata extends Carta {
 	private List<Cargo> cargo;
 	private boolean isUsed = false;
 
+	private static LettoreInput sc = new LettoreInput();
+	
 	public StazioneAbbandonata(Livello livello, List<Cargo> cargo, int giorniDaPerdere, int equipaggioRichiesto) {
 		super(livello, "Stazione Abbandonata");
 		this.equipaggioRichiesto = equipaggioRichiesto;
@@ -37,7 +40,6 @@ public class StazioneAbbandonata extends Carta {
 
 	@Override
 	public void azione(List<Giocatore> giocatori, PlanciaVolo plancia) {
-		Scanner scanner = new Scanner(System.in);
 		for (Giocatore giocatore : giocatori) {
 			
 			if (isUsed)
@@ -45,12 +47,12 @@ public class StazioneAbbandonata extends Carta {
 
 			System.out.println("==================== Giocatore: " + giocatore.getNome()+"========================");
 			System.out.print("Vuoi accettare l'offerta? (s/n): ");
-			String risposta = scanner.nextLine().trim().toLowerCase();
+			String risposta = sc.leggiString().trim().toLowerCase();
 
 			// verifica input
 			while (!risposta.equals("s") && !risposta.equals("n")) {
 				System.out.print("Risposta non valida. Digita 's' per sì o 'n' per no: ");
-				risposta = scanner.nextLine().trim().toLowerCase();
+				risposta = sc.leggiString().trim().toLowerCase();
 			}
 
 			// se si

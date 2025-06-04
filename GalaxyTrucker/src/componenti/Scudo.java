@@ -55,8 +55,8 @@ public class Scudo extends Componente {
 				this.connettoreGIU = this.connettoreDX;
 				this.connettoreDX = this.connettoreSU;
 				this.connettoreSU = temp;
-				this.dirScudo1 = this.dirScudo1.cambioDirezioneA();
-				this.dirScudo2 = this.dirScudo2.cambioDirezioneA();
+				this.dirScudo1 = this.dirScudo1.cambioDirezioneO();
+				this.dirScudo2 = this.dirScudo2.cambioDirezioneO();
 				break;
 			
 			default:	//Errore se non viene digitato 'a' oppure 'o'
@@ -65,8 +65,19 @@ public class Scudo extends Componente {
 	}	
 	
 	@Override
-	public String nomeComponente() {
+	public String nomeComponente()
+	{
 		return String.format("%1$5s", "scu ");
 	}
 
+	@Override
+	public String toString() 
+	{
+		String componente = String.format("%1$8s", "") + connettoreSU.toString() + String.format("%1$6s", "") + "\n"
+				+ connettoreSX.toString() + this.nomeComponente() + connettoreDX.toString() + "\n" 
+				+ String.format("%1$8s", "") + connettoreGIU.toString() + String.format("%1$6s", "")
+				+ "\n Direzioni scudo: " + this.getDirScudo1().toString() + ", " + this.getDirScudo2().toString();
+		
+		return componente;	
+	}
 }

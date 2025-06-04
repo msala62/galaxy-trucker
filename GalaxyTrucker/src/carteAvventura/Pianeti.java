@@ -11,12 +11,15 @@ package carteAvventura;
 import java.util.*;
 
 import game_logic.Giocatore;
+import game_logic.LettoreInput;
 import planciavolo.PlanciaVolo;
 
 public class Pianeti extends Carta {
 	private int giorniDaPerdere; // I giorni di volo da scarifiare per poter caricare dei merci
 	private List<Pianeta> pianetiDisponibili; // Lista dei pianeti disponibili sulla carta
 
+	private static LettoreInput sc = new LettoreInput();
+	
 	public Pianeti(Livello livello, List<Pianeta> pianeti, int giorniDaPerdere) {
 		super(livello, "Pianeti");
 		this.giorniDaPerdere = giorniDaPerdere;
@@ -40,7 +43,6 @@ public class Pianeti extends Carta {
 
 	@Override
 	public void azione(List<Giocatore> giocatori, PlanciaVolo plancia) {
-		Scanner scanner = new Scanner(System.in);
 		for (Giocatore giocatore : giocatori) {
 			if (pianetiDisponibili.isEmpty()) {
 				System.out.println("Nessun pianeta disponibile per il giocatore " + giocatore.getNome()); // Tutti i pianeti sono già stati attaccati
@@ -51,7 +53,7 @@ public class Pianeti extends Carta {
 			for (int i = 0; i < pianetiDisponibili.size(); i++) {
 				System.out.println(i + ": " + pianetiDisponibili.get(i));
 			}
-			int pianetaScelta = scanner.nextInt();
+			int pianetaScelta = sc.leggiInt();
 			if (pianetaScelta >= 0 && pianetaScelta < pianetiDisponibili.size()) {
 				plancia.spostamentoGiocatore(giocatore, -giorniDaPerdere);
 				giocatore.getNave().caricaCargo(pianetiDisponibili.get(pianetaScelta).getPianeta());

@@ -9,6 +9,7 @@ package carteAvventura;
 
 import java.util.*;
 import game_logic.Giocatore;
+import game_logic.LettoreInput;
 import planciavolo.PlanciaVolo;
 
 public class NaveAbbandonata extends Carta {
@@ -18,6 +19,8 @@ public class NaveAbbandonata extends Carta {
 	private int creditiDaAquistare;
 	private boolean isUsed = false;
 
+	private static LettoreInput sc = new LettoreInput();
+	
 	public NaveAbbandonata(Livello livello, int equipaggioDaPerdere, int giorniDaPerdere, int creditiDaAquistare) {
 		super(livello, "NaveAbbandonata");
 		this.creditiDaAquistare = creditiDaAquistare;
@@ -34,7 +37,6 @@ public class NaveAbbandonata extends Carta {
 
 	@Override
 	public void azione(List<Giocatore> giocatori, PlanciaVolo plancia) {
-		Scanner scanner = new Scanner(System.in);
 		System.out.println("Evento: Nave Abbandonata!");
 		System.out.println("Il primo giocatore che accetta può perdere " + equipaggioDaPerdere
 				+ " membri dell'equipaggio per ottenere " + creditiDaAquistare + " crediti, ma perderà "
@@ -46,12 +48,12 @@ public class NaveAbbandonata extends Carta {
 
 			System.out.println("==================== Giocatore: " + giocatore.getNome()+"========================");
 			System.out.print("Vuoi accettare l'offerta? (s/n): ");
-			String risposta = scanner.nextLine().trim().toLowerCase();
+			String risposta = sc.leggiString().trim().toLowerCase();
 
 			// verifica input
 			while (!risposta.equals("s") && !risposta.equals("n")) {
 				System.out.print("Risposta non valida. Digita 's' per sì o 'n' per no: ");
-				risposta = scanner.nextLine().trim().toLowerCase();
+				risposta = sc.leggiString().trim().toLowerCase();
 			}
 
 			// se si

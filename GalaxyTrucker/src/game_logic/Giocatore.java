@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import carteAvventura.Livello;
+import componenti.Componente;
 
 public class Giocatore {
 	private static int ID_COUNTER = 0;
@@ -21,6 +22,7 @@ public class Giocatore {
 	public final String nome;
 	private int crediti;
 	private List<String> titoli;
+	private List<Componente> componentiPrenotati;
 	private boolean isLeader;
 
 	public Giocatore(String nome) {
@@ -28,6 +30,7 @@ public class Giocatore {
 		this.nome = nome;
 		this.crediti = 0;
 		this.titoli = new ArrayList<String>();
+		this.componentiPrenotati = new ArrayList<Componente>();
 		this.isLeader = false;
 		
 		++ID_COUNTER;
@@ -85,5 +88,13 @@ public class Giocatore {
 	
 	public String getNome() {
 		return nome;
+	}
+
+	public List<Componente> getComponentiPrenotati() {
+		return componentiPrenotati;
+	}
+
+	public void aggiungiComponentiPrenotati(Componente comp) {
+		componentiPrenotati.add(comp);
 	}
 }
