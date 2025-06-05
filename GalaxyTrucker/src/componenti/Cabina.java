@@ -1,10 +1,13 @@
 package componenti;
 
+import alieni.Colore;
+
 public class Cabina extends CabinaPartenza {
 	
 	private int equipaggioAlieno;
 	
 	private static final int EQUIPAGGIO_ALIENO_MAX=1;
+	private Colore coloreAlieno;
 	private boolean accettaAlieni;
 	
 	public Cabina(Connettore SX, Connettore DX, Connettore SU, Connettore GIU) {
@@ -36,6 +39,15 @@ public class Cabina extends CabinaPartenza {
 	{
 		this.accettaAlieni = accettaAlieni;
 	}
+	
+	public Colore getColoreAlieno() {
+        return this.coloreAlieno;
+    }
+    
+    public void setColoreAlieno(Colore colore) {
+        this.coloreAlieno = colore;
+        this.accettaAlieni = (colore != null);
+    }
 
 	@Override
 	public void setEquipaggio(int equipaggio)	//Controllo equipaggio >0 da fare prima di chiamare
@@ -44,8 +56,10 @@ public class Cabina extends CabinaPartenza {
 			System.out.println("E' gia presente un alieno nella cabina");
 		else if (this.equipaggio + equipaggio > EQUIPAGGIO_MAX)
 			System.out.println("Numero massimo umani raggiunto");
-		else
+		else {
 			this.equipaggio = equipaggio;
+			this.coloreAlieno = coloreAlieno;
+		}
 	}
 	
 	@Override

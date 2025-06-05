@@ -164,6 +164,7 @@ public abstract class Nave {
 	            Cabina cabina = (Cabina)tessera;
 	            if (cabina.getColore() != null) {
 	                // Cabina aliena - aggiungi 1 alieno del colore specificato
+	            	cabina.setColoreAlieno(cabina.getColoreAlieno());
 	                cabina.setEquipaggioAlieno(1);
 	            } else {
 	                // Cabina normale - aggiungi 2 astronauti
