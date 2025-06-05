@@ -430,7 +430,7 @@ public class Game {
 			builder.toString();
 			scelta = sc.leggiInt();
 			
-			if(scelta == 5) //TODO: stampare plancia
+			if(scelta == 5) plancia.Stampa();
 			
 			while(scelta < 0 && scelta > giocatori.size()) {
 				builder.toString();
