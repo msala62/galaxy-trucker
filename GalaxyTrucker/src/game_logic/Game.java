@@ -58,17 +58,17 @@ public class Game {
 	private static List<Componente> GeneraComponenti(List<ComponentBuilder> builders) {
 	    List<Componente> componenti = new ArrayList<>();
 	    Connettore[] direzioni = {Connettore.SINGOLO, Connettore.DOPPIO, Connettore.UNIVERSALE, Connettore.LISCIO};
-	    Direzione[] orientamento = {Direzione.SU, Direzione.GIU, Direzione.DX, Direzione.SX};
 	    Colore[] coloriAlieni = {Colore.MARRONE, Colore.VIOLA};
+	    Random random = new Random();
 	    
 	    for(ComponentBuilder builder : builders) {
 	        for(int i = 0; i < builder.quantita; i++) {
 	            try {
-	                int su = (int)(Math.random() * 4);
-	                int giu = (int)(Math.random() * 4);
-	                int dx = (int)(Math.random() * 4);
-	                int sx = (int)(Math.random() * 4);
-	                int colore = (int)(Math.random() * 2);
+	                int su = random.nextInt(4);
+	                int giu = random.nextInt(4);
+	                int dx = random.nextInt(4);
+	                int sx = random.nextInt(4);
+	                int colore = random.nextInt(2);
 	                
 	                Componente componente;
 	                
@@ -78,9 +78,16 @@ public class Game {
 	                        .newInstance(direzioni[sx], direzioni[dx], direzioni[su], direzioni[giu], coloriAlieni[colore]);
 	                }
 	                else if(builder.tipologia.equals(Scudo.class)) {
+	                    // Generiamo due direzioni distinte per lo scudo
+	                    List<Direzione> direzioniDisponibili = new ArrayList<>(Arrays.asList(Direzione.values()));
+	                    Direzione primaDirezione = direzioniDisponibili.remove(random.nextInt(direzioniDisponibili.size()));
+	                    Direzione secondaDirezione = direzioniDisponibili.remove(random.nextInt(direzioniDisponibili.size()));
+	                    
 	                    componente = builder.tipologia.getConstructor(
-	                        Connettore.class, Connettore.class, Connettore.class, Connettore.class, Direzione.class, Direzione.class)
-	                        .newInstance(direzioni[sx], direzioni[dx], direzioni[su], direzioni[giu], orientamento[su], orientamento[giu]);
+	                        Connettore.class, Connettore.class, Connettore.class, Connettore.class, 
+	                        Direzione.class, Direzione.class)
+	                        .newInstance(direzioni[sx], direzioni[dx], direzioni[su], direzioni[giu], 
+	                                   primaDirezione, secondaDirezione);
 	                }
 	                else if(builder.tipologia.equals(Batteria.class)) {
 	                    componente = builder.tipologia.getConstructor(
@@ -88,9 +95,11 @@ public class Game {
 	                        .newInstance(direzioni[sx], direzioni[dx], direzioni[su], direzioni[giu], builder.grande);
 	                }
 	                else if(builder.tipologia.equals(Stiva.class)) {
-	                	componente = builder.tipologia.getConstructor(
-		                        Connettore.class, Connettore.class, Connettore.class, Connettore.class, boolean.class, boolean.class)
-		                        .newInstance(direzioni[sx], direzioni[dx], direzioni[su], direzioni[giu], builder.grande, builder.speciale);
+	                    componente = builder.tipologia.getConstructor(
+	                        Connettore.class, Connettore.class, Connettore.class, Connettore.class, 
+	                        boolean.class, boolean.class)
+	                        .newInstance(direzioni[sx], direzioni[dx], direzioni[su], direzioni[giu], 
+	                                   builder.grande, builder.speciale);
 	                }
 	                else {
 	                    componente = builder.tipologia.getConstructor(

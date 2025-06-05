@@ -37,6 +37,20 @@ public abstract class Nave {
 		}
 	}
 	
+	public void AttivaScudo(int x, int y) {
+		if(isUtilizzabile(this.plancia[y][x]))
+			for (int i = 0; i < ROWS; i++) {
+		        for (int j = 0; j < COLUMNS; j++) {
+		            if (plancia[i][j].getComponente() instanceof Batteria) {
+		                Batteria batteria = (Batteria)plancia[i][j].getComponente();
+		                Scudo scudo = (Scudo)plancia[y][x].getComponente();
+		                scudo.attivaScudo(batteria);
+		                return;
+		            }
+		        }
+		    }
+	}
+	
 	public Casella[][] getPlancia(){
 		return this.plancia;
 	}
@@ -170,22 +184,6 @@ public abstract class Nave {
 	                // Cabina normale - aggiungi 2 astronauti
 	                this.equipaggio += 2;
 	            }
-	        }
-	        
-	        // Gestione Scudo - consuma energia
-	        if (tessera instanceof Scudo) {
-	        	 for (int i = 0; i < ROWS; i++) {
-	        	        for (int j = 0; j < COLUMNS; j++) {
-	        	            if (plancia[i][j].getComponente() instanceof Batteria) {
-	        	                Batteria batteria = (Batteria)plancia[i][j].getComponente();
-	        	                if (batteria.getCarica() > 0) {
-	        	                    batteria.scalaCarica();
-	        	                    return;
-	        	                }
-	        	            }
-	        	        }
-	        	    }
-	        	    throw new IllegalStateException("Nessuna batteria con carica disponibile per attivare il componente");
 	        }
 	        
 	        //Gestione speciale per Cabina. Spostato qua altrimenti l'equipaggio della nave veniva aumentato prima di esser sicuri di poter posizionare la cabina
