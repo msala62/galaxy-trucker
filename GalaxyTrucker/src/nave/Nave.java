@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import alieni.Alieno;
 import componenti.*;
 import game_logic.LettoreInput;
 import merci.Cargo;
@@ -113,10 +114,12 @@ public abstract class Nave {
 	            throw new IllegalStateException("La cella (" + y + "," + x + ") è già occupata");
 	        }
 	        
-	        //Lo scudo dovrebbe essere come cannoni/motori doppi: posizionabile sempre, ma utilizzabile al costo di un segnalino batteria
-
-	        if(!(tessera instanceof CabinaPartenza)) 
-	        {
+	        boolean componenteSpeciale = tessera instanceof Scudo || 
+	                                   tessera instanceof CannoneDoppio || 
+	                                   tessera instanceof MotoreDoppio ||
+	                                   tessera instanceof CabinaPartenza;
+	        
+	        if (!componenteSpeciale) {
 	        	//Controllo che il componente sia collegato ad un altro componente TODO ancora da perfezionare
 	        	if(((y > 0 && isUtilizzabile(plancia[y-1][x]) && plancia[y-1][x].getComponente().getConnettoreGIU()==Connettore.LISCIO) || (y > 0 && !isUtilizzabile(plancia[y-1][x])) || (y > 0 && plancia[y-1][x].getComponente() == null))
 	        		&& ((y < ROWS-1 && isUtilizzabile(plancia[y+1][x]) && plancia[y+1][x].getComponente().getConnettoreSU()==Connettore.LISCIO) || (y < ROWS-1 && !isUtilizzabile(plancia[y+1][x])) || (y < ROWS-1 && plancia[y+1][x].getComponente() == null)) 
@@ -157,11 +160,38 @@ public abstract class Nave {
 	        
 	        plancia[y][x].setComponente(tessera);
 	        
+	        if (tessera instanceof Cabina) {
+	            Cabina cabina = (Cabina)tessera;
+	            if (cabina.getColore() != null) {
+	                // Cabina aliena - aggiungi 1 alieno del colore specificato
+	                cabina.setEquipaggioAlieno(1);
+	            } else {
+	                // Cabina normale - aggiungi 2 astronauti
+	                this.equipaggio += 2;
+	            }
+	        }
+	        
+	        // Gestione Scudo - consuma energia
+	        if (tessera instanceof Scudo) {
+	        	 for (int i = 0; i < ROWS; i++) {
+	        	        for (int j = 0; j < COLUMNS; j++) {
+	        	            if (plancia[i][j].getComponente() instanceof Batteria) {
+	        	                Batteria batteria = (Batteria)plancia[i][j].getComponente();
+	        	                if (batteria.getCarica() > 0) {
+	        	                    batteria.scalaCarica();
+	        	                    return;
+	        	                }
+	        	            }
+	        	        }
+	        	    }
+	        	    throw new IllegalStateException("Nessuna batteria con carica disponibile per attivare il componente");
+	        }
+	        
 	        //Gestione speciale per Cabina. Spostato qua altrimenti l'equipaggio della nave veniva aumentato prima di esser sicuri di poter posizionare la cabina
 	        //TODO scelta equipaggio alieno
-	        if (tessera instanceof Cabina) {
+	        /*if (tessera instanceof Cabina) {
 	            this.equipaggio += 2;
-	        }
+	        }*/
 	        
 	    } catch (IndexOutOfBoundsException e) {
 	        System.err.println("Errore di posizionamento: " + e.getMessage());
