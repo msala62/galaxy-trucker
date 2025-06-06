@@ -1,11 +1,11 @@
 package carteAvventura;
 
 import java.util.*;
-
 import componenti.Componente;
 import componenti.Connettore;
 import componenti.*;
 import game_logic.Giocatore;
+import game_logic.LettoreInput;
 import nave.Casella;
 import nave.Nave;
 
@@ -19,6 +19,7 @@ public class Meteorite {
 		SX, DX, SU, GIU;
 	}
 
+	private LettoreInput l = new LettoreInput();
 	private Dimensione dimensione;
 	private Direzione direzione;
 	private Random random = new Random();
@@ -92,8 +93,12 @@ public class Meteorite {
 
 			} else {
 				// Meteorite grosso – nessuna difesa se non con cannone (non gestito qui) TODO
-				 giocatore.getNave().eliminaComponente(c.getPosizione().getX(), c.getPosizione().getY());
-				System.out.println("Componente distrutto dal meteorite grosso!");
+				if (proteggiConCannone(giocatore.getNave(), direzione, dado)) {
+					System.out.println("Un cannone ha distrutto il meteorite grosso in arrivo!");
+				} else {
+					giocatore.getNave().eliminaComponente(c.getPosizione().getX(), c.getPosizione().getY());
+					System.out.println("Componente distrutto dal meteorite grosso!");
+				}
 			}
 		} else {
 			System.out.println("Il meteorite ha mancato la nave.");
@@ -152,10 +157,111 @@ public class Meteorite {
 		return null;
 	}
 
+	private boolean proteggiConCannone(Nave nave, Direzione direzione, int coordinata) {
+
+		Cannone cannone = trovaCannonePerDifesa(nave, direzione, coordinata);
+
+		if (cannone == null) {
+			return false;
+		}
+
+		if (cannone instanceof CannoneDoppio) {
+			// CannoneDoppio
+			Batteria b = trovaBatteria(nave);
+			if (b != null && b.getCarica() > 0) {
+				System.out.println("Trovato un cannone doppio e una batteria. Vuoi usare 1 carica per distruggere il meteorite? (s/n)");
+				
+				String risposta = l.leggiString();
+				if (risposta.equalsIgnoreCase("s")) {
+					if (((CannoneDoppio) cannone).getPotenza(b) > 0) {
+						System.out.println("Cannone doppio attivato usando una batteria.");
+						return true;
+					} else {
+						System.out.println("Impossibile attivare il cannone doppio, batteria esaurita.");
+						return false;
+					}
+				} else {
+					System.out.println("Hai scelto di non attivare il cannone doppio.");
+					return false;
+				}
+			} else {
+				System.out.println("Il cannone doppio non ha trovato una batteria carica per attivarsi.");
+				return false;
+			}
+		}
+
+		// in caso di cannone normale (NON RICHIEDE ATTIVAZIONE)
+		return true;
+	}
+
+	private Direzione getOpposite(Direzione d) {
+		switch (d) {
+			case SU: return Direzione.GIU;
+			case GIU: return Direzione.SU;
+			case SX: return Direzione.DX;
+			case DX: return Direzione.SX;
+		}
+		return null; // Should not be reached
+	}
+
+	private Cannone trovaCannonePerDifesa(Nave nave, Direzione direzione, int coordinata) {
+		int ROWS = nave.getPlancia().length;
+		int COLS = nave.getPlancia()[0].length;
+
+		switch (direzione) {
+		case SU:
+		case GIU:
+			if (coordinata >= 1 && coordinata <= COLS) {
+				int col = coordinata - 1;
+				for (int i = 0; i < ROWS; i++) {
+					Casella casella = nave.getPlancia()[i][col];
+					if (casella.isUtilizzabile() && casella.getComponente() instanceof Cannone) {
+						Cannone c = (Cannone) casella.getComponente();
+						if (c.getDirezione().name().equals(getOpposite(direzione).name())) {
+							return c; // trovato
+						}
+					}
+				}
+			}
+			break;
+		case SX:
+		case DX:
+			if (coordinata >= 1 && coordinata <= ROWS) {
+				int row = coordinata - 1;
+				for (int i = 0; i < COLS; i++) {
+					Casella casella = nave.getPlancia()[row][i];
+					if (casella.isUtilizzabile() && casella.getComponente() instanceof Cannone) {
+						Cannone c = (Cannone) casella.getComponente();
+						if (c.getDirezione().name().equals(getOpposite(direzione).name())) {
+							return c; // trovato
+						}
+					}
+				}
+			}
+			break;
+		}
+		return null; 
+	}
+
 	private boolean proteggeComp(Nave nave, Direzione direzione) {
 		Scudo s = trovaScudo(nave, direzione);
 		Batteria b = trovaBatteria(nave);
-		return s != null && b != null && s.attivaScudo(b);
+		if (s != null && b != null )
+		{
+			String risposta = l.leggiString();
+			if (risposta.equalsIgnoreCase("s")) {
+				if (s.attivaScudo(b)) {					
+					return true;
+				} else {
+					System.out.println("Impossibile attivare lo scudo");
+					return false;
+				}
+			} else {
+				System.out.println("Hai scelto di non attivare il cannone doppio.");
+				return false;
+			}
+		}
+		return false;
 	}
 
 	private Scudo trovaScudo(Nave nave, Direzione direzione) {

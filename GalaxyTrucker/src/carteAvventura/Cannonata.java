@@ -15,6 +15,7 @@ public class Cannonata {
 		SX, DX, SU, GIU;
 	}
 
+	private LettoreInput l = new LettoreInput();
 	private Dimensione dimensione;
 	private Direzione direzione;
 	private Random random = new Random();
@@ -114,13 +115,23 @@ public class Cannonata {
 	private boolean proteggeComp(Nave nave, Direzione direzione) {
 		Scudo s = trovaScudo(nave, direzione);
 		Batteria b = trovaBatteria(nave);
-		if (s != null && b != null) {
-			if (s.attivaScudo(b))
-				return true;
+		if (s != null && b != null )
+		{
+			String risposta = l.leggiString();
+			if (risposta.equalsIgnoreCase("s")) {
+				if (s.attivaScudo(b)) {					
+					return true;
+				} else {
+					System.out.println("Impossibile attivare lo scudo");
+					return false;
+				}
+			} else {
+				System.out.println("Hai scelto di non attivare il cannone doppio.");
+				return false;
+			}
 		}
 		return false;
 	}
-
 	private Scudo trovaScudo(Nave nave, Direzione direzione) {
 		Scudo s = null;
 		outerLoop:
