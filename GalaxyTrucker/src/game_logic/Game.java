@@ -362,6 +362,7 @@ public class Game {
 							giocatore.getNave().aggiungiComponente(x, y, pescata);
 						} catch(Exception e) {
 							System.out.println("Coordinate errate. Impossibile inserire. Riprova");
+							System.out.println(e.getMessage());
 							ripeti=true;
 						}
 					} else if(sceltaTessera.equalsIgnoreCase("p") && prenotazioni < 2) {
@@ -395,7 +396,7 @@ public class Game {
 						ripeti=true;
 						pescata.ruota('o');
 					}
-					else if(sceltaTessera.equalsIgnoreCase("a")) 
+					else if(sceltaTessera.equalsIgnoreCase("a"))
 					{
 						ripeti=true;
 						pescata.ruota('a');

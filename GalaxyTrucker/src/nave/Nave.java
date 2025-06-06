@@ -134,42 +134,47 @@ public abstract class Nave {
 	                                   tessera instanceof CabinaPartenza;
 	        
 	        if (!componenteSpeciale) {
+	        	boolean almenoUnaConnessione = false;
+	            boolean connessioniValide = true;
+	            
+	         // Controllo sopra
+	            if (y > 0 && plancia[y-1][x].getComponente() != null) {
+	                almenoUnaConnessione = true;
+	                connessioniValide &= connettoriCompatibili(tessera.getConnettoreSU(), 
+	                    plancia[y-1][x].getComponente().getConnettoreGIU());
+	            }
+
+	            // Controllo sotto
+	            if (y < ROWS-1 && plancia[y+1][x].getComponente() != null) {
+	                almenoUnaConnessione = true;
+	                connessioniValide &= connettoriCompatibili(tessera.getConnettoreGIU(), 
+	                    plancia[y+1][x].getComponente().getConnettoreSU());
+	            }
+
+	            // Controllo sinistra
+	            if (x > 0 && plancia[y][x-1].getComponente() != null) {
+	                almenoUnaConnessione = true;
+	                connessioniValide &= connettoriCompatibili(tessera.getConnettoreSX(), 
+	                    plancia[y][x-1].getComponente().getConnettoreDX());
+	            }
+
+	            // Controllo destra
+	            if (x < COLUMNS-1 && plancia[y][x+1].getComponente() != null) {
+	                almenoUnaConnessione = true;
+	                connessioniValide &= connettoriCompatibili(tessera.getConnettoreDX(), 
+	                    plancia[y][x+1].getComponente().getConnettoreSX());
+	            }
+	            
+	            if (almenoUnaConnessione && !connessioniValide) {
+	                throw new IllegalStateException("Connettori incompatibili con i componenti adiacenti");
+	            }
+	        	
 	        	//Controllo che il componente sia collegato ad un altro componente TODO ancora da perfezionare
-	        	if(((y > 0 && isUtilizzabile(plancia[y-1][x]) && plancia[y-1][x].getComponente().getConnettoreGIU()==Connettore.LISCIO) || (y > 0 && !isUtilizzabile(plancia[y-1][x])) || (y > 0 && plancia[y-1][x].getComponente() == null))
+	        	/*if(((y > 0 && isUtilizzabile(plancia[y-1][x]) && plancia[y-1][x].getComponente().getConnettoreGIU()==Connettore.LISCIO) || (y > 0 && !isUtilizzabile(plancia[y-1][x])) || (y > 0 && plancia[y-1][x].getComponente() == null))
 	        		&& ((y < ROWS-1 && isUtilizzabile(plancia[y+1][x]) && plancia[y+1][x].getComponente().getConnettoreSU()==Connettore.LISCIO) || (y < ROWS-1 && !isUtilizzabile(plancia[y+1][x])) || (y < ROWS-1 && plancia[y+1][x].getComponente() == null)) 
 	        		&& ((x > 0 && isUtilizzabile(plancia[y][x-1]) && plancia[y][x-1].getComponente().getConnettoreDX()==Connettore.LISCIO) || (x > 0 && !isUtilizzabile(plancia[y][x-1])) || (x > 0 && plancia[y][x-1].getComponente() == null))
 	        		&& ((x < COLUMNS-1 && isUtilizzabile(plancia[y][x+1]) && plancia[y][x+1].getComponente().getConnettoreSX()==Connettore.LISCIO) || (x < COLUMNS-1 && !isUtilizzabile(plancia[y][x+1])) || (x < COLUMNS-1 && plancia[y][x+1].getComponente() == null)))
-	        			throw new IllegalStateException("Il componente deve essere connesso ad almeno un altro componente");
-	        }
-	        
-	        boolean connessioneValida = true;
-	        
-	        // Controllo componente sopra
-	        if (y > 0 && plancia[y-1][x].getComponente() != null) {
-	            Componente sopra = plancia[y-1][x].getComponente();
-	            connessioneValida &= connettoriCompatibili(tessera.getConnettoreSU(), sopra.getConnettoreGIU());
-	        }
-	        
-	        // Controllo componente sotto
-	        if (y < ROWS-1 && plancia[y+1][x].getComponente() != null) {
-	            Componente sotto = plancia[y+1][x].getComponente();
-	            connessioneValida &= connettoriCompatibili(tessera.getConnettoreGIU(), sotto.getConnettoreSU());
-	        }
-	        
-	        // Controllo componente a sinistra
-	        if (x > 0 && plancia[y][x-1].getComponente() != null) {
-	            Componente sinistra = plancia[y][x-1].getComponente();
-	            connessioneValida &= connettoriCompatibili(tessera.getConnettoreSX(), sinistra.getConnettoreDX());
-	        }
-	        
-	        // Controllo componente a destra
-	        if (x < COLUMNS-1 && plancia[y][x+1].getComponente() != null) {
-	            Componente destra = plancia[y][x+1].getComponente();
-	            connessioneValida &= connettoriCompatibili(tessera.getConnettoreDX(), destra.getConnettoreSX());
-	        }
-
-	        if (!connessioneValida) {
-	            throw new IllegalStateException("Connettori incompatibili con i componenti adiacenti");
+	        			throw new IllegalStateException("Il componente deve essere connesso ad almeno un altro componente");*/
 	        }
 	        
 	        plancia[y][x].setComponente(tessera);
@@ -185,12 +190,6 @@ public abstract class Nave {
 	                this.equipaggio += 2;
 	            }
 	        }
-	        
-	        //Gestione speciale per Cabina. Spostato qua altrimenti l'equipaggio della nave veniva aumentato prima di esser sicuri di poter posizionare la cabina
-	        //TODO scelta equipaggio alieno
-	        /*if (tessera instanceof Cabina) {
-	            this.equipaggio += 2;
-	        }*/
 	        
 	    } catch (IndexOutOfBoundsException e) {
 	        System.err.println("Errore di posizionamento: " + e.getMessage());
