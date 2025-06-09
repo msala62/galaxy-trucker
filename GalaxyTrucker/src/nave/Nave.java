@@ -133,48 +133,47 @@ public abstract class Nave {
 	                                   tessera instanceof MotoreDoppio ||
 	                                   tessera instanceof CabinaPartenza;
 	        
-	        if (!componenteSpeciale) {
-	        	boolean almenoUnaConnessione = false;
-	            boolean connessioniValide = true;
-	            
-	         // Controllo sopra
-	            if (y > 0 && plancia[y-1][x].getComponente() != null) {
-	                almenoUnaConnessione = true;
-	                connessioniValide &= connettoriCompatibili(tessera.getConnettoreSU(), 
-	                    plancia[y-1][x].getComponente().getConnettoreGIU());
-	            }
+	        boolean connessioniValide = true;
+	        boolean almenoUnaConnessione = false;
 
-	            // Controllo sotto
-	            if (y < ROWS-1 && plancia[y+1][x].getComponente() != null) {
-	                almenoUnaConnessione = true;
-	                connessioniValide &= connettoriCompatibili(tessera.getConnettoreGIU(), 
-	                    plancia[y+1][x].getComponente().getConnettoreSU());
-	            }
+	        // Controllo SOPRA
+	        if (y > 0 && plancia[y-1][x].getComponente() != null) {
+	            almenoUnaConnessione = true;
+	            connessioniValide &= verificaConnessione(
+	                tessera.getConnettoreSU(), 
+	                plancia[y-1][x].getComponente().getConnettoreGIU()
+	            );
+	        }
 
-	            // Controllo sinistra
-	            if (x > 0 && plancia[y][x-1].getComponente() != null) {
-	                almenoUnaConnessione = true;
-	                connessioniValide &= connettoriCompatibili(tessera.getConnettoreSX(), 
-	                    plancia[y][x-1].getComponente().getConnettoreDX());
-	            }
+	        // Controllo SOTTO
+	        if (y < ROWS-1 && plancia[y+1][x].getComponente() != null) {
+	            almenoUnaConnessione = true;
+	            connessioniValide &= verificaConnessione(
+	                tessera.getConnettoreGIU(), 
+	                plancia[y+1][x].getComponente().getConnettoreSU()
+	            );
+	        }
 
-	            // Controllo destra
-	            if (x < COLUMNS-1 && plancia[y][x+1].getComponente() != null) {
-	                almenoUnaConnessione = true;
-	                connessioniValide &= connettoriCompatibili(tessera.getConnettoreDX(), 
-	                    plancia[y][x+1].getComponente().getConnettoreSX());
-	            }
-	            
-	            if (almenoUnaConnessione && !connessioniValide) {
-	                throw new IllegalStateException("Connettori incompatibili con i componenti adiacenti");
-	            }
-	        	
-	        	//Controllo che il componente sia collegato ad un altro componente TODO ancora da perfezionare
-	        	/*if(((y > 0 && isUtilizzabile(plancia[y-1][x]) && plancia[y-1][x].getComponente().getConnettoreGIU()==Connettore.LISCIO) || (y > 0 && !isUtilizzabile(plancia[y-1][x])) || (y > 0 && plancia[y-1][x].getComponente() == null))
-	        		&& ((y < ROWS-1 && isUtilizzabile(plancia[y+1][x]) && plancia[y+1][x].getComponente().getConnettoreSU()==Connettore.LISCIO) || (y < ROWS-1 && !isUtilizzabile(plancia[y+1][x])) || (y < ROWS-1 && plancia[y+1][x].getComponente() == null)) 
-	        		&& ((x > 0 && isUtilizzabile(plancia[y][x-1]) && plancia[y][x-1].getComponente().getConnettoreDX()==Connettore.LISCIO) || (x > 0 && !isUtilizzabile(plancia[y][x-1])) || (x > 0 && plancia[y][x-1].getComponente() == null))
-	        		&& ((x < COLUMNS-1 && isUtilizzabile(plancia[y][x+1]) && plancia[y][x+1].getComponente().getConnettoreSX()==Connettore.LISCIO) || (x < COLUMNS-1 && !isUtilizzabile(plancia[y][x+1])) || (x < COLUMNS-1 && plancia[y][x+1].getComponente() == null)))
-	        			throw new IllegalStateException("Il componente deve essere connesso ad almeno un altro componente");*/
+	        // Controllo SINISTRA
+	        if (x > 0 && plancia[y][x-1].getComponente() != null) {
+	            almenoUnaConnessione = true;
+	            connessioniValide &= verificaConnessione(
+	                tessera.getConnettoreSX(), 
+	                plancia[y][x-1].getComponente().getConnettoreDX()
+	            );
+	        }
+
+	        // Controllo DESTRA
+	        if (x < COLUMNS-1 && plancia[y][x+1].getComponente() != null) {
+	            almenoUnaConnessione = true;
+	            connessioniValide &= verificaConnessione(
+	                tessera.getConnettoreDX(), 
+	                plancia[y][x+1].getComponente().getConnettoreSX()
+	            );
+	        }
+	        
+	        if (!componenteSpeciale && almenoUnaConnessione && !connessioniValide) {
+	            throw new IllegalStateException("Connessione non valida con componenti adiacenti");
 	        }
 	        
 	        plancia[y][x].setComponente(tessera);
@@ -203,11 +202,22 @@ public abstract class Nave {
 	    }
 	}
 
-	/**
-	 * Metodo per verificare la compatibilità tra due connettori. Prende due connettorin e controlla la compatibilità di connessione.
-	 * @param Connettore c1: primo connettore
-	 * @param Connettore c2: secondo connettore
-	 */
+	private boolean verificaConnessione(Connettore corrente, Connettore adiacente) {
+	    if (corrente == Connettore.UNIVERSALE || adiacente == Connettore.UNIVERSALE) {
+	        return corrente != Connettore.LISCIO && adiacente != Connettore.LISCIO;
+	    }
+	    
+	    if (corrente == Connettore.LISCIO || adiacente == Connettore.LISCIO) {
+	        return false;
+	    }
+	    
+	    if (corrente == Connettore.SINGOLO || adiacente == Connettore.SINGOLO) {
+	        return corrente == adiacente;
+	    }
+	    
+	    return corrente == Connettore.DOPPIO && adiacente == Connettore.DOPPIO;
+	}
+	
 	private boolean connettoriCompatibili(Connettore c1, Connettore c2) {
 	    return c1 == c2 || 
 	           (c1 == Connettore.UNIVERSALE && c2!=Connettore.LISCIO) || 

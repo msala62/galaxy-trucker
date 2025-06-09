@@ -36,6 +36,10 @@ public class Giocatore {
 		++ID_COUNTER;
 	}
 	
+	public List<String> getTitoli(){
+		return this.titoli;
+	}
+	
 	public void InizializzaNave(Livello livello) {
 		switch(livello) {
 		case Livello.I:

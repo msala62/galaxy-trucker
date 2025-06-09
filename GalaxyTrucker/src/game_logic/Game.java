@@ -12,6 +12,7 @@ import java.util.Random;
 import componenti.*;
 import merci.Cargo;
 import planciavolo.*;
+import titoli.*;
 
 public class Game {
 	private final static Clessidra clessidra = new Clessidra();
@@ -538,8 +539,18 @@ public class Game {
 			if(tmp > crediti) crediti = tmp; index = i;
 		}
 		
-		System.out.println("Si annuncia con orgoglio che il vincitore della partitia, nonché miglior Trasportare Galattico è");
+		System.out.println("Si annuncia con orgoglio che il vincitore della partitia, nonché miglior Trasportatore Galattico è");
 		System.out.println(giocatori.get(index).getNome() + " !!!!!!!!!!!!!!!!!!");
+		GestioneTitoli manager = new GestioneTitoli();
+		List<Titolo> titoli = manager.generaTitoli(giocatori.size());
+		manager.assegnaTitoli(giocatori, titoli);
+		
+		for(Giocatore giocatore: giocatori) {
+			for(String titolo : giocatore.getTitoli()) {
+				System.out.print(giocatore.nome + "\t" + titolo);
+				System.out.println("");
+			}
+		}
 	}
 	
 	public static void main(String[] args) {
