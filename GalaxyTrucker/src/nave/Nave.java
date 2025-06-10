@@ -17,7 +17,7 @@ public abstract class Nave {
 	protected final int COLUMNS;
 	protected Casella[][] plancia;
 	protected int equipaggio;
-
+	protected int alieni;
 
 	private static LettoreInput sc = new LettoreInput();
 	
@@ -35,6 +35,10 @@ public abstract class Nave {
 		for (int[] coord : caselleUtilizzabili) {
 			this.plancia[coord[0]][coord[1]].utilizzabile = true;
 		}
+	}
+	
+	public int getAlieni() {
+		return this.alieni;
 	}
 	
 	public void AttivaScudo(int x, int y) {
@@ -178,14 +182,14 @@ public abstract class Nave {
 	        
 	        plancia[y][x].setComponente(tessera);
 	        
+	        // Gestione dell'equipaggio per la cabina
 	        if (tessera instanceof Cabina) {
 	            Cabina cabina = (Cabina)tessera;
 	            if (cabina.getColore() != null) {
-	                // Cabina aliena - aggiungi 1 alieno del colore specificato
 	            	cabina.setColoreAlieno(cabina.getColoreAlieno());
 	                cabina.setEquipaggioAlieno(1);
+	                alieni++;
 	            } else {
-	                // Cabina normale - aggiungi 2 astronauti
 	                this.equipaggio += 2;
 	            }
 	        }

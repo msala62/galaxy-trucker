@@ -19,7 +19,7 @@ public class Clessidra {
             if (remainingSeconds > 0) {
                 remainingSeconds--;
             } else {
-                System.out.println("Tempo scaduto!");
+                System.out.println("======================================== Tempo scaduto! ========================================");
                 timeEnded = true;
                 executor.shutdown();
             }

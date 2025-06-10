@@ -7,6 +7,7 @@ import carteAvventura.Meteorite.Dimensione;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Random;
 import componenti.*;
@@ -319,6 +320,7 @@ public class Game {
 			giocatore.InizializzaNave(livello);
 			int random = (int)(Math.random() * 4);
 			int prenotazioni = 0;
+			int timer = 180;
 			
 			CabinaPartenza cabinaGiocatore = coloreGiocatori[random];
 			giocatore.getNave().aggiungiComponente(6, 6, cabinaGiocatore);
@@ -326,7 +328,10 @@ public class Game {
 			System.out.println("\n\nTi è stato assegnato il colore " + cabinaGiocatore.getColore());
 			System.out.println("E' il tuo turno, " + giocatore.nome + "\ne' tempo di assemblare la tua nave per avviare il viaggio interspaziale!");
 			System.out.println("Da questo momento in poi hai tempo 2 minuti esatti per scegliere le tue tessere.");
-			clessidra.start(120);
+			
+			if(giocatori.size() == 2) timer = 300;
+			else if(giocatori.size() == 3) timer = 240;
+			clessidra.start(timer);
 			
 			while(!clessidra.isTimeEnded()) {
 				System.out.print("\033[H\033[2J");
@@ -414,36 +419,79 @@ public class Game {
 		}
 	}
 	
-	public static void SchermataIniziale(List<Giocatore> giocatori, PlanciaVolo plancia) {
-		System.out.print("\033[H\033[2J");   
-	    System.out.flush();
-		System.out.println("========== VISUALIZZA LA TUA NAVE O LA PLANCIA ==========");
-		
-		giocatori.get(0).getNave().stampa();
-		StringBuilder builder = new StringBuilder();
-		
-		for(Giocatore giocatore : giocatori) builder.append(giocatore.getNome() + " - ");
-		builder.append("\nLegenda:\t" + "5. Visualizza Plancia\t 6. Prosegui con il gioco");
-		builder.toString();
-		
-		int scelta = 0;
-		
-		while(scelta != 6) {
-			builder.toString();
-			scelta = sc.leggiInt();
-			
-			if(scelta == 5) plancia.Stampa();
-			
-			while(scelta < 0 && scelta > giocatori.size()) {
-				builder.toString();
-				scelta = sc.leggiInt();
-			}
-			
-			System.out.print("\033[H\033[2J");   
-		    System.out.flush();
-		    
-		    giocatori.get(scelta).getNave().stampa();
-		}
+	/*
+	 * Metodo che stampa un menu di controllo per ogni giocatore. Al termine di ogni avventura, determinata da una carta,
+	 * ai giocatori viene datat la possibilità di visualizzare la plancia, la proprio nave o passare il turno al giocatore successivo.
+	 */
+	public static void SchermataIniziale(List<Giocatore> giocatori, PlanciaVolo plancia, Giocatore giocatoreCorrente) {
+	    boolean turnoTerminato = false;
+	    
+	    while (!turnoTerminato) {
+	        System.out.print("\033[H\033[2J");   // Pulisce la console
+	        System.out.flush();
+	        
+	        System.out.println("========== TURNO DI " + giocatoreCorrente.getNome().toUpperCase() + " ==========");
+	        System.out.println("Crediti: " + giocatoreCorrente.getCrediti() + " | Equipaggio: " + giocatoreCorrente.getNave().getEquipaggioTotale());
+	        System.out.println("====================================");
+	        System.out.println("1. Visualizza la tua nave");
+	        System.out.println("2. Visualizza la plancia di gioco");
+	        System.out.println("3. Passa il turno");
+	        System.out.println("4. Visualizza stato giocatori");
+	        System.out.print("Scelta: ");
+	        
+	        int scelta;
+	        try {
+	            scelta = sc.leggiInt();
+	        } catch (InputMismatchException e) {
+	            System.out.println("Input non valido! Inserisci un numero.");
+	            sc.leggiString();
+	            continue;
+	        }
+
+	        switch (scelta) {
+	            case 1:
+	                // Visualizza la nave del giocatore corrente
+	                System.out.print("\033[H\033[2J");
+	                System.out.println("==== NAVE DI " + giocatoreCorrente.getNome().toUpperCase() + " ====");
+	                giocatoreCorrente.getNave().stampa();
+	                System.out.println("Premi INVIO per continuare...");
+	                sc.leggiString();
+	                break;
+	                
+	            case 2:
+	                // Visualizza la plancia di gioco
+	                System.out.print("\033[H\033[2J");
+	                System.out.println("==== PLANCIA DI GIOCO ====");
+	                plancia.Stampa();
+	                System.out.println("Premi INVIO per continuare...");
+	                sc.leggiString();
+	                break;
+	                
+	            case 3:
+	                // Passa il turno
+	                turnoTerminato = true;
+	                System.out.println(giocatoreCorrente.getNome() + " ha passato il turno.");
+	                break;
+	                
+	            case 4:
+	                // Visualizza stato di tutti i giocatori
+	                System.out.print("\033[H\033[2J");
+	                System.out.println("==== STATO GIOCATORI ====");
+	                for (Giocatore g : giocatori) {
+	                    System.out.println(g.getNome() + 
+	                                     " | Crediti: " + g.getCrediti() + 
+	                                     " | Equipaggio: " + g.getNave().getEquipaggioTotale() +
+	                                     " | Alieno: " + (g.getNave().getAlieni()));
+	                }
+	                System.out.println("Premi INVIO per continuare...");
+	                sc.leggiString();
+	                break;
+	                
+	            default:
+	                System.out.println("Scelta non valida! Riprova.");
+	                break;
+	        }
+	    }
 	}
 	
 	public static void StartGame(List<Giocatore> giocatori) {
@@ -478,7 +526,7 @@ public class Game {
 				int scelta = new Random().nextInt(0, mazzo.size());
 				Carta pescata = mazzo.get(scelta);
 				pescata.azione(giocatori, plancia);
-			    SchermataIniziale(giocatori, plancia);
+				for(Giocatore giocatore : giocatori) SchermataIniziale(giocatori, plancia, giocatore);
 			}
 			
 			System.out.println("==================== GIOCATORI, SIAMO GIUNTI ALLA FINE DEL VIAGGIO! ====================");
@@ -527,6 +575,7 @@ public class Game {
 			int scelta = new Random().nextInt(0, mazzo.size());
 			Carta pescata = mazzo.get(scelta);
 			pescata.azione(giocatori,plancia);
+			for(Giocatore giocatore : giocatori) SchermataIniziale(giocatori, plancia, giocatore);
 		}
 		
 		System.out.println("==================== GIOCATORI, SIAMO GIUNTI ALLA FINE DEL VIAGGIO! ====================");
