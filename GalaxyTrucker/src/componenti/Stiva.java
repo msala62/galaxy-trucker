@@ -69,12 +69,12 @@ public class Stiva extends Componente{
 		int i = 1;
 		for (Cargo merce : listaCargo) 
 		{
-			sb.append(i + "/t");
-			sb.append(merce.toString() + "/t");
-			sb.append(merce.getValore() + "/n");
+			sb.append(i + "\t");
+			sb.append(merce.toString() + "\t");
+			sb.append(merce.getValore() + "\n");
 			i++;
 		}
-		System.out.println("/tTipo cargo:/tValore:/n" + sb);
+		System.out.println("\tTipo cargo:\tValore:\n" + sb);
 	}
 	
 	@Override
@@ -94,6 +94,13 @@ public class Stiva extends Componente{
 			else
 				return String.format("%1$5s", "sts ");
 		}
+	}
+	
+	public boolean uguale (Stiva stiva) 
+	{
+		if(this.getSpazioCargo()==stiva.getSpazioCargo() && this.listaCargo.equals(stiva.getCargoCorrente()) && this.isSpeciale==stiva.isSpeciale() && this.connettoreDX==stiva.getConnettoreDX() && this.connettoreSX==stiva.getConnettoreSX() && this.connettoreSU==stiva.getConnettoreSU() && this.connettoreGIU==stiva.getConnettoreGIU())
+			return true;
+		return false;
 	}
 	
 }

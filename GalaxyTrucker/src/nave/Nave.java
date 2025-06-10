@@ -228,7 +228,7 @@ public abstract class Nave {
 	           (c2 == Connettore.UNIVERSALE && c1!=Connettore.LISCIO);
 	}
 	
-	protected boolean isUtilizzabile(Casella casella) {
+	public boolean isUtilizzabile(Casella casella) {
 		return (casella.utilizzabile && casella.getComponente() != null) ? true : false;
 	}
 	
@@ -286,23 +286,76 @@ public abstract class Nave {
 	//Funzione per scambiare merce tra due stive, oppure per scartare la merce contenuta in una stiva
 	public boolean scambiaCargo() 
 	{
-		int colonna, riga;
+		int colonna = 0, riga = 0;
+		String coordPrimaSplit;
+		String[] coordDopoSplit;
 		
-		System.out.println("Inserire le coordinate della stiva donatrice, ovvero quella DA cui scambiare, scrivendo la sua colonna e la sua riga: ");
-		colonna = sc.leggiInt();
-		riga = sc.leggiInt();
-		//Controllo se le coordinate sono valide. Continuo a chiederle finche sono giuste oppure viene immesso -1 -1 per uscire dalla funzione con return vero
-		while(isUtilizzabile(this.plancia[riga][colonna]) && !(this.plancia[riga][colonna].getComponente() instanceof Stiva)) 
+		this.stampa();
+		
+		System.out.println("\n\nInserire le coordinate della stiva donatrice, ovvero quella DA cui scambiare, scrivendo la sua riga e la sua colonna separate da una virgola (Se volete uscire non scambiando nulla immettete delle coordinate negative): ");
+		coordPrimaSplit = sc.leggiString();
+		coordDopoSplit = coordPrimaSplit.split(",");
+		
+		//Eccezioni seguenti servono ad avitare situazioni in cui viene letto un carattere non numerico
+		try
 		{
-			System.out.println("Le coordinate inserite non corrispondono ad una stiva. Provate con delle nuove coordinate oppure inserite -1 -1 per uscire dalla funzione senza effettuare uno scambio: ");
-			colonna = sc.leggiInt();
-			riga = sc.leggiInt();
+			riga = Integer.parseInt(coordDopoSplit[0]);
+			colonna = Integer.parseInt(coordDopoSplit[1]);
+		} 
+		catch(NumberFormatException ex)//Se viene causata un'eccezione si stampa un messaggio di errore e si ritorna falso
+		{
+			System.out.println("\nErrore di digitazione, dovete inserire le coordinate separate da una virgola\n");
+			return false;
+		}
+		
+		//Controllo se le coordinate sono valide. Continuo a chiederle finche sono giuste oppure viene immesso -1 -1 per uscire dalla funzione con return vero
+		if(colonna < 0 || riga < 0) 
+		{
+			return true;
+		}
+		
+		if(colonna >= this.COLUMNS || riga >= this.ROWS) 
+		{
+			int rigaMax=this.ROWS-1, colonnaMax=this.COLUMNS-1;
+			System.out.println("\nErrore di digitazione, le coordinate inserite sono troppo grandi. Massima colonna: " + colonnaMax + ", massima riga: " + rigaMax + "\n");
+			return false;
+		}
+		
+		while((this.plancia[riga][colonna].utilizzabile && this.plancia[riga][colonna].getComponente() == null) || (this.plancia[riga][colonna].utilizzabile && !(this.plancia[riga][colonna].getComponente() instanceof Stiva)) || !this.plancia[riga][colonna].utilizzabile)
+		{
+			System.out.println("Le coordinate inserite non corrispondono ad una stiva. Provate con delle nuove coordinate oppure inserite delle coordinate negative per uscire dalla funzione senza effettuare uno scambio: ");
+			coordPrimaSplit = sc.leggiString();
+			coordDopoSplit = coordPrimaSplit.split(",");
+			try
+			{
+				riga = Integer.parseInt(coordDopoSplit[0]);
+				colonna = Integer.parseInt(coordDopoSplit[1]);
+			} 
+			catch(NumberFormatException ex)
+			{
+				System.out.println("\nErrore di digitazione, dovete inserire le coordinate separate da una virgola\n");
+				return false;
+			}
+			catch(ArrayIndexOutOfBoundsException exa) 
+			{
+				System.out.println("\nErrore di digitazione, dovete inserire le coordinate separate da una virgola\n");
+				System.out.println(exa.getMessage());
+				return false;
+			}
+			
 			if(colonna == -1 && riga == -1) 
 			{
 				return true;
 			}	
+			
+			if(colonna >= this.COLUMNS || riga >= this.ROWS) 
+			{
+				int rigaMax=this.ROWS-1, colonnaMax=this.COLUMNS-1;
+				System.out.println("\nErrore di digitazione, le coordinate inserite sono troppo grandi. Massima colonna: " + colonnaMax + ", massima riga: " + rigaMax + "\n");
+				return false;
+			}
 		}
-		Stiva donatore = (Stiva) this.plancia[colonna][riga].getComponente();
+		Stiva donatore = (Stiva) this.plancia[riga][colonna].getComponente();
 		
 		//Se stiva donatrice è vuota, esco con return falso
 		if(donatore.getCargoCorrente().isEmpty()) 
@@ -311,35 +364,106 @@ public abstract class Nave {
 			return false;
 		}
 		
-		System.out.println("Inserire le coordinate della stiva ricevente, ovvero quella A cui scambiare, scrivendo la sua colonna e la sua riga. Inserire -2 -2 per eiettare il cargo nello spazio al posto di scambiarlo con un'altra stiva: ");
-		colonna = sc.leggiInt();
-		riga = sc.leggiInt();
-		//Controllo se le coordinate sono valide. Continuo a chiederle finche sono giuste oppure viene immesso -1 -1 per uscire dalla funzione, oppure -2 -2 per eliminare la merce
-		while(isUtilizzabile(this.plancia[riga][colonna]) && !(this.plancia[riga][colonna].getComponente() instanceof Stiva) && (colonna!=-2 && riga!=-2)) 
+		System.out.println("Inserire le coordinate della stiva ricevente, ovvero quella A cui scambiare, scrivendo la sua colonna e la sua riga. Inserire -1 -1 per eiettare il cargo nello spazio al posto di scambiarlo con un'altra stiva, oppure delle coordinate minori di -1 -1 per uscire dalla funzione senza effettuare uno scambio: ");
+		coordPrimaSplit = sc.leggiString();
+		coordDopoSplit = coordPrimaSplit.split(",");
+		try
 		{
-			System.out.println("Le coordinate inserite non corrispondono ad una stiva, o al codice per gettare il cargo nello spazio. Provate con delle nuove coordinate oppure inserite -1 -1 per uscire dalla funzione senza effettuare uno scambio: ");
-			colonna = sc.leggiInt();
-			riga = sc.leggiInt();
-			if(colonna == -1 && riga == -1) 
+			riga = Integer.parseInt(coordDopoSplit[0]);
+			colonna = Integer.parseInt(coordDopoSplit[1]);
+		} 
+		catch(NumberFormatException ex)
+		{
+			System.out.println("\nErrore di digitazione, dovete inserire le coordinate separate da una virgola\n");
+			return false;
+		}
+		
+		//Controllo se le coordinate sono valide. Continuo a chiederle finche sono giuste oppure viene immesso -1 -1 per uscire dalla funzione, oppure -2 -2 per eliminare la merce
+		if(colonna < -1 || riga < -1) 
+		{
+			return true;
+		}
+		
+		if(colonna >= this.COLUMNS || riga >= this.ROWS) 
+		{
+			int rigaMax=this.ROWS-1, colonnaMax=this.COLUMNS-1;
+			System.out.println("\nErrore di digitazione, le coordinate inserite sono troppo grandi. Massima colonna: " + colonnaMax + ", massima riga: " + rigaMax + "\n");
+			return false;
+		}
+		
+		while((colonna != -1 || riga != -1) && ((this.plancia[riga][colonna].utilizzabile && this.plancia[riga][colonna].getComponente() == null) || (this.plancia[riga][colonna].utilizzabile && !(this.plancia[riga][colonna].getComponente() instanceof Stiva)) || !this.plancia[riga][colonna].utilizzabile))
+		{
+			System.out.println("Le coordinate inserite non corrispondono ad una stiva, o al codice per gettare il cargo nello spazio. Provate con delle nuove coordinate oppure inserite delle coordinate minori di -1 -1 per uscire dalla funzione senza effettuare uno scambio: ");
+			coordPrimaSplit = sc.leggiString();
+			coordDopoSplit = coordPrimaSplit.split(",");
+			try
+			{
+				riga = Integer.parseInt(coordDopoSplit[0]);
+				colonna = Integer.parseInt(coordDopoSplit[1]);
+			} 
+			catch(NumberFormatException ex)
+			{
+				System.out.println("\nErrore di digitazione, dovete inserire le coordinate separate da una virgola\n");
+				return false;
+			}
+			catch(ArrayIndexOutOfBoundsException ex) 
+			{
+				System.out.println("\nErrore di digitazione, dovete inserire le coordinate separate da una virgola\n");
+				System.out.println(ex.getMessage());
+				return false;
+			}
+			
+			if(colonna < -1 || riga < -1) 
 			{
 				return true;
 			}
+			
+			if(colonna >= this.COLUMNS || riga >= this.ROWS) 
+			{
+				int rigaMax=this.ROWS-1, colonnaMax=this.COLUMNS-1;
+				System.out.println("\nErrore di digitazione, le coordinate inserite sono troppo grandi. Massima colonna: " + colonnaMax + ", massima riga: " + rigaMax + "\n");
+				return false;
+			}
 		}
 		
-		if(riga!=-2 && colonna!=-2) 
+		if(riga!=-1 && colonna!=-1) 
 		{
-			//Se le coordinate non sono -2 -2 faccio scegliere quale merce della donatrice si vuole scambiare
-			int selezioneDonatore;
-			Stiva ricevente = (Stiva) this.plancia[colonna][riga].getComponente();
+			//Se le coordinate non sono -1 -1 faccio scegliere quale merce della donatrice si vuole scambiare
+			int selezioneDonatore=0;
+			Stiva ricevente = (Stiva) this.plancia[riga][colonna].getComponente();
+			
+			//Controllo se la stiva donatrice e ricevente coincidono
+			if(ricevente.uguale(donatore)) 
+			{
+				System.out.println("La stiva donatrice non puo' essere anche la stiva ricevente");
+				return false;
+			}
 			
 			donatore.stampaCargoCorrente();
-			System.out.println("Scegliere quale merce scambiare immettendo il relativo numero: ");
-			selezioneDonatore = sc.leggiInt();
+			System.out.println("Scegliere quale merce scambiare immettendo il relativo numero: ");		
+			try
+			{
+				selezioneDonatore = Integer.parseInt(sc.leggiString());
+			} 
+			catch(NumberFormatException ex)
+			{
+				System.out.println("\nErrore di digitazione, dovete inserire il numero della merce che volete scambiare\n");
+				return false;
+			}
+			
 			//Controllo validità scelta
 			while(selezioneDonatore < 1 || selezioneDonatore > donatore.getCargoCorrente().size()) 
 			{
 				System.out.println("Errore di digitazione. Inserire un numero tra quelli nella lista soprascritta: ");
-				selezioneDonatore = sc.leggiInt();
+				try
+				{
+					selezioneDonatore = Integer.parseInt(sc.leggiString());
+				} 
+				catch(NumberFormatException ex)
+				{
+					System.out.println("\nErrore di digitazione, dovete inserire il numero della merce che volete scambiare\n");
+					return false;
+				}
 			}
 			
 			//Se si prova a scambiare una merce rossa ad una stiva non speciale si esce con return falso
@@ -357,15 +481,32 @@ public abstract class Nave {
 				return false;
 			}
 			
-			//Se la ricevente è piena si cheide quale merce si vuol passare dalla ricevente alla donatrice
-			int selezioneRicevente;
+			//Se la ricevente è piena si chiede quale merce si vuol passare dalla ricevente alla donatrice
+			int selezioneRicevente=0;
 			ricevente.stampaCargoCorrente();
 			System.out.println("Scegliere quale merce scambiare immettendo il relativo numero: ");
-			selezioneRicevente = sc.leggiInt();
+			try
+			{
+				selezioneRicevente = Integer.parseInt(sc.leggiString());
+			} 
+			catch(NumberFormatException ex)
+			{
+				System.out.println("\nErrore di digitazione, dovete inserire il numero della merce che volete scambiare\n");
+				return false;
+			}
+			
 			while(selezioneRicevente < 1 || selezioneRicevente > ricevente.getCargoCorrente().size()) 
 			{
 				System.out.println("Errore di digitazione. Inserire un numero tra quelli nella lista soprascritta: ");
-				selezioneRicevente = sc.leggiInt();
+				try
+				{
+					selezioneRicevente = Integer.parseInt(sc.leggiString());
+				} 
+				catch(NumberFormatException ex)
+				{
+					System.out.println("\nErrore di digitazione, dovete inserire il numero della merce che volete scambiare\n");
+					return false;
+				}
 			}
 			
 			//Check come prima se donatrice può accogliere merce rossa
@@ -388,15 +529,31 @@ public abstract class Nave {
 		}
 		else 
 		{
-			//Se le coordinate sono -2 -2 si fa scegliere quale merce da eliminare. Si esce con falso
-			int selezioneDonatore;
+			//Se le coordinate sono -1 -1 si fa scegliere quale merce da eliminare. Si esce con falso
+			int selezioneDonatore=0;
 			donatore.stampaCargoCorrente();
 			System.out.println("Scegliere quale merce buttare immettendo il relativo numero: ");
-			selezioneDonatore = sc.leggiInt();
+			try
+			{
+				selezioneDonatore = Integer.parseInt(sc.leggiString());
+			} 
+			catch(NumberFormatException ex)
+			{
+				System.out.println("\nErrore di digitazione, dovete inserire il numero della merce che volete scambiare\n");
+				return false;
+			}
 			while(selezioneDonatore < 1 || selezioneDonatore > donatore.getCargoCorrente().size()) 
 			{
 				System.out.println("Errore di digitazione. Inserire un numero tra quelli nella lista soprascritta: ");
-				selezioneDonatore = sc.leggiInt();
+				try
+				{
+					selezioneDonatore = Integer.parseInt(sc.leggiString());
+				} 
+				catch(NumberFormatException ex)
+				{
+					System.out.println("\nErrore di digitazione, dovete inserire il numero della merce che volete scambiare\n");
+					return false;
+				}
 			}
 			
 			donatore.getCargoCorrente().remove(selezioneDonatore-1);
@@ -427,7 +584,7 @@ public abstract class Nave {
 		{
 			for(int j=0; j<cargo.size()-i-1; j++)
 			{
-				if(cargo.get(j).getValore()>cargo.get(j+1).getValore())
+				if(cargo.get(j).getValore()<cargo.get(j+1).getValore())
 				{
 					temp=cargo.get(j);
 					cargo.set(j, cargo.get(j+1));
@@ -437,9 +594,9 @@ public abstract class Nave {
 		}
 		
 		//Faccio utilizzare all'utente la funzione scambiaCargo per fare spazio alle nuove merci e utilizzo il suo valore di return per uscire dal ciclo
-		System.out.println("Sposta le merci che hai già sulla nave per far spazio a quelle nuove. Quando sei soddisfatto esci digitando -1 -1 e le nuove merci verranno automaticamente aggiunte negli spazi disponibili a bordo. !ATTENZIONE! merci nuove per cui non c'e' spazio verranno automaticamente lasciate a fluttuare nello spazio, perdendole per sempre!");
+		System.out.println("Sposta le merci che hai già sulla nave per far spazio a quelle nuove.\nQuando sei soddisfatto esci digitando -1 -1 e le nuove merci verranno automaticamente aggiunte negli spazi disponibili a bordo.\n!ATTENZIONE! merci nuove per cui non c'e' spazio verranno automaticamente lasciate a fluttuare nello spazio, perdendole per sempre!\n\n");
 		boolean esci=false;
-		while(esci) 
+		while(!esci) 
 		{
 			esci = this.scambiaCargo();
 		}
