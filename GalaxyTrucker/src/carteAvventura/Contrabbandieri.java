@@ -44,7 +44,7 @@ public class Contrabbandieri extends Carta {
 
 	@Override
 	public void azione(List<Giocatore> giocatori, PlanciaVolo plancia) {
-		System.out.println("Evento: Contrabbandieri");
+		System.out.println("======================= Evento: Contrabbandieri =======================");
 		System.out.println("Potenza richiesta per sconfiggerli: " + potenzaRichiesta);
 		for (Giocatore giocatore : giocatori) {
 			if (isSconfitto)

@@ -37,7 +37,7 @@ public class NaveAbbandonata extends Carta {
 
 	@Override
 	public void azione(List<Giocatore> giocatori, PlanciaVolo plancia) {
-		System.out.println("Evento: Nave Abbandonata!");
+		System.out.println("======================= Evento: Nave Abbandonata! =======================");
 		System.out.println("Il primo giocatore che accetta può perdere " + equipaggioDaPerdere
 				+ " membri dell'equipaggio per ottenere " + creditiDaAquistare + " crediti, ma perderà "
 				+ giorniDaPerdere + " giorni di volo.");

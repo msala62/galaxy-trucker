@@ -30,16 +30,17 @@ public class ZonaDiGuerra extends Carta {
 
 	@Override
 	public void azione(List<Giocatore> giocatori, PlanciaVolo plancia) {
-		System.out.println("evento: Zona di Guerra");
+		System.out.println("======================= evento: Zona di Guerra =======================");
 		System.out.println(
 				"Tre penalità verranno applicate ai giocatori peggiori per: Equipaggio, Potenza Motrice, Potenza di Fuoco.");
 
+		System.out.println("=====================================================================");
 		Giocatore gEquipaggio = minorEquipaggio(giocatori);
-		System.out.println(">> Giocatore con minor equipaggio: " + gEquipaggio.getNome());
+		System.out.println("================== Giocatore con minor equipaggio: " + gEquipaggio.getNome() +"==================");
 		penalitaMinorEquipaggio(gEquipaggio, plancia);
 
 		Giocatore gMotore = minorPotenzaMotrice(giocatori);
-		System.out.println(">> Giocatore con minor potenza motrice: " + gMotore.getNome());
+		System.out.println("================== Giocatore con minor potenza motrice: " + gMotore.getNome()+"==================");
 		penalitaMinorPotenzaMotrice(gMotore);
 
 		Giocatore gFuoco = minorPotenzaFuoco(giocatori);

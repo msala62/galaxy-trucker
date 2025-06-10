@@ -42,7 +42,7 @@ public class Pirati extends Carta {
 
 	@Override
 	public void azione(List<Giocatore> giocatori, PlanciaVolo plancia) {
-		System.out.println("Evento: Attacco dei Pirati");
+		System.out.println("======================= Evento: Attacco dei Pirati =======================");
         System.out.println("Potenza richiesta per sconfiggere i pirati: " + potenzaRichiesta);
         System.out.println("Chi riesce li sconfigge e guadagna " + creditiDaAquistare + " crediti.");
 		for (Giocatore giocatore: giocatori) {

@@ -28,7 +28,7 @@ public class PolvereStellare extends Carta {
 
 	@Override
 	public void azione(List<Giocatore> giocatori, PlanciaVolo plancia) {
-		System.out.println("Evento: Polvere Stellare");
+		System.out.println("======================= Evento: Polvere Stellare =======================");
 		System.out.println("Ogni giocatore perderà 1 giorno di volo per ogni connettore esposto sulla propria nave.");
 		for (Giocatore giocatore : giocatori) {
 			giorniDaPerdere = 0;

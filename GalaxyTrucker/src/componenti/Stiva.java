@@ -1,5 +1,6 @@
 package componenti;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import merci.Cargo;
@@ -13,6 +14,7 @@ public class Stiva extends Componente{
 
 	public Stiva(Connettore SX, Connettore DX, Connettore SU, Connettore GIU, boolean grande, boolean speciale) {
 		super(SX, DX, SU, GIU);
+		this.listaCargo = new ArrayList<>(); 
 		isSpeciale = speciale;
 		if (!grande && !speciale)//Ne grande ne speciale
 			this.spazioCargo = 2;

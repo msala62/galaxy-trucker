@@ -18,7 +18,7 @@ public class Sabotaggio extends Carta {
 	@Override
 	public void azione(List<Giocatore> giocatori, PlanciaVolo plancia) {
 		Giocatore gMinorEquipaggio = minorEquipaggio(giocatori);
-		System.out.println(" Carta Avventura: Sabotaggio");
+		System.out.println("======================= Carta Avventura: Sabotaggio =======================s");
 	    System.out.println(" Il giocatore con meno equipaggio subisce la distruzione di un componente scelto casualmente (tiro di dadi)");
 		System.out.println(">> Giocatore con meno equipaggio: " + gMinorEquipaggio.getNome()
 				+ " (equipaggio: " + gMinorEquipaggio.getNave().getEquipaggioTotale() + ")");

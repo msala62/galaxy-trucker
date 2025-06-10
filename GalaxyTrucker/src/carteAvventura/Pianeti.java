@@ -34,6 +34,7 @@ public class Pianeti extends Carta {
 	}
 
 	public int getGiorniDaPerdere() {
+		
 		return giorniDaPerdere;
 	}
 
@@ -43,6 +44,10 @@ public class Pianeti extends Carta {
 
 	@Override
 	public void azione(List<Giocatore> giocatori, PlanciaVolo plancia) {
+		
+		System.out.println("======================= Evento: Pianeti =======================");
+		System.out.println("Il giocatore può spendere: "+ giorniDaPerdere +" giorni di volo per atterrare su un pianeta\n"
+				+ "	e caricare merci ");
 		for (Giocatore giocatore : giocatori) {
 			if (pianetiDisponibili.isEmpty()) {
 				System.out.println("Nessun pianeta disponibile per il giocatore " + giocatore.getNome()); // Tutti i pianeti sono già stati attaccati

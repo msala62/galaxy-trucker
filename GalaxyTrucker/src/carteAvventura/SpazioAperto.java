@@ -22,7 +22,7 @@ public class SpazioAperto extends Carta {
 
 	@Override
 	public void azione(List<Giocatore> giocatori, PlanciaVolo plancia) {
-		 System.out.println(" Carta Avventura: Spazio Aperto");
+		 System.out.println(" ======================= Carta Avventura: Spazio Aperto ======================= ");
 		    System.out.println("Ogni giocatore dichiara la potenza motrice e avanza sulla rotta.");
 
 		for (Giocatore giocatore : giocatori) {

@@ -37,7 +37,7 @@ public class Schiavisti extends Carta {
 	@Override
 	public void azione(List<Giocatore> giocatori, PlanciaVolo plancia) {
 		
-		System.out.println("Evento: Attacco Schiavisti");
+		System.out.println("======================= Evento: Attacco Schiavisti =======================");
 		System.out.println("Potenza richiesta per sconfiggerli: " + potenzaRichiesta);
 		System.out.println("Se non sconfitti, i giocatori perdono " + equipaggioDaPerdere + " membri dell'equipaggio.");
 		

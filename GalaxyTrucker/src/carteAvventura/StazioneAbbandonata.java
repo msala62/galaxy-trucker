@@ -40,6 +40,10 @@ public class StazioneAbbandonata extends Carta {
 
 	@Override
 	public void azione(List<Giocatore> giocatori, PlanciaVolo plancia) {
+		
+		System.out.println("======================= Evento: Stazione Abbandonata! =======================");
+		System.out.println("È possibile recuperare: " + cargo + ".");
+		System.out.println("L'operazione richiede un equipaggio di almeno " + equipaggioRichiesto + " membri e costerà " + giorniDaPerdere + " giorni di volo.");
 		for (Giocatore giocatore : giocatori) {
 			
 			if (isUsed)

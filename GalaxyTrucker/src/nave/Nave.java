@@ -277,6 +277,7 @@ public abstract class Nave {
 						equipaggioDaEliminare--;
 					}
 				}
+				equipaggio = getEquipaggioTotale();
 			}
 		}
 		return equipaggioDaEliminare == 0;
@@ -895,4 +896,7 @@ public abstract class Nave {
 
 	    return disconnessi;
 	}
+	
+	
+	
 }

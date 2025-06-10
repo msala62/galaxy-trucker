@@ -31,7 +31,7 @@ public class PioggiaDiMeteoriti extends Carta {
 
 	@Override
 	public void azione(List<Giocatore> giocatori, PlanciaVolo plancia) {
-		System.out.println("evento: Pioggia di Meteoriti");
+		System.out.println("======================= evento: Pioggia di Meteoriti =======================");
 	    System.out.println(" Ogni giocatore sarà colpito");
 		for (Giocatore giocatore : giocatori) {
 			System.out.println("==================== Giocatore: " + giocatore.getNome()+"========================");
