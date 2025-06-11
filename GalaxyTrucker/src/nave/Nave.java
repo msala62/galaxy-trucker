@@ -228,7 +228,7 @@ public abstract class Nave {
 	           (c2 == Connettore.UNIVERSALE && c1!=Connettore.LISCIO);
 	}
 	
-	public boolean isUtilizzabile(Casella casella) {
+	protected boolean isUtilizzabile(Casella casella) {
 		return (casella.utilizzabile && casella.getComponente() != null) ? true : false;
 	}
 	
