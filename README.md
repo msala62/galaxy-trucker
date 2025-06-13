@@ -10,7 +10,3 @@ Progetto realizzato dal gruppo 6 corso di Ingegneria Informatica, Università de
 2. Specificare i parametri di lancio e path varie e avviare il programma da console esterna tramite --> **_java -jar nome.jar_**
 
 Controllare la versione di java che sia compatibile, altrimenti potrebbero esserci errori.
-
-# Considerazioni
-
-1. La trasporta intergalattica non è stata testa per motivi di tempo e non è assicurato il suo funzionamento.
